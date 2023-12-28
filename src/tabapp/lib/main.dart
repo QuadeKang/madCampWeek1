@@ -31,6 +31,7 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -57,11 +58,10 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
     );
   }
 }
-
 class Contact {
   final String name;
   final String phoneNumber;
-  final String additionalInfo; // 추가 정보
+  final String additionalInfo;
 
   Contact({required this.name, required this.phoneNumber, required this.additionalInfo});
 }
@@ -76,23 +76,20 @@ class _Tab1State extends State<Tab1> {
     Contact(name: 'John Doe', phoneNumber: '123-456-7890', additionalInfo: 'Additional info for John Doe'),
     Contact(name: 'Jane Smith', phoneNumber: '987-654-3210', additionalInfo: 'Additional info for Jane Smith'),
     Contact(name: 'Alice Johnson', phoneNumber: '555-555-5555', additionalInfo: 'Additional info for Alice Johnson'),
-    // 필요한 만큼 데이터를 추가할 수 있습니다.
   ];
 
-  List<Contact> filteredContacts = []; // 검색 결과를 저장하는 리스트
-  String searchQuery = ''; // 검색 쿼리를 저장하는 변수
+  List<Contact> filteredContacts = [];
+  String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    // 초기에는 전체 연락처를 검색 결과로 설정
     filteredContacts = allContacts;
   }
 
-  // 검색 필드의 상태를 감지하고 검색 결과를 업데이트합니다.
   void searchContacts(String query) {
     setState(() {
-      searchQuery = query; // 검색 쿼리 업데이트
+      searchQuery = query;
       filteredContacts = allContacts
           .where((contact) =>
           contact.name.toLowerCase().contains(query.toLowerCase()))
@@ -102,35 +99,40 @@ class _Tab1State extends State<Tab1> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            onChanged: (value) {
-              searchContacts(value); // 검색 필드가 변경될 때 검색 수행
-            },
-            decoration: InputDecoration(
-              hintText: '연락처 검색', // 검색 필드 힌트
-              prefixIcon: Icon(Icons.search), // 검색 아이콘
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Phonebook'), // Tab1 페이지의 타이틀
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) {
+                searchContacts(value);
+              },
+              decoration: InputDecoration(
+                hintText: '연락처 검색',
+                prefixIcon: Icon(Icons.search),
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: searchQuery.isEmpty ? allContacts.length : filteredContacts.length, // 검색 결과 항목 수
-            itemBuilder: (context, index) {
-              final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
+          Expanded(
+            child: ListView.builder(
+              itemCount: searchQuery.isEmpty ? allContacts.length : filteredContacts.length,
+              itemBuilder: (context, index) {
+                final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
 
-              return ExpandableListTile(
-                title: Text(contact.name),
-                subtitle: Text(contact.phoneNumber),
-                additionalInfo: Text(contact.additionalInfo), // 추가 정보를 표시할 위젯 추가
-              );
-            },
+                return ExpandableListTile(
+                  title: Text(contact.name),
+                  subtitle: Text(contact.phoneNumber),
+                  additionalInfo: Text(contact.additionalInfo),
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -147,7 +149,7 @@ class ExpandableListTile extends StatefulWidget {
 }
 
 class _ExpandableListTileState extends State<ExpandableListTile> {
-  bool _isExpanded = false; // 확장/축소 상태 관리
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -156,18 +158,20 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
         ListTile(
           onTap: () {
             setState(() {
-              _isExpanded = !_isExpanded; // 탭할 때 확장/축소 상태 토글
+              _isExpanded = !_isExpanded;
             });
           },
           title: widget.title,
           subtitle: widget.subtitle,
-          trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more), // 확장/축소 아이콘
+          trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more),
         ),
-        if (_isExpanded) widget.additionalInfo, // 추가 정보 표시 여부 결정
+        if (_isExpanded) widget.additionalInfo,
       ],
     );
   }
 }
+
+
 class Tab2 extends StatefulWidget {
   @override
   _Tab2State createState() => _Tab2State();
