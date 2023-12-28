@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+Future<String> get _localPath async {
+  final directory = await getApplicationDocumentsDirectory();
+  final businessCardDir = Directory(path.join(directory.path, 'business_card'));
+
+  if (!await businessCardDir.exists()) {
+    await businessCardDir.create(recursive: true);
+  }
+
+  return businessCardDir.path;
+}
 
 void main() => runApp(MyApp());
 
@@ -175,17 +188,83 @@ class Tab2 extends StatefulWidget {
 
 class _Tab2State extends State<Tab2> {
   List<File> images = [];
+  bool showButtons = false; // State to control button visibility
+  late int selectedImageIndex; // To keep track of the selected image
+  int? selectedPhotoIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImages();
+  }
+
+  Future<void> _loadImages() async {
+    final String directoryPath = await _localPath;
+    final directory = Directory(directoryPath);
+    List<FileSystemEntity> entries = await directory.list().toList();
+
+    // Filter out only image files
+    List<File> imageFiles = entries.whereType<File>().where((file) {
+      String extension = path.extension(file.path).toLowerCase();
+      return ['.jpg', '.jpeg', '.png', '.gif', '.bmp'].contains(extension);
+    }).toList();
+
+    // Get modification times for each file
+    Map<File, DateTime> fileModificationTimes = {};
+    for (File file in imageFiles) {
+      var stat = await file.stat();
+      fileModificationTimes[file] = stat.modified;
+    }
+
+    // Sort the image files by modification date in descending order
+    imageFiles.sort((a, b) {
+      return fileModificationTimes[b]!.compareTo(fileModificationTimes[a]!);
+    });
+
+    // Update the state with the sorted list of image files
+    setState(() {
+      images = imageFiles;
+    });
+  }
 
   Future<void> _takePicture() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
     if (photo != null) {
+      final String directoryPath = await _localPath;
+      final String fileName = photo.path.split(Platform.pathSeparator).last;
+      final File localImage = await File(photo.path).copy('$directoryPath/$fileName');
+
       setState(() {
-        images.add(File(photo.path));
-        // Optionally, save the image to a specific folder
+        images.insert(0, localImage); // Add the new image at the start of the list
+        _sortImages(); // Sort the images list
       });
     }
+  }
+
+  Future<void> _getPhotos() async {
+    final ImagePicker _picker = ImagePicker();
+    final List<XFile>? photos = await _picker.pickMultiImage(); // Pick multiple images
+
+    if (photos != null && photos.isNotEmpty) {
+      final String localPath = await _localPath; // Assuming _localPath is a function returning the path as String
+
+      for (final photo in photos) {
+        final String fileName = path.basename(photo.path);
+        final File localImage = await File(photo.path).copy('$localPath/$fileName');
+
+        setState(() {
+          images.add(localImage);
+        });
+      }
+    }
+  }
+
+  void _sortImages() {
+    images.sort((a, b) {
+      return b.lastModifiedSync().compareTo(a.lastModifiedSync());
+    });
   }
 
   @override
@@ -198,14 +277,120 @@ class _Tab2State extends State<Tab2> {
             icon: Icon(Icons.add_a_photo),
             onPressed: _takePicture,
           ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _getPhotos,
+          ),
         ],
       ),
-      body: GridView.builder(
-        itemCount: images.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-        itemBuilder: (context, index) {
-          return Image.file(images[index]);
-        },
+      body: Stack(
+        children: [
+          GridView.builder(
+            itemCount: images.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+            itemBuilder: (context, index) {
+              bool isSelected = selectedPhotoIndex == index;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (selectedPhotoIndex == index) {
+                      // Toggle visibility if the same photo is clicked again
+                      showButtons = !showButtons;
+                      if (!showButtons) {
+                        // Reset selectedPhotoIndex when buttons are hidden
+                        selectedPhotoIndex = null;
+                      }
+                    } else {
+                      // Show buttons and update selected photo index
+                      showButtons = true;
+                      selectedPhotoIndex = index;
+                    }
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: selectedPhotoIndex == index
+                        ? Border.all(color: Colors.blue, width: 3)
+                        : null,
+                  ),
+                  child: Image.file(images[index]),
+                ),
+              );
+            },
+          ),
+          if (showButtons) _buildButtonOverlay(),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildButtonOverlay() {
+    return Positioned(
+      bottom: 0, // Position above the BottomNavigationBar
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 5),
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Show confirmation dialog
+                  final result = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Delete Photo'),
+                        content: Text('Do you want to delete this photo?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text('Yes'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  // If 'Yes' was pressed, delete the photo file and remove it from the list
+                  if (result == true) {
+                    File photoFile = images[selectedPhotoIndex!];
+                    await photoFile.delete(); // Delete the file from storage
+                    setState(() {
+                      images.removeAt(selectedPhotoIndex!); // Remove from the list
+                      showButtons = false;
+                      selectedPhotoIndex = null;
+                    });
+                  }
+                },
+                child: Text('Delete Photo'),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 5, right: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Handle Button 2 press
+                  setState(() {
+                    // Implement your logic for Button 2
+                    showButtons = false;
+                  });
+                },
+                child: Text('Button 2'),
+              ),
+            ),
+          ),
+        ],
+
       ),
     );
   }
