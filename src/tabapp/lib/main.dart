@@ -44,6 +44,7 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -74,9 +75,21 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
 class Contact {
   final String name;
   final String phoneNumber;
-  final String additionalInfo; // 추가 정보
+  final String memo;
+  final String organization; // 소속 정보
+  final String position; // 직급 정보
+  final String email; // 이메일 정보
+  final String photoUrl; // 사진 URL
 
-  Contact({required this.name, required this.phoneNumber, required this.additionalInfo});
+  Contact({
+    required this.name,
+    required this.phoneNumber,
+    required this.memo,
+    required this.organization,
+    required this.position,
+    required this.email,
+    required this.photoUrl,
+  });
 }
 
 class Tab1 extends StatefulWidget {
@@ -86,26 +99,156 @@ class Tab1 extends StatefulWidget {
 
 class _Tab1State extends State<Tab1> {
   final List<Contact> allContacts = [
-    Contact(name: 'John Doe', phoneNumber: '123-456-7890', additionalInfo: 'Additional info for John Doe'),
-    Contact(name: 'Jane Smith', phoneNumber: '987-654-3210', additionalInfo: 'Additional info for Jane Smith'),
-    Contact(name: 'Alice Johnson', phoneNumber: '555-555-5555', additionalInfo: 'Additional info for Alice Johnson'),
-    // 필요한 만큼 데이터를 추가할 수 있습니다.
+    Contact(
+      name: 'Alice Smith',
+      phoneNumber: '555-0100',
+      organization: 'Orbit Inc.',
+      position: 'CEO',
+      email: 'alice.smith@orbitinc.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=1',
+      memo: 'Met at tech conference',
+    ),
+    Contact(
+      name: 'Bob Johnson',
+      phoneNumber: '555-0101',
+      organization: 'Pixel Media',
+      position: 'Art Director',
+      email: 'bob.johnson@pixelmedia.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=2',
+      memo: 'Contact for marketing materials',
+    ),
+    Contact(
+      name: 'Carolyn White',
+      phoneNumber: '555-0102',
+      organization: 'Green Tech Solutions',
+      position: 'Environmental Consultant',
+      email: 'carolyn.white@greentech.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=3',
+      memo: 'Expert in renewable energy',
+    ),
+    Contact(
+      name: 'David Harris',
+      phoneNumber: '555-0103',
+      organization: 'Quick Finances',
+      position: 'Accountant',
+      email: 'david.harris@quickfinances.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=4',
+      memo: 'Advised on tax matters',
+    ),
+    Contact(
+      name: 'Evelyn Martinez',
+      phoneNumber: '555-0104',
+      organization: 'BuildBright',
+      position: 'Architect',
+      email: 'evelyn.martinez@buildbright.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=5',
+      memo: 'Architect for the new office design',
+    ),
+    Contact(
+      name: 'Franklin Green',
+      phoneNumber: '555-0105',
+      organization: 'AgroFarms',
+      position: 'Agronomist',
+      email: 'franklin.green@agrofarms.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
+      memo: 'Consultant for organic farming practices',
+    ),
+    Contact(
+      name: 'Gloria Young',
+      phoneNumber: '555-0106',
+      organization: 'TechWave',
+      position: 'Software Engineer',
+      email: 'gloria.young@techwave.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=7',
+      memo: 'Lead of the app development team',
+    ),
+    Contact(
+      name: 'Henry Foster',
+      phoneNumber: '555-0107',
+      organization: 'MediCare Hospital',
+      position: 'Cardiologist',
+      email: 'henry.foster@medicare.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=8',
+      memo: 'Specialist for heart-related issues',
+    ),
+    Contact(
+      name: 'Isabel Reid',
+      phoneNumber: '555-0108',
+      organization: 'Global Exports',
+      position: 'Logistics Manager',
+      email: 'isabel.reid@globalexports.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=9',
+      memo: 'Oversees shipping and receiving',
+    ),
+    Contact(
+      name: 'Jack Taylor',
+      phoneNumber: '555-0109',
+      organization: 'BrightHouse Security',
+      position: 'Security Consultant',
+      email: 'jack.taylor@brighthouse.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=10',
+      memo: 'Advisor for home security system',
+    ),
+    Contact(
+      name: 'Kathy Brown',
+      phoneNumber: '555-0110',
+      organization: 'EdTech Innovations',
+      position: 'Educational Researcher',
+      email: 'kathy.brown@edtechinnovations.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=11',
+      memo: 'Working on a collaborative project',
+    ),
+    Contact(
+      name: 'Luis Gonzalez',
+      phoneNumber: '555-0111',
+      organization: 'Healthy Living Markets',
+      position: 'Nutritionist',
+      email: 'luis.gonzalez@healthyliving.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=12',
+      memo: 'Consultant for dietary planning',
+    ),
+    Contact(
+      name: 'Megan Lopez',
+      phoneNumber: '555-0112',
+      organization: 'City Engineering Dept.',
+      position: 'Civil Engineer',
+      email: 'megan.lopez@cityeng.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=13',
+      memo: 'Contact for public works projects',
+    ),
+    Contact(
+      name: 'Nathan Wright',
+      phoneNumber: '555-0113',
+      organization: 'Wright Legal Advisors',
+      position: 'Attorney',
+      email: 'nathan.wright@wrightlegal.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=14',
+      memo: 'Legal advisor for company contracts',
+    ),
+    Contact(
+      name: 'Olivia King',
+      phoneNumber: '555-0114',
+      organization: 'EventStars',
+      position: 'Event Coordinator',
+      email: 'olivia.king@eventstars.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=15',
+      memo: 'Organizes corporate events',
+    ),
   ];
 
-  List<Contact> filteredContacts = []; // 검색 결과를 저장하는 리스트
-  String searchQuery = ''; // 검색 쿼리를 저장하는 변수
+
+  List<Contact> filteredContacts = [];
+  String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    // 초기에는 전체 연락처를 검색 결과로 설정
     filteredContacts = allContacts;
   }
 
-  // 검색 필드의 상태를 감지하고 검색 결과를 업데이트합니다.
   void searchContacts(String query) {
     setState(() {
-      searchQuery = query; // 검색 쿼리 업데이트
+      searchQuery = query;
       filteredContacts = allContacts
           .where((contact) =>
           contact.name.toLowerCase().contains(query.toLowerCase()))
@@ -115,52 +258,72 @@ class _Tab1State extends State<Tab1> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            onChanged: (value) {
-              searchContacts(value); // 검색 필드가 변경될 때 검색 수행
-            },
-            decoration: InputDecoration(
-              hintText: '연락처 검색', // 검색 필드 힌트
-              prefixIcon: Icon(Icons.search), // 검색 아이콘
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Phonebook'), // Tab1 페이지의 타이틀
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) {
+                searchContacts(value);
+              },
+              decoration: InputDecoration(
+                hintText: '연락처 검색',
+                prefixIcon: Icon(Icons.search),
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: searchQuery.isEmpty ? allContacts.length : filteredContacts.length, // 검색 결과 항목 수
-            itemBuilder: (context, index) {
-              final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
+          Expanded(
+            child: ListView.builder(
+              itemCount: searchQuery.isEmpty ? allContacts.length : filteredContacts.length,
+              itemBuilder: (context, index) {
+                final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
 
-              return ExpandableListTile(
-                title: Text(contact.name),
-                subtitle: Text(contact.phoneNumber),
-                additionalInfo: Text(contact.additionalInfo), // 추가 정보를 표시할 위젯 추가
-              );
-            },
+                return ExpandableListTile(
+                  name: contact.name,
+                  position: contact.position,
+                  memo: contact.memo,
+                  phoneNumber: contact.phoneNumber,
+                  photoUrl: contact.photoUrl,
+                  organization: contact.organization,
+                  email: contact.email,
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
-
 class ExpandableListTile extends StatefulWidget {
-  final Widget title;
-  final Widget subtitle;
-  final Widget additionalInfo;
+  final String name;
+  final String phoneNumber;
+  final String memo;
+  final String organization;
+  final String position;
+  final String email;
+  final String photoUrl;
 
-  ExpandableListTile({required this.title, required this.subtitle, required this.additionalInfo});
+  ExpandableListTile({
+    required this.name,
+    required this.phoneNumber,
+    required this.memo,
+    required this.organization,
+    required this.position,
+    required this.email,
+    required this.photoUrl,
+  });
 
   @override
   _ExpandableListTileState createState() => _ExpandableListTileState();
 }
 
 class _ExpandableListTileState extends State<ExpandableListTile> {
-  bool _isExpanded = false; // 확장/축소 상태 관리
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -169,18 +332,43 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
         ListTile(
           onTap: () {
             setState(() {
-              _isExpanded = !_isExpanded; // 탭할 때 확장/축소 상태 토글
+              _isExpanded = !_isExpanded;
             });
           },
-          title: widget.title,
-          subtitle: widget.subtitle,
-          trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more), // 확장/축소 아이콘
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(widget.photoUrl),
+          ),
+          title: Text(widget.name),
+          subtitle: Text(widget.organization),
+          trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more),
         ),
-        if (_isExpanded) widget.additionalInfo, // 추가 정보 표시 여부 결정
+        if (_isExpanded) Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('phone number: ${widget.phoneNumber}'),
+              Text('Position: ${widget.position}'),
+              Text('Email: ${widget.email}'),
+              Text('Memo: ${widget.memo}'),
+              Row(
+                children: [
+                  Icon(Icons.call),
+                  Icon(Icons.local_post_office),
+                  Icon(Icons.edit),
+                  Icon(Icons.remove_circle)
+                ],
+              )
+
+            ],
+          ),
+        ),
       ],
     );
   }
 }
+
+
 class Tab2 extends StatefulWidget {
   @override
   _Tab2State createState() => _Tab2State();
