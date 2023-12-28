@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() => runApp(MyApp());
 
@@ -24,13 +26,11 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
     Tab2(),
     Tab3(),
   ];
+  final List<String> _tabTitles = ['PhoneBook', 'Gallery', 'Title for Tab3'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('phonebook'),
-      ),
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -168,11 +168,45 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
     );
   }
 }
-class Tab2 extends StatelessWidget {
+class Tab2 extends StatefulWidget {
+  @override
+  _Tab2State createState() => _Tab2State();
+}
+
+class _Tab2State extends State<Tab2> {
+  List<File> images = [];
+
+  Future<void> _takePicture() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+    if (photo != null) {
+      setState(() {
+        images.add(File(photo.path));
+        // Optionally, save the image to a specific folder
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Tab 2 Content'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Gallery'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add_a_photo),
+            onPressed: _takePicture,
+          ),
+        ],
+      ),
+      body: GridView.builder(
+        itemCount: images.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+        itemBuilder: (context, index) {
+          return Image.file(images[index]);
+        },
+      ),
     );
   }
 }
