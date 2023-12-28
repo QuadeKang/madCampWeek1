@@ -4,14 +4,16 @@
 2. 전화번호
 3. 소속
 4. 직급
-5. 메모
-6. 사진
+5. 이메일
+6. 메모
+7. 사진
 
 {
   name: type(str),
   number: type(str),
   company: type(str),
   position: type(str),
+  email: type(str),
   memo: type(str),
   photo: type(str),
 }
