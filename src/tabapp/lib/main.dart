@@ -58,12 +58,25 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
     );
   }
 }
+
 class Contact {
   final String name;
   final String phoneNumber;
-  final String additionalInfo;
+  final String memo;
+  final String organization; // 소속 정보
+  final String position; // 직급 정보
+  final String email; // 이메일 정보
+  final String photoUrl; // 사진 URL
 
-  Contact({required this.name, required this.phoneNumber, required this.additionalInfo});
+  Contact({
+    required this.name,
+    required this.phoneNumber,
+    required this.memo,
+    required this.organization,
+    required this.position,
+    required this.email,
+    required this.photoUrl,
+  });
 }
 
 class Tab1 extends StatefulWidget {
@@ -73,9 +86,15 @@ class Tab1 extends StatefulWidget {
 
 class _Tab1State extends State<Tab1> {
   final List<Contact> allContacts = [
-    Contact(name: 'John Doe', phoneNumber: '123-456-7890', additionalInfo: 'Additional info for John Doe'),
-    Contact(name: 'Jane Smith', phoneNumber: '987-654-3210', additionalInfo: 'Additional info for Jane Smith'),
-    Contact(name: 'Alice Johnson', phoneNumber: '555-555-5555', additionalInfo: 'Additional info for Alice Johnson'),
+    Contact(
+      name: 'John Doe',
+      phoneNumber: '123-456-7890',
+      organization: 'Company A',
+      position: 'Manager',
+      email: 'johndoe@example.com',
+      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100',
+      memo: 'memo',
+    )
   ];
 
   List<Contact> filteredContacts = [];
@@ -124,9 +143,13 @@ class _Tab1State extends State<Tab1> {
                 final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
 
                 return ExpandableListTile(
-                  title: Text(contact.name),
-                  subtitle: Text(contact.phoneNumber),
-                  additionalInfo: Text(contact.additionalInfo),
+                  name: contact.name,
+                  position: contact.position,
+                  memo: contact.memo,
+                  phoneNumber: contact.phoneNumber,
+                  photoUrl: contact.photoUrl,
+                  organization: contact.organization,
+                  email: contact.email,
                 );
               },
             ),
@@ -136,13 +159,24 @@ class _Tab1State extends State<Tab1> {
     );
   }
 }
-
 class ExpandableListTile extends StatefulWidget {
-  final Widget title;
-  final Widget subtitle;
-  final Widget additionalInfo;
+  final String name;
+  final String phoneNumber;
+  final String memo;
+  final String organization;
+  final String position;
+  final String email;
+  final String photoUrl;
 
-  ExpandableListTile({required this.title, required this.subtitle, required this.additionalInfo});
+  ExpandableListTile({
+    required this.name,
+    required this.phoneNumber,
+    required this.memo,
+    required this.organization,
+    required this.position,
+    required this.email,
+    required this.photoUrl,
+  });
 
   @override
   _ExpandableListTileState createState() => _ExpandableListTileState();
@@ -161,11 +195,26 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
               _isExpanded = !_isExpanded;
             });
           },
-          title: widget.title,
-          subtitle: widget.subtitle,
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(widget.photoUrl),
+          ),
+          title: Text(widget.name),
+          subtitle: Text(widget.organization),
           trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more),
         ),
-        if (_isExpanded) widget.additionalInfo,
+        if (_isExpanded) Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('phone number: ${widget.phoneNumber}'),
+              Text('Position: ${widget.position}'),
+              Text('Email: ${widget.email}'),
+              Text('Memo: ${widget.memo}'),
+
+            ],
+          ),
+        ),
       ],
     );
   }
