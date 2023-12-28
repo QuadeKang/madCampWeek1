@@ -330,7 +330,7 @@ class _Tab1State extends State<Tab1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Phonebook'), // Tab1 페이지의 타이틀
+        title: Text('PhoneBook'), // Tab1 페이지의 타이틀
       ),
       body: Column(
         children: [
