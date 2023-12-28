@@ -58,12 +58,12 @@ class _MyTabbedAppState extends State<MyTabbedApp> {
   }
 }
 
-
 class Contact {
   final String name;
   final String phoneNumber;
+  final String additionalInfo; // 추가 정보
 
-  Contact({required this.name, required this.phoneNumber});
+  Contact({required this.name, required this.phoneNumber, required this.additionalInfo});
 }
 
 class Tab1 extends StatefulWidget {
@@ -73,13 +73,14 @@ class Tab1 extends StatefulWidget {
 
 class _Tab1State extends State<Tab1> {
   final List<Contact> allContacts = [
-    Contact(name: 'John Doe', phoneNumber: '123-456-7890'),
-    Contact(name: 'Jane Smith', phoneNumber: '987-654-3210'),
-    Contact(name: 'Alice Johnson', phoneNumber: '555-555-5555'),
+    Contact(name: 'John Doe', phoneNumber: '123-456-7890', additionalInfo: 'Additional info for John Doe'),
+    Contact(name: 'Jane Smith', phoneNumber: '987-654-3210', additionalInfo: 'Additional info for Jane Smith'),
+    Contact(name: 'Alice Johnson', phoneNumber: '555-555-5555', additionalInfo: 'Additional info for Alice Johnson'),
     // 필요한 만큼 데이터를 추가할 수 있습니다.
   ];
 
-  List<Contact> filteredContacts = [];
+  List<Contact> filteredContacts = []; // 검색 결과를 저장하는 리스트
+  String searchQuery = ''; // 검색 쿼리를 저장하는 변수
 
   @override
   void initState() {
@@ -91,6 +92,7 @@ class _Tab1State extends State<Tab1> {
   // 검색 필드의 상태를 감지하고 검색 결과를 업데이트합니다.
   void searchContacts(String query) {
     setState(() {
+      searchQuery = query; // 검색 쿼리 업데이트
       filteredContacts = allContacts
           .where((contact) =>
           contact.name.toLowerCase().contains(query.toLowerCase()))
@@ -116,16 +118,14 @@ class _Tab1State extends State<Tab1> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: filteredContacts.length, // 검색 결과 항목 수
+            itemCount: searchQuery.isEmpty ? allContacts.length : filteredContacts.length, // 검색 결과 항목 수
             itemBuilder: (context, index) {
-              final contact = filteredContacts[index];
+              final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
 
-              return ListTile(
+              return ExpandableListTile(
                 title: Text(contact.name),
                 subtitle: Text(contact.phoneNumber),
-                onTap: () {
-                  print('탭한 연락처: ${contact.name}');
-                },
+                additionalInfo: Text(contact.additionalInfo), // 추가 정보를 표시할 위젯 추가
               );
             },
           ),
@@ -135,8 +135,39 @@ class _Tab1State extends State<Tab1> {
   }
 }
 
+class ExpandableListTile extends StatefulWidget {
+  final Widget title;
+  final Widget subtitle;
+  final Widget additionalInfo;
 
+  ExpandableListTile({required this.title, required this.subtitle, required this.additionalInfo});
 
+  @override
+  _ExpandableListTileState createState() => _ExpandableListTileState();
+}
+
+class _ExpandableListTileState extends State<ExpandableListTile> {
+  bool _isExpanded = false; // 확장/축소 상태 관리
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          onTap: () {
+            setState(() {
+              _isExpanded = !_isExpanded; // 탭할 때 확장/축소 상태 토글
+            });
+          },
+          title: widget.title,
+          subtitle: widget.subtitle,
+          trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more), // 확장/축소 아이콘
+        ),
+        if (_isExpanded) widget.additionalInfo, // 추가 정보 표시 여부 결정
+      ],
+    );
+  }
+}
 class Tab2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
