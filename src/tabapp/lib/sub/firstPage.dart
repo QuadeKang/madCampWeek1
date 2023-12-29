@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tabapp/database.dart';
+import 'dart:io';
 
 class Contact {
   int? id;
@@ -92,6 +93,51 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
   }
 
+  void _sendEmail(String email) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      throw 'Could not launch $emailLaunchUri';
+    }
+  }
+
+  void _sendEmailViaGmail(String email) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {
+        'subject': 'Example Subject', // 이메일 제목을 여기에 추가
+        'body': 'Example Body', // 이메일 본문을 여기에 추가
+      },
+    );
+
+    // Android에서 Gmail 앱을 직접 열려고 시도
+    if (Platform.isAndroid) {
+      final Uri gmailUri = Uri(
+        scheme: 'intent',
+        path: '#Intent',
+        query: 'action=android.intent.action.SENDTO&data=${emailLaunchUri.toString()}&package=com.google.android.gm',
+        fragment: 'Intent;end',
+      );
+      if (await canLaunchUrl(gmailUri)) {
+        await launchUrl(gmailUri);
+      } else {
+        throw 'Could not launch $gmailUri';
+      }
+    } else {
+      // iOS 또는 다른 플랫폼에서는 기본 이메일 앱을 사용
+      if (await canLaunchUrl(emailLaunchUri)) {
+        await launchUrl(emailLaunchUri);
+      } else {
+        throw 'Could not launch $emailLaunchUri';
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +214,10 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
             children: [
               Icon(Icons.alternate_email, size: 20),
               SizedBox(width: 8),
-              Text(widget.contact.email),
+              InkWell(
+                onTap: () => _sendEmailViaGmail(widget.contact.email),
+                child: Text(widget.contact.email),
+              ),
             ],
           ),
           SizedBox(height: 8), // 행 사이 간격
