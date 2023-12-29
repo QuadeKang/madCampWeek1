@@ -58,14 +58,32 @@ class BusinessCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       // Photo
-                      if (contactInfo.photoUrl.isNotEmpty)
-                        Image.file(
-                          File(contactInfo.photoUrl),
-                          width: 100.0, // Adjust the width as needed
-                          height: double.infinity, // Adjust the height as needed
-                          fit: BoxFit.cover,
-                        ),
-                      SizedBox(width: 10),
+                  FutureBuilder<bool>(
+                    future: File(contactInfo.photoUrl).exists(),
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      // Debug print the photo URL
+                      debugPrint('Photo URL: ${contactInfo.photoUrl}');
+
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data == true) {
+                          // File exists, display the image
+                          return Image.file(
+                            File(contactInfo.photoUrl),
+                            width: 100.0,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        } else {
+                          // File does not exist, display a placeholder or error widget
+                          return Icon(Icons.image_not_supported); // Placeholder icon
+                        }
+                      } else {
+                        // While the future is resolving, you can show a loader or an empty container
+                        return CircularProgressIndicator(); // Loader widget
+                      }
+                    },
+                  ),
+                        SizedBox(width: 10),
 
                       // Contact Info
                       Expanded(
@@ -102,7 +120,6 @@ Future<ContactInfo> readContactInfo(String fileName) async {
     // Get the application directory
     final directory = await getApplicationDocumentsDirectory();
     final filePath = '${directory.path}/$fileName'; // Corrected file path
-    debugPrint(filePath);
 
     // Create a file reference
     final file = File(filePath);
@@ -113,15 +130,21 @@ Future<ContactInfo> readContactInfo(String fileName) async {
 
       // Assuming the format is exactly as specified
       final lines = contents.split('\n');
+      String photoUrl = lines[6].split(':')[1].trim();
+
+      // Debug print the photo URL
+      debugPrint('Photo URL: $photoUrl');
+
       return ContactInfo(
         name: lines[0].split(':')[1].trim(),
         phone: lines[1].split(':')[1].trim(),
         email: lines[2].split(':')[1].trim(),
         organization: lines[3].split(':')[1].trim(),
         position: lines[4].split(':')[1].trim(),
-        photoUrl: lines[5].split(':')[1].trim(),
+        photoUrl: photoUrl,
       );
-    } else {
+
+  } else {
       // Handle the case where the file does not exist
       print('File does not exist: $filePath');
       throw FileSystemException('File not found', filePath);
@@ -132,6 +155,7 @@ Future<ContactInfo> readContactInfo(String fileName) async {
     rethrow; // Rethrow to allow calling code to handle the exception
   }
 }
+
 
 
 class ContactInputScreen extends StatefulWidget {
@@ -147,12 +171,29 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   final TextEditingController _positionController = TextEditingController();
   final TextEditingController _organizationController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
   String _photoUrl = '';
 
   @override
   void initState() {
     super.initState();
+    _initializePhotoPath();
     _loadContactInfo();
+  }
+
+  Future<void> _initializePhotoPath() async {
+    try {
+      String directoryPath = await findPath; // Ensure findPath is an async function
+      String folderPath = path.join(directoryPath, 'newProfileFolder');
+      String fileName = "profile.jpg";
+      String newPath = path.join(folderPath, fileName);
+
+      setState(() {
+        _photoUrl = newPath;
+      });
+    } catch (e) {
+      print("Error initializing photo path: $e");
+    }
   }
 
   Future<void> _loadContactInfo() async {
@@ -178,39 +219,34 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
     if (pickedFile != null) {
       File tempFile = File(pickedFile.path);
-      String directoryPath = await findPath; // Assuming findPath() returns a valid directory path
-      String folderPath = path.join(directoryPath, 'profile');
+      String directoryPath = await findPath; // Make sure findPath() returns a valid directory path
+      String folderPath = path.join(directoryPath, 'newProfileFolder');
       String fileName = "profile.jpg";
       String newPath = path.join(folderPath, fileName);
 
       try {
-        final file = File(folderPath);
-        if (await file.exists()) {
-          // If the path is a file, you could choose to delete it or use another path
-          // WARNING: Deleting a file is irreversible
-          // await file.delete();
-
-          // Alternatively, change the path
-          folderPath = path.join(directoryPath, 'newProfileFolder');
-          newPath = path.join(folderPath, fileName);
-        }
-
         final directory = Directory(folderPath);
-
         if (!await directory.exists()) {
           await directory.create(recursive: true);
         }
 
         File newFile = await tempFile.copy(newPath);
 
-        setState(() {
-          _photoUrl = newFile.path;
-        });
+        // Check if the file now exists
+        if (await newFile.exists()) {
+          setState(() {
+            _photoUrl = newPath;
+            debugPrint("Image successfully saved to $newPath");
+          });
+        } else {
+          debugPrint("Failed to save image at $newPath");
+        }
       } catch (e) {
-        print("Error: $e");
+        debugPrint("Error: $e");
       }
     }
   }
+
 
 
 
@@ -256,8 +292,9 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Image.file(
                 File(_photoUrl),
-                width: 100.0, // You can adjust the size
-                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return const Icon(Icons.error); // Placeholder widget
+                },
               ),
             ),
 
@@ -283,14 +320,14 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                 String email = _emailController.text;
                 String organization = _organizationController.text;
                 String position = _positionController.text;
-                String pathUrl = '/data/user/0/com.example.tabapp/app_flutter/business_card/newProfileFolder/profile.jpg';
+                String phothUrl = '';
 
-                String contactInfo = 'Name:$name\nPhone:$phone\nEmail:$email\nOrganization:$organization\nPosition:$position\nMemo:\nPhoto URL:$pathUrl';
+                String contactInfo = 'Name:$name\nPhone:$phone\nEmail:$email\nOrganization:$organization\nPosition:$position\nMemo:\nPhoto URL:$_photoUrl';
                 debugPrint(contactInfo);
 
                 try {
-                  // Get the local path
-                  final filePath = '/data/user/0/com.example.tabapp/app_flutter/business_card/information.txt';
+                  final directory = await getApplicationDocumentsDirectory();
+                  final filePath = '${directory.path}/information.txt'; // Corrected file path
 
                   // Create a file reference
                   final file = File(filePath);
@@ -311,9 +348,6 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                 // Close the dialog
                 Navigator.of(context).pop();
 
-                setState(() {
-
-                });
               },
               child: Text("Save"),
               style: ElevatedButton.styleFrom(
@@ -338,7 +372,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 class Tab3State extends State {
 
   void _showInputScreen() async {
-    final photoUrl = await Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ContactInputScreen()),
     );
