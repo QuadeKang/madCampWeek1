@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:tabapp/database.dart';
 
 class Contact {
+  int? id;
   final String name;
   final String phoneNumber;
-  final String memo;
+  String? memo;
   final String organization; // 소속 정보
   final String position; // 직급 정보
   final String email; // 이메일 정보
   final String photoUrl; // 사진 URL
 
   Contact({
+    this.id,
     required this.name,
     required this.phoneNumber,
-    required this.memo,
     required this.organization,
     required this.position,
     required this.email,
     required this.photoUrl,
+    this.memo,
   });
 }
 
@@ -174,7 +177,17 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
             children: [
               Icon(Icons.edit_note, size: 20),
               SizedBox(width: 8),
-              Text(widget.contact.memo),
+              widget.contact.memo != null
+                ? Text(widget.contact.memo!) : Container(
+                width: 200,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.circular(5)
+
+                ),
+              )
+
             ],
           ),
           SizedBox(height: 8), // 행 사이 간격
@@ -221,7 +234,6 @@ class Tab1State extends State {
       position: 'CEO',
       email: 'alice.smith@orbitinc.com',
       photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=1',
-      memo: 'Met at tech conference',
     ),
     Contact(
       name: 'Bob Johnson',
