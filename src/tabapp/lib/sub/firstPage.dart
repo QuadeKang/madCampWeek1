@@ -4,6 +4,8 @@ import 'package:tabapp/database.dart';
 import 'dart:io';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
+
 
 class Contact {
   int? id;
@@ -238,7 +240,18 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
             children: [
               Icon(Icons.phone, size: 20),
               SizedBox(width: 8),
-              Text(widget.contact.phoneNumber),
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: widget.contact.phoneNumber));
+                  // 옵션: 사용자에게 알림 표시
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('전화번호가 복사되었습니다: ${widget.contact.phoneNumber}'),
+                    ),
+                  );
+                },
+                child: Text(widget.contact.phoneNumber),
+              ),
             ],
           ),
           SizedBox(height: 8), // 행 사이 간격
