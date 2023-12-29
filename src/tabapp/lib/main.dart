@@ -53,8 +53,8 @@ class _MyTabbedAppState extends State<MyTabbedApp> with SingleTickerProviderStat
       bottomNavigationBar: Material(
         child: TabBar(
           tabs: <Tab>[
-            Tab(icon: Icon(Icons.home), text: '전화번호부'),
-            Tab(icon: Icon(Icons.search), text: '이미지'),
+            Tab(icon: Icon(Icons.person), text: '전화번호부'),
+            Tab(icon: Icon(Icons.photo), text: '이미지'),
             Tab(icon: Icon(Icons.nfc), text: 'NFC'),
           ],
           controller: controller,
