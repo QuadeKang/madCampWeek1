@@ -3,6 +3,7 @@ import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();
@@ -14,6 +15,8 @@ Future<String> get _localPath async {
 
   return businessCardDir.path;
 }
+
+
 
 void main() => runApp(MyApp());
 
@@ -386,6 +389,7 @@ class _Tab2State extends State<Tab2> {
     _loadImages();
   }
 
+
   Future<void> _loadImages() async {
     final String directoryPath = await _localPath;
     final directory = Directory(directoryPath);
@@ -448,6 +452,44 @@ class _Tab2State extends State<Tab2> {
       }
     }
   }
+
+
+  Future<File?> _cropImage(File imageFile) async {
+
+    try {
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: imageFile.path,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+          ],
+          aspectRatio: CropAspectRatio(
+            ratioX: 9, // Custom aspect ratio
+            ratioY: 5,
+          ),
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: 'Crop Image',
+                toolbarColor: Colors.deepOrange,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: true
+            ),
+            IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            )
+          ]
+      );
+
+      if (croppedFile != null) {
+        return File(croppedFile.path);
+      }
+    } catch (e) {
+      // Handle any exceptions here
+      print('Error in _cropImage: $e');
+    }
+    return null;
+  }
+
 
   void _sortImages() {
     images.sort((a, b) {
@@ -566,14 +608,29 @@ class _Tab2State extends State<Tab2> {
             child: Padding(
               padding: EdgeInsets.only(left: 5, right: 10),
               child: ElevatedButton(
-                onPressed: () {
-                  // Handle Button 2 press
+                onPressed: () async {
+                  try {
+                    // Check if a photo is selected
+                    if (selectedPhotoIndex != null && selectedPhotoIndex! < images.length) {
+                      // Call the cropImage function and pass the selected image
+                      final File? croppedImage = await _cropImage(images[selectedPhotoIndex!]);
+                      if (croppedImage != null) {
+                        setState(() {
+                          // Update the image list with the cropped image
+                          images[selectedPhotoIndex!] = croppedImage;
+                        });
+                      }
+                    }
+                  } catch (e) {
+                    // Handle any exceptions here
+                    print('Error cropping image: $e');
+                  }
+                  // Hide the buttons after the operation
                   setState(() {
-                    // Implement your logic for Button 2
                     showButtons = false;
                   });
                 },
-                child: Text('Button 2'),
+                child: Text('Edit Photo'),
               ),
             ),
           ),
