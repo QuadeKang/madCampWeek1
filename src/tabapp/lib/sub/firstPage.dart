@@ -44,7 +44,6 @@ class ExpandableContactCard extends StatefulWidget {
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
 
-
   void _confirmDeletion() async {
     final bool? confirm = await showDialog(
       context: context,
@@ -122,7 +121,8 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
       final Uri gmailUri = Uri(
         scheme: 'intent',
         path: '#Intent',
-        query: 'action=android.intent.action.SENDTO&data=${emailLaunchUri.toString()}&package=com.google.android.gm',
+        query:
+            'action=android.intent.action.SENDTO&data=${emailLaunchUri.toString()}&package=com.google.android.gm',
         fragment: 'Intent;end',
       );
       if (await canLaunchUrl(gmailUri)) {
@@ -140,7 +140,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -149,7 +148,10 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: ExpansionTile(
-        title: Text(widget.contact.name, style: TextStyle(fontWeight: FontWeight.bold),),
+        title: Text(
+          widget.contact.name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Text(widget.contact.organization),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(widget.contact.photoUrl),
@@ -223,7 +225,11 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
 
     return Padding(
-      padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, top: 8.0, bottom: 8.0),
+      padding: EdgeInsets.only(
+          left: horizontalPadding,
+          right: horizontalPadding,
+          top: 8.0,
+          bottom: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -263,14 +269,16 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               ),
             ],
           ),
+
           SizedBox(height: 8), // 행 사이 간격
           // 메모 행
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트가 여러 줄일 경우를 고려하여 정렬 변경
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // 텍스트가 여러 줄일 경우를 고려하여 정렬 변경
             children: [
               Icon(Icons.edit_note, size: 20),
               SizedBox(width: 8),
-              Expanded( // Text 위젯을 Expanded로 감싸서 가용 공간을 모두 사용하도록 함
+              Expanded(
                 child: widget.contact.memo != null
                     ? Text(
                         widget.contact.memo!,
@@ -307,9 +315,13 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(onPressed: () => _makePhoneCall(widget.contact.phoneNumber), icon: Icon(Icons.call)),
-              IconButton(onPressed: () => _sendSMS(widget.contact.phoneNumber), icon: Icon(Icons.local_post_office)),
-              IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
+              IconButton(
+                  onPressed: () => _makePhoneCall(widget.contact.phoneNumber),
+                  icon: Icon(Icons.call)),
+              IconButton(
+                  onPressed: () => _sendSMS(widget.contact.phoneNumber),
+                  icon: Icon(Icons.local_post_office)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
               IconButton(
                 onPressed: _confirmDeletion,
                 icon: Icon(Icons.delete_forever_rounded),
@@ -320,7 +332,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
       ),
     );
   }
-
 
   Widget _buildCollapsedCard() {
     // Build the collapsed card with less details
@@ -390,7 +401,8 @@ class Tab1State extends State {
       position: 'Agronomist',
       email: 'franklin.green@agrofarms.com',
       photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
-      memo: 'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
+      memo:
+          'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
     ),
     Contact(
       name: 'Gloria Young',
@@ -494,18 +506,18 @@ class Tab1State extends State {
             contact.organization.toLowerCase().contains(searchQuery) ||
             contact.position.toLowerCase().contains(searchQuery) ||
             contact.email.toLowerCase().contains(searchQuery) ||
-            (contact.memo != null && contact.memo!.toLowerCase().contains(searchQuery));
+            (contact.memo != null &&
+                contact.memo!.toLowerCase().contains(searchQuery));
       }).toList();
     });
   }
-
-
 
   void deleteContact(Contact contact) {
     setState(() {
       allContacts.remove(contact);
       filteredContacts = allContacts
-          .where((c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
+          .where(
+              (c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
     });
   }
@@ -552,12 +564,11 @@ class Tab1State extends State {
                     : filteredContacts[index];
 
                 return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0), // 양쪽에 간격 추가
-                child: ExpandableContactCard(
-                contact: contact,
-                onDelete: deleteContact,
-                ),
-
+                  padding: EdgeInsets.symmetric(horizontal: 8.0), // 양쪽에 간격 추가
+                  child: ExpandableContactCard(
+                    contact: contact,
+                    onDelete: deleteContact,
+                  ),
                 );
               },
             ),
