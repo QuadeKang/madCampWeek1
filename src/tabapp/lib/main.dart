@@ -94,11 +94,17 @@ class Contact {
     required this.photoUrl,
   });
 }
-
-class ContactCard extends StatelessWidget {
+class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
 
-  const ContactCard({Key? key, required this.contact}) : super(key: key);
+  const ExpandableContactCard({Key? key, required this.contact}) : super(key: key);
+
+  @override
+  _ExpandableContactCardState createState() => _ExpandableContactCardState();
+}
+
+class _ExpandableContactCardState extends State<ExpandableContactCard> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -107,63 +113,85 @@ class ContactCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: NetworkImage(contact.photoUrl),
-              radius: 30.0,
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              contact.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            Text(
-              contact.organization,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14.0,
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.phone, size: 16.0),
-                SizedBox(width: 4.0),
-                Text(contact.phoneNumber),
-              ],
-            ),
-            SizedBox(height: 4.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.badge, size: 16.0),
-                SizedBox(width: 4.0),
-                Text(contact.position),
-              ],
-            ),
-            SizedBox(height: 4.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.email, size: 16.0),
-                SizedBox(width: 4.0),
-                Text(contact.email),
-              ],
-            ),
-          ],
+      child: ExpansionTile(
+        title: Text(widget.contact.name),
+        subtitle: Text(widget.contact.organization),
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(widget.contact.photoUrl),
         ),
+        children: <Widget>[
+          isExpanded ? _buildExpandedCard() : _buildCollapsedCard(),
+        ],
+        onExpansionChanged: (expanded) {
+          setState(() {
+            isExpanded = expanded;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _buildExpandedCard() {
+    // Build the expanded card with more details
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          // Put more detailed information here
+          Row(
+            children: [
+              Icon(Icons.phone),
+              Text(widget.contact.phoneNumber),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.person),
+              Text(widget.contact.position),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.alternate_email),
+              Text(widget.contact.email),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.edit_note),
+              Text(widget.contact.memo),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.call),
+              Icon(Icons.local_post_office),
+              Icon(Icons.edit),
+              Icon(Icons.delete_forever_rounded),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCollapsedCard() {
+    // Build the collapsed card with less details
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          // Put less detailed information here
+          Text(widget.contact.position),
+          // Add more widgets as needed
+        ],
       ),
     );
   }
 }
+
 
 class Tab1 extends StatefulWidget {
   @override
@@ -334,6 +362,9 @@ class _Tab1State extends State<Tab1> {
     return Scaffold(
       appBar: AppBar(
         title: Text('PhoneBook'), // Tab1 페이지의 타이틀
+        actions: <Widget>[
+          Icon(Icons.add),
+        ],
       ),
       body: Column(
         children: [
@@ -355,14 +386,8 @@ class _Tab1State extends State<Tab1> {
               itemBuilder: (context, index) {
                 final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
 
-                return ExpandableListTile(
-                  name: contact.name,
-                  position: contact.position,
-                  memo: contact.memo,
-                  phoneNumber: contact.phoneNumber,
-                  photoUrl: contact.photoUrl,
-                  organization: contact.organization,
-                  email: contact.email,
+                return ExpandableContactCard(
+                  contact: contact,
                 );
               },
             ),
@@ -372,87 +397,6 @@ class _Tab1State extends State<Tab1> {
     );
   }
 }
-class ExpandableListTile extends StatefulWidget {
-  final String name;
-  final String phoneNumber;
-  final String memo;
-  final String organization;
-  final String position;
-  final String email;
-  final String photoUrl;
-
-  ExpandableListTile({
-    required this.name,
-    required this.phoneNumber,
-    required this.memo,
-    required this.organization,
-    required this.position,
-    required this.email,
-    required this.photoUrl,
-  });
-
-  @override
-  _ExpandableListTileState createState() => _ExpandableListTileState();
-}
-
-class _ExpandableListTileState extends State<ExpandableListTile> {
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          onTap: () {
-            setState(() {
-              _isExpanded = !_isExpanded;
-            });
-          },
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(widget.photoUrl),
-          ),
-          title: Text(widget.name),
-          subtitle: Text(widget.organization),
-          trailing: _isExpanded ? Icon(Icons.expand_less) : Icon(Icons.expand_more),
-        ),
-        if (_isExpanded) Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('phone number: ${widget.phoneNumber}'),
-              Text('Position: ${widget.position}'),
-              Text('Email: ${widget.email}'),
-              Text('Memo: ${widget.memo}'),
-              Row(
-                children: [
-                  Icon(Icons.call),
-                  Icon(Icons.local_post_office),
-                  Icon(Icons.edit),
-                  Icon(Icons.remove_circle),
-
-                ],
-              ),
-              ContactCard(
-                contact: Contact(
-                  name: 'Quade Kang',
-                  phoneNumber: '010-5962-1685',
-                  memo: 'Junior Developer',
-                  organization: 'madCamp',
-                  position: 'Junior Developer',
-                  email: 'quade.kang@gmail.com',
-                  photoUrl: 'https://via.placeholder.com/150',
-                ),
-              ),
-
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 
 class Tab2 extends StatefulWidget {
   @override
