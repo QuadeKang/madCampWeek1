@@ -23,9 +23,13 @@ class Contact {
 
 class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
+  final Function(Contact) onDelete;
 
-  const ExpandableContactCard({Key? key, required this.contact})
-      : super(key: key);
+  const ExpandableContactCard({
+    Key? key,
+    required this.contact,
+    required this.onDelete,
+  }) : super(key: key);
 
   @override
   _ExpandableContactCardState createState() => _ExpandableContactCardState();
@@ -33,6 +37,33 @@ class ExpandableContactCard extends StatefulWidget {
 
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
+
+
+  void _confirmDeletion() async {
+    final bool? confirm = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('삭제 확인'),
+          content: Text('삭제하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('예'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('아니오'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      widget.onDelete(widget.contact);
+    }
+  }
 
   void _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -58,6 +89,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -71,6 +103,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         leading: CircleAvatar(
           backgroundImage: NetworkImage(widget.contact.photoUrl),
         ),
+        trailing: isExpanded ? null : _buildTrailingIcons(),
         children: <Widget>[
           isExpanded ? _buildExpandedCard() : _buildCollapsedCard(),
         ],
@@ -83,56 +116,86 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     );
   }
 
+  Widget _buildTrailingIcons() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        IconButton(
+          onPressed: () => _makePhoneCall(widget.contact.phoneNumber),
+          icon: Icon(Icons.call),
+          tooltip: '전화 걸기',
+        ),
+        IconButton(
+          onPressed: () => _sendSMS(widget.contact.phoneNumber),
+          icon: Icon(Icons.local_post_office),
+          tooltip: '문자 보내기',
+        ),
+      ],
+    );
+  }
+
   Widget _buildExpandedCard() {
-    // Build the expanded card with more details
+    const double horizontalPadding = 40.0 + 16.0; // 아바타 크기 + 간격
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, top: 8.0, bottom: 8.0),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Put more detailed information here
+          // 전화번호 행
           Row(
             children: [
-              Icon(Icons.phone),
+              Icon(Icons.phone, size: 20),
+              SizedBox(width: 8),
               Text(widget.contact.phoneNumber),
             ],
           ),
+          SizedBox(height: 8), // 행 사이 간격
+          // 직급 행
           Row(
             children: [
-              Icon(Icons.person),
+              Icon(Icons.person, size: 20),
+              SizedBox(width: 8),
               Text(widget.contact.position),
             ],
           ),
+          SizedBox(height: 8), // 행 사이 간격
+          // 이메일 행
           Row(
             children: [
-              Icon(Icons.alternate_email),
+              Icon(Icons.alternate_email, size: 20),
+              SizedBox(width: 8),
               Text(widget.contact.email),
             ],
           ),
+          SizedBox(height: 8), // 행 사이 간격
+          // 메모 행
           Row(
             children: [
-              Icon(Icons.edit_note),
+              Icon(Icons.edit_note, size: 20),
+              SizedBox(width: 8),
               Text(widget.contact.memo),
             ],
           ),
+          SizedBox(height: 8), // 행 사이 간격
+          // 기타 아이콘 버튼들
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(onPressed: () => _makePhoneCall(widget.contact.phoneNumber), icon: Icon(Icons.call)),
+              IconButton(onPressed: () => _sendSMS(widget.contact.phoneNumber), icon: Icon(Icons.local_post_office)),
+              IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
               IconButton(
-                  onPressed: () => _makePhoneCall(widget.contact.phoneNumber),
-                  icon: Icon(Icons.call)),
-              IconButton(
-                onPressed: () => _sendSMS(widget.contact.phoneNumber),
-                icon: Icon(Icons.local_post_office),
+                onPressed: _confirmDeletion,
+                icon: Icon(Icons.delete_forever_rounded),
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-              IconButton(
-                  onPressed: () {}, icon: Icon(Icons.delete_forever_rounded)),
             ],
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildCollapsedCard() {
     // Build the collapsed card with less details
@@ -307,6 +370,16 @@ class Tab1State extends State {
     });
   }
 
+
+  void deleteContact(Contact contact) {
+    setState(() {
+      allContacts.remove(contact);
+      filteredContacts = allContacts
+          .where((c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -342,6 +415,8 @@ class Tab1State extends State {
 
                 return ExpandableContactCard(
                   contact: contact,
+                  onDelete: deleteContact,
+
                 );
               },
             ),
