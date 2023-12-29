@@ -165,7 +165,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               Icon(Icons.call),
               Icon(Icons.local_post_office),
               Icon(Icons.edit),
-              Icon(Icons.remove_circle),
+              Icon(Icons.delete_forever_rounded),
             ],
           ),
         ],
