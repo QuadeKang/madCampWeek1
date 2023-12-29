@@ -613,7 +613,12 @@ class _Tab2State extends State<Tab2> {
         children: [
           GridView.builder(
             itemCount: images.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              // You can adjust childAspectRatio to match the ratio you want.
+              // The ratio is width / height. So for a 9:5 ratio, it would be 9 / 5.
+              childAspectRatio: 9 / 5,
+            ),
             itemBuilder: (context, index) {
               bool isSelected = selectedPhotoIndex == index;
               return GestureDetector(
@@ -636,10 +641,23 @@ class _Tab2State extends State<Tab2> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: selectedPhotoIndex == index
-                        ? Border.all(color: Colors.blue, width: 3)
+                        ? Border.all(color: Colors.grey, width: 3)
                         : null,
                   ),
-                  child: Image.file(images[index]),
+                  child:Stack (children: <Widget>[
+                    Padding (
+                      padding: EdgeInsets.all(8.0),
+                      child:
+                        Image.file(
+                          images[index],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
+                    ),
+
+                  ],),
+
                 ),
               );
             },
@@ -744,11 +762,154 @@ class _Tab2State extends State<Tab2> {
   }
 }
 
-class Tab3 extends StatelessWidget {
+class Tab3 extends StatefulWidget {
+  @override
+  _Tab3State createState() => _Tab3State();
+}
+
+class ContactInputScreen extends StatefulWidget {
+  @override
+  _ContactInputScreenState createState() => _ContactInputScreenState();
+}
+
+class _ContactInputScreenState extends State<ContactInputScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _positionController = TextEditingController();
+  final TextEditingController _organizationController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  // Add other controllers for phone, memo, organization, position, email
+  String _photoUrl = '';
+
+  void _selectPhoto() async {
+    // Implement photo selection logic
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _photoUrl = pickedFile.path; // Or copy the file and use the new path
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Tab 3 Content'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Enter Contact Information"),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(hintText: "Name"),
+            ),
+
+            TextField(
+              controller: _phoneController,
+              decoration: const InputDecoration(hintText: "Phone"),
+            ),
+
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(hintText: "E-mail"),
+            ),
+
+            TextField(
+              controller: _organizationController,
+              decoration: const InputDecoration(hintText: "Organization"),
+            ),
+
+            TextField(
+              controller: _positionController,
+              decoration: const InputDecoration(hintText: "Position"),
+            ),
+            SizedBox(height: 16),
+            // Add other text fields for phone, memo, etc.
+            ElevatedButton(
+              onPressed: _selectPhoto,
+              child: Text("Select Photo"),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.grey,  // Background color
+                onPrimary: Colors.white,  // Text color
+                elevation: 5,  // Shadow elevation
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),  // Rounded corners
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                String name = _nameController.text;
+                String phone = _phoneController.text;
+                String email = _emailController.text;
+                String organization = _organizationController.text;
+                String position = _positionController.text;
+
+                String contactInfo = 'Name: $name\nPhone: $phone\nEmail: $email\nOrganization: $organization\nPosition: $position\nPhoto URL: $_photoUrl';
+
+                // Get the local path
+                final directory = await getApplicationDocumentsDirectory();
+                final path = directory.path;
+
+                // Create a file to write
+                final file = File('$path/information.txt');
+
+                // Write the information
+                await file.writeAsString(contactInfo);
+
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: Text("Save"),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.grey,  // Background color
+                onPrimary: Colors.white,  // Text color
+                elevation: 5,  // Shadow elevation
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),  // Rounded corners
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Tab3State extends State<Tab3> {
+  String _photoUrl = '';
+
+  void _showInputScreen() async {
+    final photoUrl = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ContactInputScreen()),
+    );
+
+    if (photoUrl != null) {
+      setState(() {
+        _photoUrl = photoUrl;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        // Display your content here
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showInputScreen,
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
