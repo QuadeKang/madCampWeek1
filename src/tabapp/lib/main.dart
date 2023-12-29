@@ -95,6 +95,76 @@ class Contact {
   });
 }
 
+class ContactCard extends StatelessWidget {
+  final Contact contact;
+
+  const ContactCard({Key? key, required this.contact}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CircleAvatar(
+              backgroundImage: NetworkImage(contact.photoUrl),
+              radius: 30.0,
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              contact.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+              ),
+            ),
+            Text(
+              contact.organization,
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14.0,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.phone, size: 16.0),
+                SizedBox(width: 4.0),
+                Text(contact.phoneNumber),
+              ],
+            ),
+            SizedBox(height: 4.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.badge, size: 16.0),
+                SizedBox(width: 4.0),
+                Text(contact.position),
+              ],
+            ),
+            SizedBox(height: 4.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.email, size: 16.0),
+                SizedBox(width: 4.0),
+                Text(contact.email),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class Tab1 extends StatefulWidget {
   @override
   _Tab1State createState() => _Tab1State();
@@ -263,7 +333,7 @@ class _Tab1State extends State<Tab1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Phonebook'), // Tab1 페이지의 타이틀
+        title: Text('PhoneBook'), // Tab1 페이지의 타이틀
       ),
       body: Column(
         children: [
@@ -359,9 +429,21 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
                   Icon(Icons.call),
                   Icon(Icons.local_post_office),
                   Icon(Icons.edit),
-                  Icon(Icons.remove_circle)
+                  Icon(Icons.remove_circle),
+
                 ],
-              )
+              ),
+              ContactCard(
+                contact: Contact(
+                  name: 'Quade Kang',
+                  phoneNumber: '010-5962-1685',
+                  memo: 'Junior Developer',
+                  organization: 'madCamp',
+                  position: 'Junior Developer',
+                  email: 'quade.kang@gmail.com',
+                  photoUrl: 'https://via.placeholder.com/150',
+                ),
+              ),
 
             ],
           ),
