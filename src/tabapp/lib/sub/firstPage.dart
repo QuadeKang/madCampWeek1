@@ -250,9 +250,16 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
             children: [
               Icon(Icons.alternate_email, size: 20),
               SizedBox(width: 8),
-              InkWell(
-                onTap: () => _sendEmailViaGmail(widget.contact.email),
-                child: Text(widget.contact.email),
+              Expanded( // 이메일 텍스트를 Expanded로 감싸 전체 사용 가능한 공간을 채움
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, // 가로 스크롤 활성화
+                  child: Container(
+                    child: InkWell(
+                      onTap: () => _sendEmailViaGmail(widget.contact.email),
+                      child: Text(widget.contact.email, style: TextStyle(color: Colors.blue)),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
