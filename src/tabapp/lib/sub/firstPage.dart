@@ -174,22 +174,29 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           SizedBox(height: 8), // 행 사이 간격
           // 메모 행
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트가 여러 줄일 경우를 고려하여 정렬 변경
             children: [
               Icon(Icons.edit_note, size: 20),
               SizedBox(width: 8),
-              widget.contact.memo != null
-                ? Text(widget.contact.memo!) : Container(
-                width: 200,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.circular(5)
-
+              Expanded( // Text 위젯을 Expanded로 감싸서 가용 공간을 모두 사용하도록 함
+                child: widget.contact.memo != null
+                    ? Text(
+                  widget.contact.memo!,
+                  maxLines: null, // 제한 없이 모든 텍스트 표시
+                  overflow: TextOverflow.visible, // 텍스트가 길 경우 자동으로 줄 바꿈
+                )
+                    : Container(
+                  width: 200,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
                 ),
               )
-
             ],
           ),
+
           SizedBox(height: 8), // 행 사이 간격
           // 기타 아이콘 버튼들
           Row(
@@ -278,7 +285,7 @@ class Tab1State extends State {
       position: 'Agronomist',
       email: 'franklin.green@agrofarms.com',
       photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
-      memo: 'Consultant for organic farming practices',
+      memo: 'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
     ),
     Contact(
       name: 'Gloria Young',
