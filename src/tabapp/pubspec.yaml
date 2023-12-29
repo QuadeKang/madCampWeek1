@@ -93,17 +93,11 @@ flutter:
   #         weight: 700
 
   fonts:
-    - family: PretendardBold
+    - family: Pretendard
       fonts:
         - asset: assets/fonts/Pretendard-Bold.ttf
-    - family: PretendardSemiBold
-      fonts:
         - asset: assets/fonts/Pretendard-SemiBold.ttf
-    - family: PretendardRegular
-      fonts:
         - asset: assets/fonts/Pretendard-Regular.ttf
-    - family: PretendardLight
-      fonts:
         - asset: assets/fonts/Pretendard-Light.ttf
   #
   # For details regarding fonts from package dependencies,

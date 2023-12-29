@@ -101,7 +101,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: ExpansionTile(
-        title: Text(widget.contact.name),
+        title: Text(widget.contact.name, style: TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Text(widget.contact.organization),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(widget.contact.photoUrl),
@@ -396,7 +396,7 @@ class Tab1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('전화번호부'), // Tab1 페이지의 타이틀
+        title: Text('전화번호부',style: TextStyle(fontWeight: FontWeight.bold),), // Tab1 페이지의 타이틀
         actions: <Widget>[
           Icon(Icons.add),
         ],

@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: MyTabbedApp(),
       theme: ThemeData(
-        fontFamily: 'PretendardRegular',
+        fontFamily: 'Pretendard',
       ),
     );
   }
