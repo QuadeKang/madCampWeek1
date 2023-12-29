@@ -136,10 +136,30 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           // Put more detailed information here
-          Text(widget.contact.phoneNumber),
-          Text(widget.contact.position),
-          Text(widget.contact.email),
-          Text(widget.contact.memo),
+          Row(
+            children: [
+              Icon(Icons.phone),
+              Text(widget.contact.phoneNumber),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.person),
+              Text(widget.contact.position),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.alternate_email),
+              Text(widget.contact.email),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.edit_note),
+              Text(widget.contact.memo),
+            ],
+          ),
           Row(
             children: [
               Icon(Icons.call),
