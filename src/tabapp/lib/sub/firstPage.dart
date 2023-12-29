@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:tabapp/database.dart';
+import 'dart:io';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Contact {
+  int? id;
   final String name;
   final String phoneNumber;
-  final String memo;
+  String? memo;
   final String organization; // 소속 정보
   final String position; // 직급 정보
   final String email; // 이메일 정보
   final String photoUrl; // 사진 URL
 
   Contact({
+    this.id,
     required this.name,
     required this.phoneNumber,
-    required this.memo,
     required this.organization,
     required this.position,
     required this.email,
     required this.photoUrl,
+    this.memo,
   });
 }
 
@@ -89,6 +95,51 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
   }
 
+  void _sendEmail(String email) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      throw 'Could not launch $emailLaunchUri';
+    }
+  }
+
+  void _sendEmailViaGmail(String email) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {
+        'subject': 'Example Subject', // 이메일 제목을 여기에 추가
+        'body': 'Example Body', // 이메일 본문을 여기에 추가
+      },
+    );
+
+    // Android에서 Gmail 앱을 직접 열려고 시도
+    if (Platform.isAndroid) {
+      final Uri gmailUri = Uri(
+        scheme: 'intent',
+        path: '#Intent',
+        query: 'action=android.intent.action.SENDTO&data=${emailLaunchUri.toString()}&package=com.google.android.gm',
+        fragment: 'Intent;end',
+      );
+      if (await canLaunchUrl(gmailUri)) {
+        await launchUrl(gmailUri);
+      } else {
+        throw 'Could not launch $gmailUri';
+      }
+    } else {
+      // iOS 또는 다른 플랫폼에서는 기본 이메일 앱을 사용
+      if (await canLaunchUrl(emailLaunchUri)) {
+        await launchUrl(emailLaunchUri);
+      } else {
+        throw 'Could not launch $emailLaunchUri';
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +149,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: ExpansionTile(
-        title: Text(widget.contact.name),
+        title: Text(widget.contact.name, style: TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Text(widget.contact.organization),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(widget.contact.photoUrl),
@@ -165,18 +216,38 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
             children: [
               Icon(Icons.alternate_email, size: 20),
               SizedBox(width: 8),
-              Text(widget.contact.email),
+              InkWell(
+                onTap: () => _sendEmailViaGmail(widget.contact.email),
+                child: Text(widget.contact.email),
+              ),
             ],
           ),
           SizedBox(height: 8), // 행 사이 간격
           // 메모 행
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트가 여러 줄일 경우를 고려하여 정렬 변경
             children: [
               Icon(Icons.edit_note, size: 20),
               SizedBox(width: 8),
-              Text(widget.contact.memo),
+              Expanded( // Text 위젯을 Expanded로 감싸서 가용 공간을 모두 사용하도록 함
+                child: widget.contact.memo != null
+                    ? Text(
+                  widget.contact.memo!,
+                  maxLines: null, // 제한 없이 모든 텍스트 표시
+                  overflow: TextOverflow.visible, // 텍스트가 길 경우 자동으로 줄 바꿈
+                )
+                    : Container(
+                  width: 200,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              )
             ],
           ),
+
           SizedBox(height: 8), // 행 사이 간격
           // 기타 아이콘 버튼들
           Row(
@@ -221,7 +292,6 @@ class Tab1State extends State {
       position: 'CEO',
       email: 'alice.smith@orbitinc.com',
       photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=1',
-      memo: 'Met at tech conference',
     ),
     Contact(
       name: 'Bob Johnson',
@@ -266,7 +336,7 @@ class Tab1State extends State {
       position: 'Agronomist',
       email: 'franklin.green@agrofarms.com',
       photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
-      memo: 'Consultant for organic farming practices',
+      memo: 'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
     ),
     Contact(
       name: 'Gloria Young',
@@ -362,13 +432,19 @@ class Tab1State extends State {
 
   void searchContacts(String query) {
     setState(() {
-      searchQuery = query;
-      filteredContacts = allContacts
-          .where((contact) =>
-              contact.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      searchQuery = query.toLowerCase(); // 검색어를 소문자로 변환하여 저장
+      filteredContacts = allContacts.where((contact) {
+        // 모든 필드를 소문자로 변환하고 검색어가 포함되어 있는지 확인
+        return contact.name.toLowerCase().contains(searchQuery) ||
+            contact.phoneNumber.toLowerCase().contains(searchQuery) ||
+            contact.organization.toLowerCase().contains(searchQuery) ||
+            contact.position.toLowerCase().contains(searchQuery) ||
+            contact.email.toLowerCase().contains(searchQuery) ||
+            (contact.memo != null && contact.memo!.toLowerCase().contains(searchQuery));
+      }).toList();
     });
   }
+
 
 
   void deleteContact(Contact contact) {
@@ -384,9 +460,17 @@ class Tab1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('전화번호부'), // Tab1 페이지의 타이틀
+        title: Text('전화번호부', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
-          Icon(Icons.add),
+          Padding(
+            padding: EdgeInsets.only(right: 16.0), // 오른쪽에 간격 추가
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                // 아이콘 버튼 기능 추가
+              },
+            ),
+          ),
         ],
       ),
       body: Column(
@@ -413,9 +497,12 @@ class Tab1State extends State {
                     ? allContacts[index]
                     : filteredContacts[index];
 
-                return ExpandableContactCard(
-                  contact: contact,
-                  onDelete: deleteContact,
+                return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0), // 양쪽에 간격 추가
+                child: ExpandableContactCard(
+                contact: contact,
+                onDelete: deleteContact,
+                ),
 
                 );
               },
