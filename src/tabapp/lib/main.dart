@@ -146,7 +146,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               Icon(Icons.local_post_office),
               Icon(Icons.edit),
               Icon(Icons.remove_circle),
-
             ],
           ),
         ],
@@ -340,6 +339,9 @@ class _Tab1State extends State<Tab1> {
     return Scaffold(
       appBar: AppBar(
         title: Text('PhoneBook'), // Tab1 페이지의 타이틀
+        actions: <Widget>[
+          Icon(Icons.add),
+        ],
       ),
       body: Column(
         children: [
