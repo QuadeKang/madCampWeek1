@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:tabapp/findpath.dart';
 
@@ -25,8 +24,14 @@ class Tab2State extends State {
     final directory = Directory(directoryPath);
     List<FileSystemEntity> entries = await directory.list().toList();
 
+    List<FileSystemEntity> filteredEntries = entries.where((file) {
+      return file.path != '$findPath/profile.jpg';
+    }).toList();
+
+
+
     // Filter out only image files
-    List<File> imageFiles = entries.whereType<File>().where((file) {
+    List<File> imageFiles = filteredEntries.whereType<File>().where((file) {
       String extension = path.extension(file.path).toLowerCase();
       return ['.jpg', '.jpeg', '.png', '.gif', '.bmp'].contains(extension);
     }).toList();
@@ -77,7 +82,7 @@ class Tab2State extends State {
         final File localImage = await File(photo.path).copy('$localPath/$fileName');
 
         setState(() {
-          images.add(localImage);
+            images.add(localImage);
         });
       }
     }
