@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as path;
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:image_cropper/image_cropper.dart';
-
-
+import 'package:url_launcher/url_launcher.dart';
 
 class Contact {
   final String name;
@@ -26,10 +20,12 @@ class Contact {
     required this.photoUrl,
   });
 }
+
 class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
 
-  const ExpandableContactCard({Key? key, required this.contact}) : super(key: key);
+  const ExpandableContactCard({Key? key, required this.contact})
+      : super(key: key);
 
   @override
   _ExpandableContactCardState createState() => _ExpandableContactCardState();
@@ -37,6 +33,30 @@ class ExpandableContactCard extends StatefulWidget {
 
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
+
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    } else {
+      throw 'Could not launch $launchUri';
+    }
+  }
+
+  void _sendSMS(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'sms',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    } else {
+      throw 'Could not launch $launchUri';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +117,16 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           ),
           Row(
             children: [
-              Icon(Icons.call),
-              Icon(Icons.local_post_office),
-              Icon(Icons.edit),
-              Icon(Icons.delete_forever_rounded),
+              IconButton(
+                  onPressed: () => _makePhoneCall(widget.contact.phoneNumber),
+                  icon: Icon(Icons.call)),
+              IconButton(
+                onPressed: () => _sendSMS(widget.contact.phoneNumber),
+                icon: Icon(Icons.local_post_office),
+              ),
+              IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+              IconButton(
+                  onPressed: () {}, icon: Icon(Icons.delete_forever_rounded)),
             ],
           ),
         ],
@@ -116,7 +142,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           // Put less detailed information here
-          Text(widget.contact.position),
           // Add more widgets as needed
         ],
       ),
@@ -263,7 +288,6 @@ class Tab1State extends State {
     ),
   ];
 
-
   List<Contact> filteredContacts = [];
   String searchQuery = '';
 
@@ -278,7 +302,7 @@ class Tab1State extends State {
       searchQuery = query;
       filteredContacts = allContacts
           .where((contact) =>
-          contact.name.toLowerCase().contains(query.toLowerCase()))
+              contact.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -287,7 +311,7 @@ class Tab1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PhoneBook'), // Tab1 페이지의 타이틀
+        title: Text('전화번호부'), // Tab1 페이지의 타이틀
         actions: <Widget>[
           Icon(Icons.add),
         ],
@@ -308,9 +332,13 @@ class Tab1State extends State {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: searchQuery.isEmpty ? allContacts.length : filteredContacts.length,
+              itemCount: searchQuery.isEmpty
+                  ? allContacts.length
+                  : filteredContacts.length,
               itemBuilder: (context, index) {
-                final contact = searchQuery.isEmpty ? allContacts[index] : filteredContacts[index];
+                final contact = searchQuery.isEmpty
+                    ? allContacts[index]
+                    : filteredContacts[index];
 
                 return ExpandableContactCard(
                   contact: contact,
