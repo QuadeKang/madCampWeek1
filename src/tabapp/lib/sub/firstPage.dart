@@ -381,13 +381,19 @@ class Tab1State extends State {
 
   void searchContacts(String query) {
     setState(() {
-      searchQuery = query;
-      filteredContacts = allContacts
-          .where((contact) =>
-              contact.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      searchQuery = query.toLowerCase(); // 검색어를 소문자로 변환하여 저장
+      filteredContacts = allContacts.where((contact) {
+        // 모든 필드를 소문자로 변환하고 검색어가 포함되어 있는지 확인
+        return contact.name.toLowerCase().contains(searchQuery) ||
+            contact.phoneNumber.toLowerCase().contains(searchQuery) ||
+            contact.organization.toLowerCase().contains(searchQuery) ||
+            contact.position.toLowerCase().contains(searchQuery) ||
+            contact.email.toLowerCase().contains(searchQuery) ||
+            (contact.memo != null && contact.memo!.toLowerCase().contains(searchQuery));
+      }).toList();
     });
   }
+
 
 
   void deleteContact(Contact contact) {
