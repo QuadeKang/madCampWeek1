@@ -187,6 +187,40 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
 
   Widget _buildExpandedCard() {
     const double horizontalPadding = 40.0 + 16.0; // 아바타 크기 + 간격
+    void _showMemoInputDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          String memoInput = '';
+          return AlertDialog(
+            title: Text('메모 입력'),
+            content: TextField(
+              onChanged: (value) {
+                memoInput = value;
+              },
+              decoration: InputDecoration(hintText: "메모를 입력하세요"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    widget.contact.memo = memoInput;
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text('저장'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('취소'),
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, top: 8.0, bottom: 8.0),
@@ -232,18 +266,31 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               Expanded( // Text 위젯을 Expanded로 감싸서 가용 공간을 모두 사용하도록 함
                 child: widget.contact.memo != null
                     ? Text(
-                  widget.contact.memo!,
-                  maxLines: null, // 제한 없이 모든 텍스트 표시
-                  overflow: TextOverflow.visible, // 텍스트가 길 경우 자동으로 줄 바꿈
-                )
-                    : Container(
-                  width: 200,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.black12,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
+                        widget.contact.memo!,
+                        maxLines: null,
+                        overflow: TextOverflow.visible,
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          // 메모 입력 로직
+                          _showMemoInputDialog();
+                        },
+                        child: Container(
+                          width: 200,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 8.0), // 왼쪽에 8.0만큼의 패딩 추가
+                              child: Text('메모 추가', style: TextStyle(color: Colors.black54)),
+                            ),
+                          ),
+                        ),
+                      ),
               )
             ],
           ),
