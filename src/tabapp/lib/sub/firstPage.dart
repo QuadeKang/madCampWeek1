@@ -51,7 +51,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('삭제 확인'),
+          title: Text('연락처 삭제'),
           content: Text('삭제하시겠습니까?'),
           actions: <Widget>[
             TextButton(
