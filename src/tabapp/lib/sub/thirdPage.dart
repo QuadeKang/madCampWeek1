@@ -173,6 +173,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   String _photoUrl = '';
+  String _randKey = '';
 
   @override
   void initState() {
@@ -190,6 +191,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
       setState(() {
         _photoUrl = newPath;
+        _randKey = math.Random().nextInt(100) as String;
       });
     } catch (e) {
       print("Error initializing photo path: $e");
@@ -212,6 +214,11 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
   }
 
+  Future<void> clearImageCache(String imagePath) async {
+    final imageProvider = FileImage(File(imagePath));
+    await imageProvider.evict();
+  }
+
 
   Future<void> _selectPhoto() async {
     final picker = ImagePicker();
@@ -232,15 +239,11 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
         File newFile = await tempFile.copy(newPath);
 
-        // Check if the file now exists
-        if (await newFile.exists()) {
-          setState(() {
-            _photoUrl = newPath;
-            debugPrint("Image successfully saved to $newPath");
-          });
-        } else {
-          debugPrint("Failed to save image at $newPath");
-        }
+        setState(() {
+          _photoUrl = newPath;
+          clearImageCache(newPath);
+        });
+
       } catch (e) {
         debugPrint("Error: $e");
       }
@@ -291,16 +294,21 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Image.file(
-                File(_photoUrl),
+                File(_photoUrl.split('?')[0]), // Split to get the actual file path without the query parameter
+                key: ValueKey(_randKey), // Using ValueKey to ensure the widget rebuilds when the key changes
                 errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                  return const Icon(Icons.error); // Placeholder widget
+                  return Image.file(File(_photoUrl)); // Placeholder widget for errors
                 },
               ),
             ),
 
             // Add other text fields for phone, memo, etc.
             ElevatedButton(
-              onPressed: _selectPhoto,
+              onPressed: () {
+                _selectPhoto().then((_) async {
+                  await clearImageCache(_photoUrl);
+                });
+              },
               child: Text("Select Photo"),
               style: ElevatedButton.styleFrom(
                 primary: Colors.grey,  // Background color
