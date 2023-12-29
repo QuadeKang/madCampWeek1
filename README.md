@@ -8,3 +8,5 @@ dependencies
 - image_cropper (5.0.1)
 - url_launcher: (6.2.2)
 - sqflite: (2.3.0)
+- contacts_service: (0.6.3)
+- permission_handler: (11.1.0)
