@@ -124,13 +124,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
   }
 }
 
-
-class Tab1 extends StatefulWidget {
-  @override
-  Tab1State createState() => Tab1State();
-}
-
-class Tab1State extends State<Tab1> {
+class Tab1State extends State {
   final List<Contact> allContacts = [
     Contact(
       name: 'Alice Smith',

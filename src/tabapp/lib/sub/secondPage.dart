@@ -6,12 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:tabapp/findpath.dart';
 
-class Tab2 extends StatefulWidget {
-  @override
-  Tab2State createState() => Tab2State();
-}
 
-class Tab2State extends State<Tab2> {
+class Tab2State extends State {
   List<File> images = [];
   bool showButtons = false; // State to control button visibility
   late int selectedImageIndex; // To keep track of the selected image

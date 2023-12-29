@@ -6,11 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 
-class Tab3 extends StatefulWidget {
-  @override
-  Tab3State createState() => Tab3State();
-}
-
 class ContactInputScreen extends StatefulWidget {
   @override
   _ContactInputScreenState createState() => _ContactInputScreenState();
@@ -129,7 +124,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 }
 
 
-class Tab3State extends State<Tab3> {
+class Tab3State extends State {
   String _photoUrl = '';
 
   void _showInputScreen() async {
