@@ -572,6 +572,20 @@ class _Tab2State extends State<Tab2> {
     return null;
   }
 
+  Future<bool> _overwriteOriginalFile(File originalFile, File croppedFile) async {
+    try {
+      // Check if the cropped file exists
+      if (await croppedFile.exists()) {
+        // Copy the cropped file to the original file path
+        await croppedFile.copy(originalFile.path);
+        return true;
+      }
+    } catch (e) {
+      print("Error in overwriting file: $e");
+    }
+    return false;
+  }
+
 
   void _sortImages() {
     images.sort((a, b) {
@@ -697,10 +711,17 @@ class _Tab2State extends State<Tab2> {
                       // Call the cropImage function and pass the selected image
                       final File? croppedImage = await _cropImage(images[selectedPhotoIndex!]);
                       if (croppedImage != null) {
-                        setState(() {
-                          // Update the image list with the cropped image
-                          images[selectedPhotoIndex!] = croppedImage;
-                        });
+                        bool success = await _overwriteOriginalFile(images[selectedPhotoIndex!], croppedImage);
+                        if (success) {
+                          print("Image successfully overwritten.");
+                          setState(() {
+                            // Update the image list with the cropped image
+                            images[selectedPhotoIndex!] = croppedImage;
+                          });
+                        } else {
+                          print("Failed to overwrite image.");
+                        }
+
                       }
                     }
                   } catch (e) {
