@@ -396,9 +396,17 @@ class Tab1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('전화번호부',style: TextStyle(fontWeight: FontWeight.bold),), // Tab1 페이지의 타이틀
+        title: Text('전화번호부', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
-          Icon(Icons.add),
+          Padding(
+            padding: EdgeInsets.only(right: 16.0), // 오른쪽에 간격 추가
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                // 아이콘 버튼 기능 추가
+              },
+            ),
+          ),
         ],
       ),
       body: Column(
@@ -425,9 +433,12 @@ class Tab1State extends State {
                     ? allContacts[index]
                     : filteredContacts[index];
 
-                return ExpandableContactCard(
-                  contact: contact,
-                  onDelete: deleteContact,
+                return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0), // 양쪽에 간격 추가
+                child: ExpandableContactCard(
+                contact: contact,
+                onDelete: deleteContact,
+                ),
 
                 );
               },
