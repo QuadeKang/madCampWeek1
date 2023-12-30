@@ -13,7 +13,7 @@ class Contact {
   String organization;
   String position;
   String email;
-  String? photoUrl; // Optional field
+  String? photoPath; // Optional field
   String? memo; // Optional field
 
   Contact({
@@ -22,7 +22,7 @@ class Contact {
     required this.organization,
     required this.position,
     required this.email,
-    this.photoUrl,
+    this.photoPath,
     this.memo,
   });
 
@@ -33,7 +33,7 @@ class Contact {
       organization: jsonData['organization'],
       position: jsonData['position'],
       email: jsonData['email'],
-      photoUrl: jsonData['photoUrl'] as String?, // Handle optional field
+      photoPath: jsonData['photoPath'] as String?, // Handle optional field
       memo: jsonData['memo'] as String?, // Handle optional field
     );
   }
@@ -45,7 +45,7 @@ class Contact {
       'organization': organization,
       'position': position,
       'email': email,
-      'photoUrl': photoUrl, // Optional field
+      'photoPath': photoPath, // Optional field
       'memo': memo, // Optional field
     };
   }
@@ -71,14 +71,14 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
 
   void _updateContact(String name, String phoneNumber, String organization,
-      String position, String email, String? photoUrl, String? memo) {
+      String position, String email, String? photoPath, String? memo) {
     Contact updatedContact = Contact(
       name: name,
       phoneNumber: phoneNumber,
       organization: organization,
       position: position,
       email: email,
-      photoUrl: photoUrl,
+      photoPath: photoPath,
       memo: memo,
     );
 
@@ -135,7 +135,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   _organizationController.text,
                   _positionController.text,
                   _emailController.text,
-                  widget.contact.photoUrl, // 사진 URL은 변경하지 않음
+                  widget.contact.photoPath, // 사진 URL은 변경하지 않음
                   _memoController.text.isEmpty ? null : _memoController.text,
                 );
               },
@@ -261,13 +261,13 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         ),
         subtitle: Text(widget.contact.organization),
         leading: CircleAvatar(
-          backgroundImage: widget.contact.photoUrl != null
-              ? NetworkImage(widget.contact.photoUrl!)
+          backgroundImage: widget.contact.photoPath != null
+              ? FileImage(File(widget.contact.photoPath!)) // 로컬 파일 이미지 사용
               : null,
-          child: widget.contact.photoUrl == null
+          child: widget.contact.photoPath == null
               ? Icon(Icons.person, color: Colors.white)
               : null,
-          backgroundColor: Colors.grey, // photoUrl이 null일 때의 배경색 설정
+          backgroundColor: Colors.grey, // photoPath가 null일 때의 배경색 설정
         ),
         trailing: isExpanded ? null : _buildTrailingIcons(),
         children: <Widget>[
@@ -325,7 +325,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     widget.contact.organization,
                     widget.contact.position,
                     widget.contact.email,
-                    widget.contact.photoUrl,
+                    widget.contact.photoPath,
                     _memoController.text.isEmpty ? null : _memoController.text,
                   );
                 },
@@ -530,7 +530,6 @@ class Tab1State extends State {
         organization: 'Pixel Media',
         position: 'Art Director',
         email: 'bob.johnson@pixelmedia.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=2',
         memo: 'Contact for marketing materials',
       ),
       Contact(
@@ -539,7 +538,6 @@ class Tab1State extends State {
         organization: 'Green Tech Solutions',
         position: 'Environmental Consultant',
         email: 'carolyn.white@greentech.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=3',
         memo: 'Expert in renewable energy',
       ),
       Contact(
@@ -548,7 +546,6 @@ class Tab1State extends State {
         organization: 'Quick Finances',
         position: 'Accountant',
         email: 'david.harris@quickfinances.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=4',
         memo: 'Advised on tax matters',
       ),
       Contact(
@@ -557,7 +554,6 @@ class Tab1State extends State {
         organization: 'BuildBright',
         position: 'Architect',
         email: 'evelyn.martinez@buildbright.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=5',
         memo: 'Architect for the new office design',
       ),
       Contact(
@@ -566,7 +562,6 @@ class Tab1State extends State {
         organization: 'AgroFarms',
         position: 'Agronomist',
         email: 'franklin.green@agrofarms.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
         memo:
             'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
       ),
@@ -576,7 +571,6 @@ class Tab1State extends State {
         organization: 'TechWave',
         position: 'Software Engineer',
         email: 'gloria.young@techwave.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=7',
         memo: 'Lead of the app development team',
       ),
       Contact(
@@ -585,7 +579,6 @@ class Tab1State extends State {
         organization: 'MediCare Hospital',
         position: 'Cardiologist',
         email: 'henry.foster@medicare.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=8',
         memo: 'Specialist for heart-related issues',
       ),
       Contact(
@@ -594,7 +587,6 @@ class Tab1State extends State {
         organization: 'Global Exports',
         position: 'Logistics Manager',
         email: 'isabel.reid@globalexports.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=9',
         memo: 'Oversees shipping and receiving',
       ),
       Contact(
@@ -603,7 +595,6 @@ class Tab1State extends State {
         organization: 'BrightHouse Security',
         position: 'Security Consultant',
         email: 'jack.taylor@brighthouse.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=10',
         memo: 'Advisor for home security system',
       ),
       Contact(
@@ -612,7 +603,6 @@ class Tab1State extends State {
         organization: 'EdTech Innovations',
         position: 'Educational Researcher',
         email: 'kathy.brown@edtechinnovations.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=11',
         memo: 'Working on a collaborative project',
       ),
       Contact(
@@ -621,7 +611,6 @@ class Tab1State extends State {
         organization: 'Healthy Living Markets',
         position: 'Nutritionist',
         email: 'luis.gonzalez@healthyliving.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=12',
         memo: 'Consultant for dietary planning',
       ),
       Contact(
@@ -630,7 +619,6 @@ class Tab1State extends State {
         organization: 'City Engineering Dept.',
         position: 'Civil Engineer',
         email: 'megan.lopez@cityeng.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=13',
         memo: 'Contact for public works projects',
       ),
       Contact(
@@ -639,7 +627,6 @@ class Tab1State extends State {
         organization: 'Wright Legal Advisors',
         position: 'Attorney',
         email: 'nathan.wright@wrightlegal.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=14',
         memo: 'Legal advisor for company contracts',
       ),
       Contact(
@@ -648,7 +635,6 @@ class Tab1State extends State {
         organization: 'EventStars',
         position: 'Event Coordinator',
         email: 'olivia.king@eventstars.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=15',
         memo: 'Organizes corporate events',
       ),
     ];
@@ -729,7 +715,7 @@ class Tab1State extends State {
                     decoration: InputDecoration(labelText: '전화번호')),
                 TextField(
                     controller: _organizationController,
-                    decoration: InputDecoration(labelText: '조직')),
+                    decoration: InputDecoration(labelText: '소속')),
                 TextField(
                     controller: _positionController,
                     decoration: InputDecoration(labelText: '직급')),
