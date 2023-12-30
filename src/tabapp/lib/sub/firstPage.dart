@@ -54,13 +54,13 @@ class Contact {
 class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
   final Function(Contact) onDelete;
-  final Function(Contact, Contact) onUpdate;  // 추가: 연락처 업데이트 콜백
+  final Function(Contact, Contact) onUpdate; // 추가: 연락처 업데이트 콜백
 
   const ExpandableContactCard({
     Key? key,
     required this.contact,
     required this.onDelete,
-    required this.onUpdate,  // 추가
+    required this.onUpdate, // 추가
   }) : super(key: key);
 
   @override
@@ -70,14 +70,8 @@ class ExpandableContactCard extends StatefulWidget {
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
 
-  void _updateContact(
-      String name,
-      String phoneNumber,
-      String organization,
-      String position,
-      String email,
-      String? photoUrl,
-      String? memo) {
+  void _updateContact(String name, String phoneNumber, String organization,
+      String position, String email, String? photoUrl, String? memo) {
     Contact updatedContact = Contact(
       name: name,
       phoneNumber: phoneNumber,
@@ -91,12 +85,14 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     widget.onUpdate(widget.contact, updatedContact);
   }
 
-
   void _showEditContactDialog() async {
     final _nameController = TextEditingController(text: widget.contact.name);
-    final _phoneNumberController = TextEditingController(text: widget.contact.phoneNumber);
-    final _organizationController = TextEditingController(text: widget.contact.organization);
-    final _positionController = TextEditingController(text: widget.contact.position);
+    final _phoneNumberController =
+        TextEditingController(text: widget.contact.phoneNumber);
+    final _organizationController =
+        TextEditingController(text: widget.contact.organization);
+    final _positionController =
+        TextEditingController(text: widget.contact.position);
     final _emailController = TextEditingController(text: widget.contact.email);
     final _memoController = TextEditingController(text: widget.contact.memo);
 
@@ -108,12 +104,24 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextField(controller: _nameController, decoration: InputDecoration(labelText: '이름')),
-                TextField(controller: _phoneNumberController, decoration: InputDecoration(labelText: '전화번호')),
-                TextField(controller: _organizationController, decoration: InputDecoration(labelText: '조직')),
-                TextField(controller: _positionController, decoration: InputDecoration(labelText: '직급')),
-                TextField(controller: _emailController, decoration: InputDecoration(labelText: '이메일')),
-                TextField(controller: _memoController, decoration: InputDecoration(labelText: '메모')),
+                TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(labelText: '이름')),
+                TextField(
+                    controller: _phoneNumberController,
+                    decoration: InputDecoration(labelText: '전화번호')),
+                TextField(
+                    controller: _organizationController,
+                    decoration: InputDecoration(labelText: '조직')),
+                TextField(
+                    controller: _positionController,
+                    decoration: InputDecoration(labelText: '직급')),
+                TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: '이메일')),
+                TextField(
+                    controller: _memoController,
+                    decoration: InputDecoration(labelText: '메모')),
               ],
             ),
           ),
@@ -142,7 +150,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
       },
     );
   }
-
 
   void _confirmDeletion() async {
     final bool? confirm = await showDialog(
@@ -454,7 +461,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                 icon: Icon(Icons.edit),
                 onPressed: _showEditContactDialog,
               ),
-
               IconButton(
                 onPressed: _confirmDeletion,
                 icon: Icon(Icons.delete_forever_rounded),
@@ -482,164 +488,178 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
 }
 
 class Tab1State extends State {
-  final List<Contact> allContacts = [
-    Contact(
-      name: 'Alice Smith',
-      phoneNumber: '555-0100',
-      organization: 'Orbit Inc.',
-      position: 'CEO',
-      email: 'alice.smith@orbitinc.com',
-    ),
-    Contact(
-      name: 'Bob Johnson',
-      phoneNumber: '555-0101',
-      organization: 'Pixel Media',
-      position: 'Art Director',
-      email: 'bob.johnson@pixelmedia.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=2',
-      memo: 'Contact for marketing materials',
-    ),
-    Contact(
-      name: 'Carolyn White',
-      phoneNumber: '555-0102',
-      organization: 'Green Tech Solutions',
-      position: 'Environmental Consultant',
-      email: 'carolyn.white@greentech.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=3',
-      memo: 'Expert in renewable energy',
-    ),
-    Contact(
-      name: 'David Harris',
-      phoneNumber: '555-0103',
-      organization: 'Quick Finances',
-      position: 'Accountant',
-      email: 'david.harris@quickfinances.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=4',
-      memo: 'Advised on tax matters',
-    ),
-    Contact(
-      name: 'Evelyn Martinez',
-      phoneNumber: '555-0104',
-      organization: 'BuildBright',
-      position: 'Architect',
-      email: 'evelyn.martinez@buildbright.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=5',
-      memo: 'Architect for the new office design',
-    ),
-    Contact(
-      name: 'Franklin Green',
-      phoneNumber: '555-0105',
-      organization: 'AgroFarms',
-      position: 'Agronomist',
-      email: 'franklin.green@agrofarms.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
-      memo:
-          'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
-    ),
-    Contact(
-      name: 'Gloria Young',
-      phoneNumber: '555-0106',
-      organization: 'TechWave',
-      position: 'Software Engineer',
-      email: 'gloria.young@techwave.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=7',
-      memo: 'Lead of the app development team',
-    ),
-    Contact(
-      name: 'Henry Foster',
-      phoneNumber: '555-0107',
-      organization: 'MediCare Hospital',
-      position: 'Cardiologist',
-      email: 'henry.foster@medicare.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=8',
-      memo: 'Specialist for heart-related issues',
-    ),
-    Contact(
-      name: 'Isabel Reid',
-      phoneNumber: '555-0108',
-      organization: 'Global Exports',
-      position: 'Logistics Manager',
-      email: 'isabel.reid@globalexports.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=9',
-      memo: 'Oversees shipping and receiving',
-    ),
-    Contact(
-      name: 'Jack Taylor',
-      phoneNumber: '555-0109',
-      organization: 'BrightHouse Security',
-      position: 'Security Consultant',
-      email: 'jack.taylor@brighthouse.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=10',
-      memo: 'Advisor for home security system',
-    ),
-    Contact(
-      name: 'Kathy Brown',
-      phoneNumber: '555-0110',
-      organization: 'EdTech Innovations',
-      position: 'Educational Researcher',
-      email: 'kathy.brown@edtechinnovations.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=11',
-      memo: 'Working on a collaborative project',
-    ),
-    Contact(
-      name: 'Luis Gonzalez',
-      phoneNumber: '555-0111',
-      organization: 'Healthy Living Markets',
-      position: 'Nutritionist',
-      email: 'luis.gonzalez@healthyliving.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=12',
-      memo: 'Consultant for dietary planning',
-    ),
-    Contact(
-      name: 'Megan Lopez',
-      phoneNumber: '555-0112',
-      organization: 'City Engineering Dept.',
-      position: 'Civil Engineer',
-      email: 'megan.lopez@cityeng.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=13',
-      memo: 'Contact for public works projects',
-    ),
-    Contact(
-      name: 'Nathan Wright',
-      phoneNumber: '555-0113',
-      organization: 'Wright Legal Advisors',
-      position: 'Attorney',
-      email: 'nathan.wright@wrightlegal.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=14',
-      memo: 'Legal advisor for company contracts',
-    ),
-    Contact(
-      name: 'Olivia King',
-      phoneNumber: '555-0114',
-      organization: 'EventStars',
-      position: 'Event Coordinator',
-      email: 'olivia.king@eventstars.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=15',
-      memo: 'Organizes corporate events',
-    ),
-  ];
-
+  final List<Contact> allContacts = [];
   List<Contact> filteredContacts = [];
   String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    filteredContacts = allContacts;
+    _loadContacts();
   }
 
-  void updateContact(Contact oldContact, Contact newContact) {
-    setState(() {
-      int index = allContacts.indexOf(oldContact);
-      if (index != -1) {
-        allContacts[index] = newContact;
-        // 필요에 따라 filteredContacts 리스트도 업데이트
+  Future<void> _loadContacts() async {
+    try {
+      List<Contact> loadedContacts = await ContactManager.loadContacts();
+      if (loadedContacts.isEmpty) {
+        _addDefaultContacts(); // 기본 연락처 추가
+      } else {
+        setState(() {
+          allContacts.clear();
+          allContacts.addAll(loadedContacts);
+          _searchContacts(searchQuery);
+        });
       }
+    } catch (e) {
+      print("Error loading contacts: $e");
+    }
+  }
+
+  void _addDefaultContacts() {
+    List<Contact> defaultContacts = [
+      Contact(
+        name: 'Alice Smith',
+        phoneNumber: '555-0100',
+        organization: 'Orbit Inc.',
+        position: 'CEO',
+        email: 'alice.smith@orbitinc.com',
+      ),
+      Contact(
+        name: 'Bob Johnson',
+        phoneNumber: '555-0101',
+        organization: 'Pixel Media',
+        position: 'Art Director',
+        email: 'bob.johnson@pixelmedia.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=2',
+        memo: 'Contact for marketing materials',
+      ),
+      Contact(
+        name: 'Carolyn White',
+        phoneNumber: '555-0102',
+        organization: 'Green Tech Solutions',
+        position: 'Environmental Consultant',
+        email: 'carolyn.white@greentech.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=3',
+        memo: 'Expert in renewable energy',
+      ),
+      Contact(
+        name: 'David Harris',
+        phoneNumber: '555-0103',
+        organization: 'Quick Finances',
+        position: 'Accountant',
+        email: 'david.harris@quickfinances.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=4',
+        memo: 'Advised on tax matters',
+      ),
+      Contact(
+        name: 'Evelyn Martinez',
+        phoneNumber: '555-0104',
+        organization: 'BuildBright',
+        position: 'Architect',
+        email: 'evelyn.martinez@buildbright.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=5',
+        memo: 'Architect for the new office design',
+      ),
+      Contact(
+        name: 'Franklin Green',
+        phoneNumber: '555-0105',
+        organization: 'AgroFarms',
+        position: 'Agronomist',
+        email: 'franklin.green@agrofarms.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
+        memo:
+            'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
+      ),
+      Contact(
+        name: 'Gloria Young',
+        phoneNumber: '555-0106',
+        organization: 'TechWave',
+        position: 'Software Engineer',
+        email: 'gloria.young@techwave.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=7',
+        memo: 'Lead of the app development team',
+      ),
+      Contact(
+        name: 'Henry Foster',
+        phoneNumber: '555-0107',
+        organization: 'MediCare Hospital',
+        position: 'Cardiologist',
+        email: 'henry.foster@medicare.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=8',
+        memo: 'Specialist for heart-related issues',
+      ),
+      Contact(
+        name: 'Isabel Reid',
+        phoneNumber: '555-0108',
+        organization: 'Global Exports',
+        position: 'Logistics Manager',
+        email: 'isabel.reid@globalexports.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=9',
+        memo: 'Oversees shipping and receiving',
+      ),
+      Contact(
+        name: 'Jack Taylor',
+        phoneNumber: '555-0109',
+        organization: 'BrightHouse Security',
+        position: 'Security Consultant',
+        email: 'jack.taylor@brighthouse.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=10',
+        memo: 'Advisor for home security system',
+      ),
+      Contact(
+        name: 'Kathy Brown',
+        phoneNumber: '555-0110',
+        organization: 'EdTech Innovations',
+        position: 'Educational Researcher',
+        email: 'kathy.brown@edtechinnovations.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=11',
+        memo: 'Working on a collaborative project',
+      ),
+      Contact(
+        name: 'Luis Gonzalez',
+        phoneNumber: '555-0111',
+        organization: 'Healthy Living Markets',
+        position: 'Nutritionist',
+        email: 'luis.gonzalez@healthyliving.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=12',
+        memo: 'Consultant for dietary planning',
+      ),
+      Contact(
+        name: 'Megan Lopez',
+        phoneNumber: '555-0112',
+        organization: 'City Engineering Dept.',
+        position: 'Civil Engineer',
+        email: 'megan.lopez@cityeng.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=13',
+        memo: 'Contact for public works projects',
+      ),
+      Contact(
+        name: 'Nathan Wright',
+        phoneNumber: '555-0113',
+        organization: 'Wright Legal Advisors',
+        position: 'Attorney',
+        email: 'nathan.wright@wrightlegal.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=14',
+        memo: 'Legal advisor for company contracts',
+      ),
+      Contact(
+        name: 'Olivia King',
+        phoneNumber: '555-0114',
+        organization: 'EventStars',
+        position: 'Event Coordinator',
+        email: 'olivia.king@eventstars.com',
+        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=15',
+        memo: 'Organizes corporate events',
+      ),
+    ];
+
+    setState(() {
+      allContacts.addAll(defaultContacts);
+      ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
 
-
-  void searchContacts(String query) {
+  void _searchContacts(String query) {
     setState(() {
       searchQuery = query.toLowerCase(); // 검색어를 소문자로 변환하여 저장
       filteredContacts = allContacts.where((contact) {
@@ -655,15 +675,107 @@ class Tab1State extends State {
     });
   }
 
-
+  void updateContact(Contact oldContact, Contact newContact) {
+    setState(() {
+      int index = allContacts.indexOf(oldContact);
+      if (index != -1) {
+        allContacts[index] = newContact;
+        ContactManager.saveContacts(allContacts); // Save to SharedPreferences
+        _searchContacts(searchQuery); // Update the filteredContacts
+      }
+    });
+  }
 
   void deleteContact(Contact contact) {
     setState(() {
       allContacts.remove(contact);
+      ContactManager.saveContacts(allContacts); // Save to SharedPreferences
+      _searchContacts(searchQuery); // Update the filteredContacts
+    });
+  }
+
+  // Add a method to handle adding a new contact
+  void addNewContact(Contact newContact) {
+    setState(() {
+      allContacts.add(newContact);
       filteredContacts = allContacts
           .where(
               (c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
+      ContactManager.saveContacts(allContacts); // Save to SharedPreferences
+    });
+  }
+
+  void _addNewContactDialog() async {
+    final _nameController = TextEditingController();
+    final _phoneNumberController = TextEditingController();
+    final _organizationController = TextEditingController();
+    final _positionController = TextEditingController();
+    final _emailController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('새 연락처 추가'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(labelText: '이름')),
+                TextField(
+                    controller: _phoneNumberController,
+                    decoration: InputDecoration(labelText: '전화번호')),
+                TextField(
+                    controller: _organizationController,
+                    decoration: InputDecoration(labelText: '조직')),
+                TextField(
+                    controller: _positionController,
+                    decoration: InputDecoration(labelText: '직급')),
+                TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: '이메일')),
+                // 필요에 따라 더 많은 필드를 추가할 수 있습니다
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _addNewContact(
+                  _nameController.text,
+                  _phoneNumberController.text,
+                  _organizationController.text,
+                  _positionController.text,
+                  _emailController.text,
+                );
+              },
+              child: Text('저장'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addNewContact(String name, String phoneNumber, String organization,
+      String position, String email) {
+    Contact newContact = Contact(
+      name: name,
+      phoneNumber: phoneNumber,
+      organization: organization,
+      position: position,
+      email: email,
+    );
+    setState(() {
+      allContacts.add(newContact);
+      ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
 
@@ -673,14 +785,9 @@ class Tab1State extends State {
       appBar: AppBar(
         title: Text('연락처', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 16.0), // 오른쪽에 간격 추가
-            child: IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                // 아이콘 버튼 기능 추가
-              },
-            ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _addNewContactDialog, // 여기에 연락처 추가 다이얼로그를 띄우는 기능을 연결
           ),
         ],
       ),
@@ -690,7 +797,7 @@ class Tab1State extends State {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               onChanged: (value) {
-                searchContacts(value);
+                _searchContacts(value);
               },
               decoration: InputDecoration(
                 hintText: '연락처 검색',
@@ -707,7 +814,6 @@ class Tab1State extends State {
                 final contact = searchQuery.isEmpty
                     ? allContacts[index]
                     : filteredContacts[index];
-
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0), // 양쪽에 간격 추가
                   child: ExpandableContactCard(
