@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
-import 'package:contacts_service/contacts_service.dart';
+import 'package:contacts_service/contacts_service.dart' as cs;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:tabapp/sub/contactManager.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Contact {
   String name;
@@ -13,7 +14,7 @@ class Contact {
   String organization;
   String position;
   String email;
-  String? photoUrl; // Optional field
+  String? photoPath; // Optional field
   String? memo; // Optional field
 
   Contact({
@@ -22,7 +23,7 @@ class Contact {
     required this.organization,
     required this.position,
     required this.email,
-    this.photoUrl,
+    this.photoPath,
     this.memo,
   });
 
@@ -33,7 +34,7 @@ class Contact {
       organization: jsonData['organization'],
       position: jsonData['position'],
       email: jsonData['email'],
-      photoUrl: jsonData['photoUrl'] as String?, // Handle optional field
+      photoPath: jsonData['photoPath'] as String?, // Handle optional field
       memo: jsonData['memo'] as String?, // Handle optional field
     );
   }
@@ -45,7 +46,7 @@ class Contact {
       'organization': organization,
       'position': position,
       'email': email,
-      'photoUrl': photoUrl, // Optional field
+      'photoPath': photoPath, // Optional field
       'memo': memo, // Optional field
     };
   }
@@ -70,15 +71,68 @@ class ExpandableContactCard extends StatefulWidget {
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
 
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      _updateContactWithImage(image.path);
+    }
+  }
+
+  Future<void> _confirmRemoveImage() async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('사진 삭제'),
+          content: Text('사진을 삭제하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('예'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('아니오'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      _removeImage();
+    }
+  }
+
+  void _removeImage() {
+    _updateContactWithImage(null);
+  }
+
+  void _updateContactWithImage(String? imagePath) {
+    Contact updatedContact = Contact(
+      name: widget.contact.name,
+      phoneNumber: widget.contact.phoneNumber,
+      organization: widget.contact.organization,
+      position: widget.contact.position,
+      email: widget.contact.email,
+      photoPath: imagePath,
+      memo: widget.contact.memo,
+    );
+
+    widget.onUpdate(widget.contact, updatedContact);
+  }
+
   void _updateContact(String name, String phoneNumber, String organization,
-      String position, String email, String? photoUrl, String? memo) {
+      String position, String email, String? photoPath, String? memo) {
     Contact updatedContact = Contact(
       name: name,
       phoneNumber: phoneNumber,
       organization: organization,
       position: position,
       email: email,
-      photoUrl: photoUrl,
+      photoPath: photoPath,
       memo: memo,
     );
 
@@ -135,7 +189,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   _organizationController.text,
                   _positionController.text,
                   _emailController.text,
-                  widget.contact.photoUrl, // 사진 URL은 변경하지 않음
+                  widget.contact.photoPath, // 사진 URL은 변경하지 않음
                   _memoController.text.isEmpty ? null : _memoController.text,
                 );
               },
@@ -247,6 +301,18 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
   }
 
+  void _openGmail(String email) async {
+    // URL 인코딩을 사용하여 이메일 링크 생성
+    final url = 'mailto:$email';
+
+    // 만약 링크를 열 수 있다면 열기
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not open Gmail';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -260,14 +326,18 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(widget.contact.organization),
-        leading: CircleAvatar(
-          backgroundImage: widget.contact.photoUrl != null
-              ? NetworkImage(widget.contact.photoUrl!)
-              : null,
-          child: widget.contact.photoUrl == null
-              ? Icon(Icons.person, color: Colors.white)
-              : null,
-          backgroundColor: Colors.grey, // photoUrl이 null일 때의 배경색 설정
+        leading: GestureDetector(
+          onTap: _pickImage,
+          onLongPress: _confirmRemoveImage, // 여기를 수정합니다.
+          child: CircleAvatar(
+            backgroundImage: widget.contact.photoPath != null
+                ? FileImage(File(widget.contact.photoPath!))
+                : null,
+            child: widget.contact.photoPath == null
+                ? Icon(Icons.person, color: Colors.white)
+                : null,
+            backgroundColor: Colors.grey,
+          ),
         ),
         trailing: isExpanded ? null : _buildTrailingIcons(),
         children: <Widget>[
@@ -325,7 +395,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     widget.contact.organization,
                     widget.contact.position,
                     widget.contact.email,
-                    widget.contact.photoUrl,
+                    widget.contact.photoPath,
                     _memoController.text.isEmpty ? null : _memoController.text,
                   );
                 },
@@ -394,7 +464,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   scrollDirection: Axis.horizontal, // 가로 스크롤 활성화
                   child: Container(
                     child: InkWell(
-                      onTap: () => _sendEmailViaGmail(widget.contact.email),
+                      onTap: () => _openGmail(widget.contact.email),
                       child: Text(widget.contact.email,
                           style: TextStyle(color: Colors.blue)),
                     ),
@@ -498,6 +568,36 @@ class Tab1State extends State {
     _loadContacts();
   }
 
+  void sortContacts(List<Contact> contacts) {
+    print('sort');
+    contacts.sort((a, b) {
+      return _compareContacts(a.name, b.name);
+    });
+  }
+  int _compareContacts(String a, String b) {
+    // 한글 체크
+    bool isKoreanA = _isKorean(a);
+    bool isKoreanB = _isKorean(b);
+
+    if (isKoreanA && !isKoreanB) return -1;
+    if (!isKoreanA && isKoreanB) return 1;
+
+    // 영어의 경우 대소문자를 구분하지 않고 비교, 같으면 대문자가 먼저 오도록
+    int caseInsensitiveCompare = a.toLowerCase().compareTo(b.toLowerCase());
+    if (caseInsensitiveCompare != 0) {
+      return caseInsensitiveCompare;
+    } else {
+      return -a.compareTo(b); // 대문자가 먼저 오도록
+    }
+  }
+
+  bool _isKorean(String text) {
+    // 한글 유니코드 범위 체크
+    return text.isNotEmpty && text.codeUnitAt(0) >= 0xAC00 && text.codeUnitAt(0) <= 0xD7A3;
+  }
+
+
+
   Future<void> _loadContacts() async {
     try {
       List<Contact> loadedContacts = await ContactManager.loadContacts();
@@ -507,6 +607,7 @@ class Tab1State extends State {
         setState(() {
           allContacts.clear();
           allContacts.addAll(loadedContacts);
+          sortContacts(allContacts);
           _searchContacts(searchQuery);
         });
       }
@@ -530,7 +631,6 @@ class Tab1State extends State {
         organization: 'Pixel Media',
         position: 'Art Director',
         email: 'bob.johnson@pixelmedia.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=2',
         memo: 'Contact for marketing materials',
       ),
       Contact(
@@ -539,7 +639,6 @@ class Tab1State extends State {
         organization: 'Green Tech Solutions',
         position: 'Environmental Consultant',
         email: 'carolyn.white@greentech.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=3',
         memo: 'Expert in renewable energy',
       ),
       Contact(
@@ -548,7 +647,6 @@ class Tab1State extends State {
         organization: 'Quick Finances',
         position: 'Accountant',
         email: 'david.harris@quickfinances.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=4',
         memo: 'Advised on tax matters',
       ),
       Contact(
@@ -557,7 +655,6 @@ class Tab1State extends State {
         organization: 'BuildBright',
         position: 'Architect',
         email: 'evelyn.martinez@buildbright.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=5',
         memo: 'Architect for the new office design',
       ),
       Contact(
@@ -566,7 +663,6 @@ class Tab1State extends State {
         organization: 'AgroFarms',
         position: 'Agronomist',
         email: 'franklin.green@agrofarms.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=6',
         memo:
             'Consultant for organic farming practices. Try to make very long long memo. \nIs it available to change the lines?\nYes!',
       ),
@@ -576,7 +672,6 @@ class Tab1State extends State {
         organization: 'TechWave',
         position: 'Software Engineer',
         email: 'gloria.young@techwave.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=7',
         memo: 'Lead of the app development team',
       ),
       Contact(
@@ -585,7 +680,6 @@ class Tab1State extends State {
         organization: 'MediCare Hospital',
         position: 'Cardiologist',
         email: 'henry.foster@medicare.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=8',
         memo: 'Specialist for heart-related issues',
       ),
       Contact(
@@ -594,7 +688,6 @@ class Tab1State extends State {
         organization: 'Global Exports',
         position: 'Logistics Manager',
         email: 'isabel.reid@globalexports.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=9',
         memo: 'Oversees shipping and receiving',
       ),
       Contact(
@@ -603,7 +696,6 @@ class Tab1State extends State {
         organization: 'BrightHouse Security',
         position: 'Security Consultant',
         email: 'jack.taylor@brighthouse.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=10',
         memo: 'Advisor for home security system',
       ),
       Contact(
@@ -612,7 +704,6 @@ class Tab1State extends State {
         organization: 'EdTech Innovations',
         position: 'Educational Researcher',
         email: 'kathy.brown@edtechinnovations.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=11',
         memo: 'Working on a collaborative project',
       ),
       Contact(
@@ -621,7 +712,6 @@ class Tab1State extends State {
         organization: 'Healthy Living Markets',
         position: 'Nutritionist',
         email: 'luis.gonzalez@healthyliving.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=12',
         memo: 'Consultant for dietary planning',
       ),
       Contact(
@@ -630,7 +720,6 @@ class Tab1State extends State {
         organization: 'City Engineering Dept.',
         position: 'Civil Engineer',
         email: 'megan.lopez@cityeng.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=13',
         memo: 'Contact for public works projects',
       ),
       Contact(
@@ -639,7 +728,6 @@ class Tab1State extends State {
         organization: 'Wright Legal Advisors',
         position: 'Attorney',
         email: 'nathan.wright@wrightlegal.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=14',
         memo: 'Legal advisor for company contracts',
       ),
       Contact(
@@ -648,13 +736,13 @@ class Tab1State extends State {
         organization: 'EventStars',
         position: 'Event Coordinator',
         email: 'olivia.king@eventstars.com',
-        photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=15',
         memo: 'Organizes corporate events',
       ),
     ];
 
     setState(() {
       allContacts.addAll(defaultContacts);
+      sortContacts(allContacts);
       ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
@@ -672,6 +760,7 @@ class Tab1State extends State {
             (contact.memo != null &&
                 contact.memo!.toLowerCase().contains(searchQuery));
       }).toList();
+      sortContacts(filteredContacts);
     });
   }
 
@@ -680,6 +769,7 @@ class Tab1State extends State {
       int index = allContacts.indexOf(oldContact);
       if (index != -1) {
         allContacts[index] = newContact;
+        sortContacts(allContacts);
         ContactManager.saveContacts(allContacts); // Save to SharedPreferences
         _searchContacts(searchQuery); // Update the filteredContacts
       }
@@ -698,12 +788,14 @@ class Tab1State extends State {
   void addNewContact(Contact newContact) {
     setState(() {
       allContacts.add(newContact);
+      sortContacts(allContacts);
       filteredContacts = allContacts
           .where(
               (c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
       ContactManager.saveContacts(allContacts); // Save to SharedPreferences
     });
+
   }
 
   void _addNewContactDialog() async {
@@ -729,7 +821,7 @@ class Tab1State extends State {
                     decoration: InputDecoration(labelText: '전화번호')),
                 TextField(
                     controller: _organizationController,
-                    decoration: InputDecoration(labelText: '조직')),
+                    decoration: InputDecoration(labelText: '소속')),
                 TextField(
                     controller: _positionController,
                     decoration: InputDecoration(labelText: '직급')),
@@ -775,7 +867,206 @@ class Tab1State extends State {
     );
     setState(() {
       allContacts.add(newContact);
+      sortContacts(allContacts);
       ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
+    });
+  }
+
+  void _resetContacts() {
+    setState(() {
+      allContacts.clear(); // 기존 데이터를 모두 제거
+      _addDefaultContacts(); // 기본 연락처를 다시 추가
+    });
+  }
+
+
+  Future<void> _loadContactsFromPhone() async {
+    // 연락처 접근 권한 체크
+    var permissionStatus = await Permission.contacts.status;
+
+    // 권한이 부여되지 않았다면 요청
+    if (!permissionStatus.isGranted) {
+      permissionStatus = await Permission.contacts.request();
+    }
+
+    // 권한이 부여되면 연락처를 불러옴
+    if (permissionStatus.isGranted) {
+      Iterable<cs.Contact> phoneContacts =
+          await cs.ContactsService.getContacts();
+
+      // 사용자가 연락처를 선택할 수 있는 다이얼로그를 표시
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('연락처 선택'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: phoneContacts.length,
+                itemBuilder: (BuildContext context, int index) {
+                  cs.Contact contact = phoneContacts.elementAt(index);
+                  return ListTile(
+                    title: Text(contact.displayName ?? 'Unknown'),
+                    subtitle: Text(contact.phones?.isNotEmpty ?? false
+                        ? contact.phones!.first.value ?? 'No phone number'
+                        : 'No phone number'),
+                    onTap: () {
+                      // 연락처 선택 시 처리
+                      Navigator.of(context).pop();
+                      _addSelectedContact(contact);
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      );
+
+    } else {
+      // 권한 거부 처리
+      print("연락처 접근 권한이 거부되었습니다.");
+      // 필요한 경우 사용자에게 권한 거부에 대한 안내 메시지 표시
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('권한 필요'),
+            content: Text('연락처에 접근하려면 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('설정 열기'),
+                onPressed: () {
+                  openAppSettings(); // 앱 설정 페이지를 열어 사용자가 권한을 변경할 수 있도록 함
+                },
+              ),
+              TextButton(
+                child: Text('취소'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _addSelectedContact(cs.Contact phoneContact) {
+    // 필수 정보의 누락 여부를 확인합니다.
+    bool isInfoMissing = phoneContact.displayName == null || phoneContact.displayName!.isEmpty ||
+        phoneContact.phones == null || phoneContact.phones!.isEmpty ||
+        phoneContact.emails == null || phoneContact.emails!.isEmpty ||
+        phoneContact.company == null || phoneContact.company!.isEmpty ||
+        phoneContact.jobTitle == null || phoneContact.jobTitle!.isEmpty;
+
+    if (isInfoMissing) {
+      // 필수 정보가 누락된 경우, 정보 입력 대화상자를 표시합니다.
+      _showContactDialogForIncompleteInfo(
+          phoneContact.displayName ?? '',
+          phoneContact.phones?.isNotEmpty ?? false ? phoneContact.phones!.first.value ?? '' : '',
+          phoneContact.company ?? '',
+          phoneContact.jobTitle ?? '',
+          phoneContact.emails?.isNotEmpty ?? false ? phoneContact.emails!.first.value ?? '' : ''
+      );
+    } else {
+      // 필수 정보가 모두 있는 경우, 연락처를 직접 추가합니다.
+      Contact newContact = Contact(
+        name: phoneContact.displayName ?? '',
+        phoneNumber: phoneContact.phones?.isNotEmpty ?? false ? phoneContact.phones!.first.value ?? '' : '',
+        organization: phoneContact.company ?? '',
+        position: phoneContact.jobTitle ?? '',
+        email: phoneContact.emails?.isNotEmpty ?? false ? phoneContact.emails!.first.value ?? '' : '',
+      );
+
+      setState(() {
+        allContacts.add(newContact);
+        sortContacts(allContacts);
+        ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
+      });
+    }
+  }
+
+// 불러온 연락처 정보가 누락된 경우 대화상자 표시
+  Future<void> _showContactDialogForIncompleteInfo(
+      String name,
+      String phoneNumber,
+      String organization,
+      String position,
+      String email) async {
+    final _nameController = TextEditingController(text: name);
+    final _phoneNumberController = TextEditingController(text: phoneNumber);
+
+    // 기존 TextField 외에 조직, 직급, 이메일을 위한 추가 TextField
+    final _organizationController = TextEditingController(text: organization);
+    final _positionController = TextEditingController(text: position);
+    final _emailController = TextEditingController(text: email);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('연락처 정보 입력'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: '이름'),
+                ),
+                TextField(
+                  controller: _phoneNumberController,
+                  decoration: InputDecoration(labelText: '전화번호'),
+                ),
+                // 여기에 추가 정보(소속, 직급, 이메일) 입력을 위한 TextField 추가
+                TextField(
+                  controller: _organizationController,
+                  decoration: InputDecoration(labelText: '소속'),
+                ),
+                TextField(
+                  controller: _positionController,
+                  decoration: InputDecoration(labelText: '직급'),
+                ),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(labelText: '이메일'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _addContactToApp(Contact(
+                  name: _nameController.text,
+                  phoneNumber: _phoneNumberController.text,
+                  organization: _organizationController.text,
+                  position: _positionController.text,
+                  email: _emailController.text,
+                ));
+              },
+              child: Text('저장'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+// 연락처를 앱의 목록에 추가하는 메소드
+  void _addContactToApp(Contact contact) {
+    setState(() {
+      allContacts.add(contact);
+      sortContacts(allContacts);
+      ContactManager.saveContacts(allContacts);
     });
   }
 
@@ -785,6 +1076,14 @@ class Tab1State extends State {
       appBar: AppBar(
         title: Text('연락처', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh), // 새로고침 아이콘 추가
+            onPressed: _resetContacts, // 새로고침 기능을 실행할 메소드
+          ),
+          IconButton(
+            icon: Icon(Icons.contact_phone),
+            onPressed: _loadContactsFromPhone,
+          ),
           IconButton(
             icon: Icon(Icons.add),
             onPressed: _addNewContactDialog, // 여기에 연락처 추가 다이얼로그를 띄우는 기능을 연결
