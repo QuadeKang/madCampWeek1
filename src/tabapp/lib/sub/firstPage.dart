@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:tabapp/sub/contactManager.dart';
 
 class Contact {
   String name;
@@ -48,7 +50,6 @@ class Contact {
     };
   }
 }
-
 
 class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
@@ -218,6 +219,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
 
   Widget _buildExpandedCard() {
     const double horizontalPadding = 40.0 + 16.0; // 아바타 크기 + 간격
+
     void _showMemoInputDialog() {
       showDialog(
         context: context,
@@ -269,11 +271,13 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               SizedBox(width: 8),
               InkWell(
                 onTap: () {
-                  Clipboard.setData(ClipboardData(text: widget.contact.phoneNumber));
+                  Clipboard.setData(
+                      ClipboardData(text: widget.contact.phoneNumber));
                   // 옵션: 사용자에게 알림 표시
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('전화번호가 복사되었습니다: ${widget.contact.phoneNumber}'),
+                      content:
+                          Text('전화번호가 복사되었습니다: ${widget.contact.phoneNumber}'),
                     ),
                   );
                 },
@@ -296,13 +300,15 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
             children: [
               Icon(Icons.alternate_email, size: 20),
               SizedBox(width: 8),
-              Expanded( // 이메일 텍스트를 Expanded로 감싸 전체 사용 가능한 공간을 채움
+              Expanded(
+                // 이메일 텍스트를 Expanded로 감싸 전체 사용 가능한 공간을 채움
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal, // 가로 스크롤 활성화
                   child: Container(
                     child: InkWell(
                       onTap: () => _sendEmailViaGmail(widget.contact.email),
-                      child: Text(widget.contact.email, style: TextStyle(color: Colors.blue)),
+                      child: Text(widget.contact.email,
+                          style: TextStyle(color: Colors.blue)),
                     ),
                   ),
                 ),
@@ -340,8 +346,10 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 8.0), // 왼쪽에 8.0만큼의 패딩 추가
-                              child: Text('메모 추가', style: TextStyle(color: Colors.black54)),
+                              padding: EdgeInsets.only(
+                                  left: 8.0), // 왼쪽에 8.0만큼의 패딩 추가
+                              child: Text('메모 추가',
+                                  style: TextStyle(color: Colors.black54)),
                             ),
                           ),
                         ),
@@ -361,7 +369,10 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               IconButton(
                   onPressed: () => _sendSMS(widget.contact.phoneNumber),
                   icon: Icon(Icons.local_post_office)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {},
+              ),
               IconButton(
                 onPressed: _confirmDeletion,
                 icon: Icon(Icons.delete_forever_rounded),
