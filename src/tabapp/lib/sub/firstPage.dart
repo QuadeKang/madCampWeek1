@@ -10,7 +10,7 @@ class Contact {
   final String name;
   final String phoneNumber;
   String? memo;
-  String organization; // 소속 정보
+  final String organization; // 소속 정보
   final String position; // 직급 정보
   final String email; // 이메일 정보
   final String photoUrl; // 사진 URL
@@ -537,7 +537,7 @@ class Tab1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('전화번호부', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('연락처', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 16.0), // 오른쪽에 간격 추가
