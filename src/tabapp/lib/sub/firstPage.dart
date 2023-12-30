@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
-import 'package:contacts_service/contacts_service.dart';
+import 'package:contacts_service/contacts_service.dart' as cs;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -832,6 +832,138 @@ class Tab1State extends State {
     });
   }
 
+  Future<void> _loadContactsFromPhone() async {
+    // 연락처 접근 권한 체크
+    var permissionStatus = await Permission.contacts.status;
+
+    // 권한이 부여되지 않았다면 요청
+    if (!permissionStatus.isGranted) {
+      permissionStatus = await Permission.contacts.request();
+    }
+
+    // 권한이 부여되면 연락처를 불러옴
+    if (permissionStatus.isGranted) {
+      Iterable<cs.Contact> phoneContacts = await cs.ContactsService.getContacts();
+
+      // 연락처를 앱의 Contact 객체로 변환
+      List<Contact> convertedContacts = phoneContacts.map((phoneContact) {
+        String name = phoneContact.displayName ?? ''; // 이름
+        String phoneNumber = phoneContact.phones?.isNotEmpty ?? false
+            ? phoneContact.phones!.first.value ?? ''
+            : ''; // 전화번호
+        String email = phoneContact.emails?.isNotEmpty ?? false
+            ? phoneContact.emails!.first.value ?? ''
+            : ''; // 이메일
+
+        // 조직과 직급
+        String organization = phoneContact.company?.isNotEmpty ?? false
+            ? phoneContact.company! ?? ''
+            : ''; // 조직
+        String position = phoneContact.jobTitle?.isNotEmpty ?? false
+            ? phoneContact.jobTitle! ?? ''
+            : ''; // 직급
+
+        return Contact(
+          name: name,
+          phoneNumber: phoneNumber,
+          organization: organization,
+          position: position,
+          email: email,
+          // 나머지 필드도 이와 같이 처리
+        );
+      }).toList();
+
+      setState(() {
+        allContacts.clear();
+        allContacts.addAll(convertedContacts);
+      });
+    } else {
+      // 권한 거부 처리
+      print("연락처 접근 권한이 거부되었습니다.");
+      // 필요한 경우 사용자에게 권한 거부에 대한 안내 메시지 표시
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('권한 필요'),
+            content: Text('연락처에 접근하려면 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('설정 열기'),
+                onPressed: () {
+                  openAppSettings(); // 앱 설정 페이지를 열어 사용자가 권한을 변경할 수 있도록 함
+                },
+              ),
+              TextButton(
+                child: Text('취소'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
+// 불러온 연락처 정보가 누락된 경우 대화상자 표시
+  Future<void> _showContactDialogForIncompleteInfo(String name, String phoneNumber) async {
+    final _nameController = TextEditingController(text: name);
+    final _phoneNumberController = TextEditingController(text: phoneNumber);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('연락처 정보 입력'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: '이름'),
+                ),
+                TextField(
+                  controller: _phoneNumberController,
+                  decoration: InputDecoration(labelText: '전화번호'),
+                ),
+                // 여기에 추가 정보(소속, 직급, 이메일) 입력을 위한 TextField 추가
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _addContactToApp(Contact(
+                  name: _nameController.text,
+                  phoneNumber: _phoneNumberController.text,
+                  organization: '', // 소속
+                  position: '', // 직급
+                  email: '', // 이메일
+                ));
+              },
+              child: Text('저장'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+// 연락처를 앱의 목록에 추가하는 메소드
+  void _addContactToApp(Contact contact) {
+    setState(() {
+      allContacts.add(contact);
+      ContactManager.saveContacts(allContacts);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -841,6 +973,10 @@ class Tab1State extends State {
           IconButton(
             icon: Icon(Icons.refresh), // 새로고침 아이콘 추가
             onPressed: _resetContacts, // 새로고침 기능을 실행할 메소드
+          ),
+          IconButton(
+            icon: Icon(Icons.contact_phone),
+            onPressed: _loadContactsFromPhone,
           ),
           IconButton(
             icon: Icon(Icons.add),
