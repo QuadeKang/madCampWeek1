@@ -825,6 +825,12 @@ class Tab1State extends State {
       ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
+  void _resetContacts() {
+    setState(() {
+      allContacts.clear(); // 기존 데이터를 모두 제거
+      _addDefaultContacts(); // 기본 연락처를 다시 추가
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -832,6 +838,10 @@ class Tab1State extends State {
       appBar: AppBar(
         title: Text('연락처', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh), // 새로고침 아이콘 추가
+            onPressed: _resetContacts, // 새로고침 기능을 실행할 메소드
+          ),
           IconButton(
             icon: Icon(Icons.add),
             onPressed: _addNewContactDialog, // 여기에 연락처 추가 다이얼로그를 띄우는 기능을 연결
