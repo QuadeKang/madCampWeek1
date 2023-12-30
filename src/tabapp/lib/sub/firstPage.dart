@@ -8,7 +8,6 @@ import 'dart:convert';
 import 'package:tabapp/sub/contactManager.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class Contact {
   String name;
   String phoneNumber;
@@ -72,7 +71,6 @@ class ExpandableContactCard extends StatefulWidget {
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
 
-
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -107,9 +105,11 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
       _removeImage();
     }
   }
+
   void _removeImage() {
     _updateContactWithImage(null);
   }
+
   void _updateContactWithImage(String? imagePath) {
     Contact updatedContact = Contact(
       name: widget.contact.name,
@@ -123,9 +123,6 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
 
     widget.onUpdate(widget.contact, updatedContact);
   }
-
-
-
 
   void _updateContact(String name, String phoneNumber, String organization,
       String position, String email, String? photoPath, String? memo) {
@@ -825,12 +822,14 @@ class Tab1State extends State {
       ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
+
   void _resetContacts() {
     setState(() {
       allContacts.clear(); // 기존 데이터를 모두 제거
       _addDefaultContacts(); // 기본 연락처를 다시 추가
     });
   }
+
 
   Future<void> _loadContactsFromPhone() async {
     // 연락처 접근 권한 체크
@@ -843,40 +842,40 @@ class Tab1State extends State {
 
     // 권한이 부여되면 연락처를 불러옴
     if (permissionStatus.isGranted) {
-      Iterable<cs.Contact> phoneContacts = await cs.ContactsService.getContacts();
+      Iterable<cs.Contact> phoneContacts =
+          await cs.ContactsService.getContacts();
 
-      // 연락처를 앱의 Contact 객체로 변환
-      List<Contact> convertedContacts = phoneContacts.map((phoneContact) {
-        String name = phoneContact.displayName ?? ''; // 이름
-        String phoneNumber = phoneContact.phones?.isNotEmpty ?? false
-            ? phoneContact.phones!.first.value ?? ''
-            : ''; // 전화번호
-        String email = phoneContact.emails?.isNotEmpty ?? false
-            ? phoneContact.emails!.first.value ?? ''
-            : ''; // 이메일
+      // 사용자가 연락처를 선택할 수 있는 다이얼로그를 표시
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('연락처 선택'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: phoneContacts.length,
+                itemBuilder: (BuildContext context, int index) {
+                  cs.Contact contact = phoneContacts.elementAt(index);
+                  return ListTile(
+                    title: Text(contact.displayName ?? 'Unknown'),
+                    subtitle: Text(contact.phones?.isNotEmpty ?? false
+                        ? contact.phones!.first.value ?? 'No phone number'
+                        : 'No phone number'),
+                    onTap: () {
+                      // 연락처 선택 시 처리
+                      Navigator.of(context).pop();
+                      _addSelectedContact(contact);
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      );
 
-        // 조직과 직급
-        String organization = phoneContact.company?.isNotEmpty ?? false
-            ? phoneContact.company! ?? ''
-            : ''; // 조직
-        String position = phoneContact.jobTitle?.isNotEmpty ?? false
-            ? phoneContact.jobTitle! ?? ''
-            : ''; // 직급
-
-        return Contact(
-          name: name,
-          phoneNumber: phoneNumber,
-          organization: organization,
-          position: position,
-          email: email,
-          // 나머지 필드도 이와 같이 처리
-        );
-      }).toList();
-
-      setState(() {
-        allContacts.clear();
-        allContacts.addAll(convertedContacts);
-      });
     } else {
       // 권한 거부 처리
       print("연락처 접근 권한이 거부되었습니다.");
@@ -907,11 +906,54 @@ class Tab1State extends State {
     }
   }
 
+  void _addSelectedContact(cs.Contact phoneContact) {
+    // 필수 정보의 누락 여부를 확인합니다.
+    bool isInfoMissing = phoneContact.displayName == null || phoneContact.displayName!.isEmpty ||
+        phoneContact.phones == null || phoneContact.phones!.isEmpty ||
+        phoneContact.emails == null || phoneContact.emails!.isEmpty ||
+        phoneContact.company == null || phoneContact.company!.isEmpty ||
+        phoneContact.jobTitle == null || phoneContact.jobTitle!.isEmpty;
+
+    if (isInfoMissing) {
+      // 필수 정보가 누락된 경우, 정보 입력 대화상자를 표시합니다.
+      _showContactDialogForIncompleteInfo(
+          phoneContact.displayName ?? '',
+          phoneContact.phones?.isNotEmpty ?? false ? phoneContact.phones!.first.value ?? '' : '',
+          phoneContact.company ?? '',
+          phoneContact.jobTitle ?? '',
+          phoneContact.emails?.isNotEmpty ?? false ? phoneContact.emails!.first.value ?? '' : ''
+      );
+    } else {
+      // 필수 정보가 모두 있는 경우, 연락처를 직접 추가합니다.
+      Contact newContact = Contact(
+        name: phoneContact.displayName ?? '',
+        phoneNumber: phoneContact.phones?.isNotEmpty ?? false ? phoneContact.phones!.first.value ?? '' : '',
+        organization: phoneContact.company ?? '',
+        position: phoneContact.jobTitle ?? '',
+        email: phoneContact.emails?.isNotEmpty ?? false ? phoneContact.emails!.first.value ?? '' : '',
+      );
+
+      setState(() {
+        allContacts.add(newContact);
+        ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
+      });
+    }
+  }
 
 // 불러온 연락처 정보가 누락된 경우 대화상자 표시
-  Future<void> _showContactDialogForIncompleteInfo(String name, String phoneNumber) async {
+  Future<void> _showContactDialogForIncompleteInfo(
+      String name,
+      String phoneNumber,
+      String organization,
+      String position,
+      String email) async {
     final _nameController = TextEditingController(text: name);
     final _phoneNumberController = TextEditingController(text: phoneNumber);
+
+    // 기존 TextField 외에 조직, 직급, 이메일을 위한 추가 TextField
+    final _organizationController = TextEditingController(text: organization);
+    final _positionController = TextEditingController(text: position);
+    final _emailController = TextEditingController(text: email);
 
     await showDialog(
       context: context,
@@ -930,6 +972,18 @@ class Tab1State extends State {
                   decoration: InputDecoration(labelText: '전화번호'),
                 ),
                 // 여기에 추가 정보(소속, 직급, 이메일) 입력을 위한 TextField 추가
+                TextField(
+                  controller: _organizationController,
+                  decoration: InputDecoration(labelText: '소속'),
+                ),
+                TextField(
+                  controller: _positionController,
+                  decoration: InputDecoration(labelText: '직급'),
+                ),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(labelText: '이메일'),
+                ),
               ],
             ),
           ),
@@ -940,9 +994,9 @@ class Tab1State extends State {
                 _addContactToApp(Contact(
                   name: _nameController.text,
                   phoneNumber: _phoneNumberController.text,
-                  organization: '', // 소속
-                  position: '', // 직급
-                  email: '', // 이메일
+                  organization: _organizationController.text,
+                  position: _positionController.text,
+                  email: _emailController.text,
                 ));
               },
               child: Text('저장'),
@@ -964,6 +1018,7 @@ class Tab1State extends State {
       ContactManager.saveContacts(allContacts);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
