@@ -568,6 +568,36 @@ class Tab1State extends State {
     _loadContacts();
   }
 
+  void sortContacts(List<Contact> contacts) {
+    print('sort');
+    contacts.sort((a, b) {
+      return _compareContacts(a.name, b.name);
+    });
+  }
+  int _compareContacts(String a, String b) {
+    // 한글 체크
+    bool isKoreanA = _isKorean(a);
+    bool isKoreanB = _isKorean(b);
+
+    if (isKoreanA && !isKoreanB) return -1;
+    if (!isKoreanA && isKoreanB) return 1;
+
+    // 영어의 경우 대소문자를 구분하지 않고 비교, 같으면 대문자가 먼저 오도록
+    int caseInsensitiveCompare = a.toLowerCase().compareTo(b.toLowerCase());
+    if (caseInsensitiveCompare != 0) {
+      return caseInsensitiveCompare;
+    } else {
+      return -a.compareTo(b); // 대문자가 먼저 오도록
+    }
+  }
+
+  bool _isKorean(String text) {
+    // 한글 유니코드 범위 체크
+    return text.isNotEmpty && text.codeUnitAt(0) >= 0xAC00 && text.codeUnitAt(0) <= 0xD7A3;
+  }
+
+
+
   Future<void> _loadContacts() async {
     try {
       List<Contact> loadedContacts = await ContactManager.loadContacts();
@@ -577,6 +607,7 @@ class Tab1State extends State {
         setState(() {
           allContacts.clear();
           allContacts.addAll(loadedContacts);
+          sortContacts(allContacts);
           _searchContacts(searchQuery);
         });
       }
@@ -711,6 +742,7 @@ class Tab1State extends State {
 
     setState(() {
       allContacts.addAll(defaultContacts);
+      sortContacts(allContacts);
       ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
@@ -728,6 +760,7 @@ class Tab1State extends State {
             (contact.memo != null &&
                 contact.memo!.toLowerCase().contains(searchQuery));
       }).toList();
+      sortContacts(filteredContacts);
     });
   }
 
@@ -736,6 +769,7 @@ class Tab1State extends State {
       int index = allContacts.indexOf(oldContact);
       if (index != -1) {
         allContacts[index] = newContact;
+        sortContacts(allContacts);
         ContactManager.saveContacts(allContacts); // Save to SharedPreferences
         _searchContacts(searchQuery); // Update the filteredContacts
       }
@@ -754,12 +788,14 @@ class Tab1State extends State {
   void addNewContact(Contact newContact) {
     setState(() {
       allContacts.add(newContact);
+      sortContacts(allContacts);
       filteredContacts = allContacts
           .where(
               (c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
       ContactManager.saveContacts(allContacts); // Save to SharedPreferences
     });
+
   }
 
   void _addNewContactDialog() async {
@@ -831,6 +867,7 @@ class Tab1State extends State {
     );
     setState(() {
       allContacts.add(newContact);
+      sortContacts(allContacts);
       ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
     });
   }
@@ -947,6 +984,7 @@ class Tab1State extends State {
 
       setState(() {
         allContacts.add(newContact);
+        sortContacts(allContacts);
         ContactManager.saveContacts(allContacts); // SharedPreferences에 저장
       });
     }
@@ -1027,6 +1065,7 @@ class Tab1State extends State {
   void _addContactToApp(Contact contact) {
     setState(() {
       allContacts.add(contact);
+      sortContacts(allContacts);
       ContactManager.saveContacts(allContacts);
     });
   }
