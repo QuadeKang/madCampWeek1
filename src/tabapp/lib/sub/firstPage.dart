@@ -177,7 +177,13 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
         ),
         subtitle: Text(widget.contact.organization),
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(widget.contact.photoUrl),
+          backgroundImage: widget.contact.photoUrl != null
+              ? NetworkImage(widget.contact.photoUrl!)
+              : null,
+          child: widget.contact.photoUrl == null
+              ? Icon(Icons.person, color: Colors.white)
+              : null,
+          backgroundColor: Colors.grey, // photoUrl이 null일 때의 배경색 설정
         ),
         trailing: isExpanded ? null : _buildTrailingIcons(),
         children: <Widget>[
@@ -390,7 +396,6 @@ class Tab1State extends State {
       organization: 'Orbit Inc.',
       position: 'CEO',
       email: 'alice.smith@orbitinc.com',
-      photoUrl: 'https://source.unsplash.com/user/c_v_r/100x100?sig=1',
     ),
     Contact(
       name: 'Bob Johnson',
