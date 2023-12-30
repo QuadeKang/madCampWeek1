@@ -296,26 +296,31 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
   Widget _buildExpandedCard() {
     const double horizontalPadding = 40.0 + 16.0; // 아바타 크기 + 간격
 
-    void _showMemoInputDialog() {
-      showDialog(
+    void _showMemoInputDialog() async {
+      final _memoController = TextEditingController(text: widget.contact.memo);
+
+      await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String memoInput = '';
           return AlertDialog(
             title: Text('메모 입력'),
             content: TextField(
-              onChanged: (value) {
-                memoInput = value;
-              },
+              controller: _memoController,
               decoration: InputDecoration(hintText: "메모를 입력하세요"),
             ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    widget.contact.memo = memoInput;
-                  });
                   Navigator.of(context).pop();
+                  _updateContact(
+                    widget.contact.name,
+                    widget.contact.phoneNumber,
+                    widget.contact.organization,
+                    widget.contact.position,
+                    widget.contact.email,
+                    widget.contact.photoUrl,
+                    _memoController.text.isEmpty ? null : _memoController.text,
+                  );
                 },
                 child: Text('저장'),
               ),
