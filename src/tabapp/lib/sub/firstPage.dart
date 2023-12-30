@@ -301,6 +301,18 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     }
   }
 
+  void _openGmail(String email) async {
+    // URL 인코딩을 사용하여 이메일 링크 생성
+    final url = 'mailto:$email';
+
+    // 만약 링크를 열 수 있다면 열기
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not open Gmail';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -452,7 +464,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   scrollDirection: Axis.horizontal, // 가로 스크롤 활성화
                   child: Container(
                     child: InkWell(
-                      onTap: () => _sendEmailViaGmail(widget.contact.email),
+                      onTap: () => _openGmail(widget.contact.email),
                       child: Text(widget.contact.email,
                           style: TextStyle(color: Colors.blue)),
                     ),
