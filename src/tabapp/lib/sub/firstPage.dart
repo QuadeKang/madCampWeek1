@@ -54,11 +54,13 @@ class Contact {
 class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
   final Function(Contact) onDelete;
+  final Function(Contact, Contact) onUpdate;  // 추가: 연락처 업데이트 콜백
 
   const ExpandableContactCard({
     Key? key,
     required this.contact,
     required this.onDelete,
+    required this.onUpdate,  // 추가
   }) : super(key: key);
 
   @override
@@ -67,6 +69,80 @@ class ExpandableContactCard extends StatefulWidget {
 
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
+
+  void _updateContact(
+      String name,
+      String phoneNumber,
+      String organization,
+      String position,
+      String email,
+      String? photoUrl,
+      String? memo) {
+    Contact updatedContact = Contact(
+      name: name,
+      phoneNumber: phoneNumber,
+      organization: organization,
+      position: position,
+      email: email,
+      photoUrl: photoUrl,
+      memo: memo,
+    );
+
+    widget.onUpdate(widget.contact, updatedContact);
+  }
+
+
+  void _showEditContactDialog() async {
+    final _nameController = TextEditingController(text: widget.contact.name);
+    final _phoneNumberController = TextEditingController(text: widget.contact.phoneNumber);
+    final _organizationController = TextEditingController(text: widget.contact.organization);
+    final _positionController = TextEditingController(text: widget.contact.position);
+    final _emailController = TextEditingController(text: widget.contact.email);
+    final _memoController = TextEditingController(text: widget.contact.memo);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('연락처 수정'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(controller: _nameController, decoration: InputDecoration(labelText: '이름')),
+                TextField(controller: _phoneNumberController, decoration: InputDecoration(labelText: '전화번호')),
+                TextField(controller: _organizationController, decoration: InputDecoration(labelText: '조직')),
+                TextField(controller: _positionController, decoration: InputDecoration(labelText: '직급')),
+                TextField(controller: _emailController, decoration: InputDecoration(labelText: '이메일')),
+                TextField(controller: _memoController, decoration: InputDecoration(labelText: '메모')),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _updateContact(
+                  _nameController.text,
+                  _phoneNumberController.text,
+                  _organizationController.text,
+                  _positionController.text,
+                  _emailController.text,
+                  widget.contact.photoUrl, // 사진 URL은 변경하지 않음
+                  _memoController.text.isEmpty ? null : _memoController.text,
+                );
+              },
+              child: Text('저장'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   void _confirmDeletion() async {
     final bool? confirm = await showDialog(
@@ -371,8 +447,9 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   icon: Icon(Icons.local_post_office)),
               IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () {},
+                onPressed: _showEditContactDialog,
               ),
+
               IconButton(
                 onPressed: _confirmDeletion,
                 icon: Icon(Icons.delete_forever_rounded),
@@ -546,6 +623,17 @@ class Tab1State extends State {
     filteredContacts = allContacts;
   }
 
+  void updateContact(Contact oldContact, Contact newContact) {
+    setState(() {
+      int index = allContacts.indexOf(oldContact);
+      if (index != -1) {
+        allContacts[index] = newContact;
+        // 필요에 따라 filteredContacts 리스트도 업데이트
+      }
+    });
+  }
+
+
   void searchContacts(String query) {
     setState(() {
       searchQuery = query.toLowerCase(); // 검색어를 소문자로 변환하여 저장
@@ -561,6 +649,8 @@ class Tab1State extends State {
       }).toList();
     });
   }
+
+
 
   void deleteContact(Contact contact) {
     setState(() {
@@ -618,6 +708,7 @@ class Tab1State extends State {
                   child: ExpandableContactCard(
                     contact: contact,
                     onDelete: deleteContact,
+                    onUpdate: updateContact,
                   ),
                 );
               },
