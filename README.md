@@ -10,3 +10,5 @@ dependencies
 - sqflite: (2.3.0)
 - contacts_service: (0.6.3)
 - permission_handler: (11.1.0)
+- shared_preferences: (2.2.2)
+
