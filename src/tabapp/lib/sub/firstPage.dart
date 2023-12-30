@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:tabapp/sub/contactManager.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 class Contact {
   String name;
@@ -69,6 +71,61 @@ class ExpandableContactCard extends StatefulWidget {
 
 class _ExpandableContactCardState extends State<ExpandableContactCard> {
   bool isExpanded = false;
+
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      _updateContactWithImage(image.path);
+    }
+  }
+
+  Future<void> _confirmRemoveImage() async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('사진 삭제'),
+          content: Text('사진을 삭제하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('예'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('아니오'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      _removeImage();
+    }
+  }
+  void _removeImage() {
+    _updateContactWithImage(null);
+  }
+  void _updateContactWithImage(String? imagePath) {
+    Contact updatedContact = Contact(
+      name: widget.contact.name,
+      phoneNumber: widget.contact.phoneNumber,
+      organization: widget.contact.organization,
+      position: widget.contact.position,
+      email: widget.contact.email,
+      photoPath: imagePath,
+      memo: widget.contact.memo,
+    );
+
+    widget.onUpdate(widget.contact, updatedContact);
+  }
+
+
+
 
   void _updateContact(String name, String phoneNumber, String organization,
       String position, String email, String? photoPath, String? memo) {
@@ -260,14 +317,18 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(widget.contact.organization),
-        leading: CircleAvatar(
-          backgroundImage: widget.contact.photoPath != null
-              ? FileImage(File(widget.contact.photoPath!)) // 로컬 파일 이미지 사용
-              : null,
-          child: widget.contact.photoPath == null
-              ? Icon(Icons.person, color: Colors.white)
-              : null,
-          backgroundColor: Colors.grey, // photoPath가 null일 때의 배경색 설정
+        leading: GestureDetector(
+          onTap: _pickImage,
+          onLongPress: _confirmRemoveImage, // 여기를 수정합니다.
+          child: CircleAvatar(
+            backgroundImage: widget.contact.photoPath != null
+                ? FileImage(File(widget.contact.photoPath!))
+                : null,
+            child: widget.contact.photoPath == null
+                ? Icon(Icons.person, color: Colors.white)
+                : null,
+            backgroundColor: Colors.grey,
+          ),
         ),
         trailing: isExpanded ? null : _buildTrailingIcons(),
         children: <Widget>[
