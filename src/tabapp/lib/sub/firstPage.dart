@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tabapp/database.dart';
 import 'dart:io';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
-
 
 class Contact {
   int? id;
   final String name;
   final String phoneNumber;
   String? memo;
-  final String organization; // 소속 정보
+  String organization; // 소속 정보
   final String position; // 직급 정보
   final String email; // 이메일 정보
   final String photoUrl; // 사진 URL
