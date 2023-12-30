@@ -6,26 +6,49 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 
 class Contact {
-  int? id;
-  final String name;
-  final String phoneNumber;
-  String? memo;
-  final String organization; // 소속 정보
-  final String position; // 직급 정보
-  final String email; // 이메일 정보
-  final String photoUrl; // 사진 URL
+  String name;
+  String phoneNumber;
+  String organization;
+  String position;
+  String email;
+  String? photoUrl; // Optional field
+  String? memo; // Optional field
 
   Contact({
-    this.id,
     required this.name,
     required this.phoneNumber,
     required this.organization,
     required this.position,
     required this.email,
-    required this.photoUrl,
+    this.photoUrl,
     this.memo,
   });
+
+  factory Contact.fromJson(Map<String, dynamic> jsonData) {
+    return Contact(
+      name: jsonData['name'],
+      phoneNumber: jsonData['phoneNumber'],
+      organization: jsonData['organization'],
+      position: jsonData['position'],
+      email: jsonData['email'],
+      photoUrl: jsonData['photoUrl'] as String?, // Handle optional field
+      memo: jsonData['memo'] as String?, // Handle optional field
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'phoneNumber': phoneNumber,
+      'organization': organization,
+      'position': position,
+      'email': email,
+      'photoUrl': photoUrl, // Optional field
+      'memo': memo, // Optional field
+    };
+  }
 }
+
 
 class ExpandableContactCard extends StatefulWidget {
   final Contact contact;
