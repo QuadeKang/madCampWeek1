@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'sub/firstPage.dart';
 import 'sub/secondPage.dart';
 import 'sub/thirdPage.dart';
+import 'intro.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,13 +10,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyTabbedApp(),
+      home: IntroScreen(),
       theme: ThemeData(
         fontFamily: 'Pretendard',
       ),
     );
   }
 }
+
 
 class MyTabbedApp extends StatefulWidget {
   @override
