@@ -899,26 +899,38 @@ class Tab1State extends State {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('연락처 선택'),
+            title: Text('연락처 불러오기'),
             content: Container(
               width: double.maxFinite,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: phoneContacts.length,
-                itemBuilder: (BuildContext context, int index) {
-                  cs.Contact contact = phoneContacts.elementAt(index);
-                  return ListTile(
-                    title: Text(contact.displayName ?? 'Unknown'),
-                    subtitle: Text(contact.phones?.isNotEmpty ?? false
-                        ? contact.phones!.first.value ?? 'No phone number'
-                        : 'No phone number'),
-                    onTap: () {
-                      // 연락처 선택 시 처리
-                      Navigator.of(context).pop();
-                      _addSelectedContact(contact);
-                    },
-                  );
-                },
+              height: 300,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8.0),
+                    child: Text('불러올 연락처를 선택하세요', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: phoneContacts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        cs.Contact contact = phoneContacts.elementAt(index);
+                        return ListTile(
+                          title: Text(contact.displayName ?? 'Unknown'),
+                          subtitle: Text(contact.phones?.isNotEmpty ?? false
+                              ? contact.phones!.first.value ?? 'No phone number'
+                              : 'No phone number'),
+                          onTap: () {
+                            // 연락처 선택 시 처리
+                            Navigator.of(context).pop();
+                            _addSelectedContact(contact);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -1081,7 +1093,7 @@ class Tab1State extends State {
             onPressed: _resetContacts, // 새로고침 기능을 실행할 메소드
           ),
           IconButton(
-            icon: Icon(Icons.contact_phone),
+            icon: Icon(Icons.person_add_alt_1),
             onPressed: _loadContactsFromPhone,
           ),
           IconButton(
