@@ -29,7 +29,7 @@ class _IntroScreenState extends State<IntroScreen> {
               width: 151.27,
               height: 138.72,
               child: SvgPicture.asset(
-                'assets/icons/logo.svg',
+                'assets/images/logo.svg',
                 width: 160,
                 height: 160,
               ),
