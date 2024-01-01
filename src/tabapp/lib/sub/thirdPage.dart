@@ -505,60 +505,64 @@ class Tab3State extends State {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        body: Center(
-          child: FutureBuilder<ContactInfo>(
-            future: readContactInfo('information.txt'), // Replace with your actual method to get contact info
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  // When data is loaded, display the business card
-                  return BusinessCardWidget(contactInfo: snapshot.data!);
-                } else if (snapshot.hasError) {
-                  // In case of an error
-                  return Text('Error loading data: ${snapshot.error}');
-                } else {
-                  // If data is not yet available
-                  return Text('No data found');
-                }
-              } else {
-                // While data is loading, show a progress indicator
-                return CircularProgressIndicator();
-              }
-            },
-          ),
+        appBar: AppBar(
+          title: Text('Shaing Card'),
         ),
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Positioned(
-            right: 10,
-            bottom: 10,
-            child: FloatingActionButton(
-              onPressed: _showInputScreen,
-              child: Icon(Icons.add),
-              heroTag: 'btn1', // Ensure each button has a unique heroTag
+        body: Stack(
+          children: <Widget>[
+            Center(
+              child: FutureBuilder<ContactInfo>(
+                future: readContactInfo('information.txt'), // Replace with your actual method to get contact info
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      // When data is loaded, display the business card
+                      return BusinessCardWidget(contactInfo: snapshot.data!);
+                    } else if (snapshot.hasError) {
+                      // In case of an error
+                      return Text('Error loading data: ${snapshot.error}');
+                    } else {
+                      // If data is not yet available
+                      return Text('No data found');
+                    }
+                  } else {
+                    // While data is loading, show a progress indicator
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
             ),
-          ),
-          Positioned(
-            right: 10,
-            bottom: 130,
-            child: FloatingActionButton(
-              onPressed:_showCardShare,
-              child: Icon(Icons.share),
-              heroTag: 'btn2',
+            SizedBox(height: 20), // Spacing between buttons
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
+                children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: _showInputScreen,
+                    child: Icon(Icons.add),
+                    heroTag: 'btn1',
+                  ),
+                  SizedBox(width: 20), // Spacing between buttons
+                  FloatingActionButton(
+                    onPressed: _showCardShare,
+                    child: Icon(Icons.share),
+                    heroTag: 'btn2',
+                  ),
+                  SizedBox(width: 20), // Spacing between buttons
+                  FloatingActionButton(
+                    onPressed: _showCardRecieve,
+                    child: Icon(Icons.download),
+                    heroTag: 'btn3',
+                  ),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            right: 10,
-            bottom: 70,
-            child: FloatingActionButton(
-              onPressed:_showCardRecieve,
-              child: Icon(Icons.download),
-              heroTag: 'btn3',
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 }
 
