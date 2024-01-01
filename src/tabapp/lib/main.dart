@@ -3,6 +3,7 @@ import 'sub/firstPage.dart';
 import 'sub/secondPage.dart';
 import 'sub/thirdPage.dart';
 import 'intro.dart';
+import 'package:tabapp/colors.dart';
 
 void main() => runApp(MyApp());
 
