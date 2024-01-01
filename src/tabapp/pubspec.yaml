@@ -77,6 +77,11 @@ flutter:
     - assets/images/tab2logo.svg
     - assets/images/photoadd.svg
     - assets/images/takephoto.svg
+    - assets/images/addContact.svg
+    - assets/images/callButton.svg
+    - assets/images/deleteButton.svg
+    - assets/images/editButton.svg
+    - assets/images/messageButtonFilled.svg
 
   #   - images/a_dot_ham.jpeg
 
