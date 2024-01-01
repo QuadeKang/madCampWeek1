@@ -162,72 +162,59 @@ class Tab2State extends State {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          GridView.builder(
-            itemCount: images.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              // You can adjust childAspectRatio to match the ratio you want.
-              // The ratio is width / height. So for a 9:5 ratio, it would be 9 / 5.
-              childAspectRatio: 9 / 5,
-            ),
-            itemBuilder: (context, index) {
-              bool isSelected = selectedPhotoIndex == index;
-              return GestureDetector(
+      body: ListView.builder(
+        itemCount: images.length,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              GestureDetector(
                 onTap: () {
                   setState(() {
                     if (selectedPhotoIndex == index) {
-                      // Toggle visibility if the same photo is clicked again
                       showButtons = !showButtons;
                       if (!showButtons) {
-                        // Reset selectedPhotoIndex when buttons are hidden
                         selectedPhotoIndex = null;
                       }
                     } else {
-                      // Show buttons and update selected photo index
                       showButtons = true;
                       selectedPhotoIndex = index;
                     }
                   });
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: selectedPhotoIndex == index
-                        ? Border.all(color: Colors.grey, width: 3)
-                        : null,
-                  ),
-                  child:Stack (children: <Widget>[
-                    Padding (
-                      padding: EdgeInsets.all(8.0),
-                      child:
-                      Image.file(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: selectedPhotoIndex==index && showButtons ? BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue, // Choose your color
+                        width: 3.0, // Adjust the thickness
+                      ),
+                    ) : null,
+                    child: AspectRatio(
+                      aspectRatio: 9/5,
+                      child: Image.file(
                         images[index],
                         fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
                       ),
                     ),
-
-                  ],),
-
+                  ),
                 ),
-              );
-            },
-          ),
-          if (showButtons) _buildButtonOverlay(),
-        ],
+              ),
+              if (showButtons && selectedPhotoIndex == index)
+                  _buildButtonOverlay(),
+
+            ],
+          );
+        },
       ),
     );
   }
 
 
+
+
   Widget _buildButtonOverlay() {
-    return Positioned(
-      bottom: 0, // Position above the BottomNavigationBar
-      left: 0,
-      right: 0,
-      child: Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
@@ -309,8 +296,6 @@ class Tab2State extends State {
             ),
           ),
         ],
-
-      ),
     );
   }
 }
