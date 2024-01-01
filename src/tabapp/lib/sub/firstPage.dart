@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:tabapp/sub/contactManager.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 class Contact {
   String name;
@@ -332,14 +334,15 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           onTap: _pickImage,
           onLongPress: _confirmRemoveImage, // 여기를 수정합니다.
           child: CircleAvatar(
-            backgroundImage: widget.contact.photoPath != null
+            backgroundImage: widget.contact.photoPath != null && widget.contact.photoPath!.isNotEmpty
                 ? FileImage(File(widget.contact.photoPath!))
                 : null,
-            child: widget.contact.photoPath == null
-                ? Icon(Icons.person, color: Colors.white)
+            child: widget.contact.photoPath == null || widget.contact.photoPath!.isEmpty
+                ? SvgPicture.asset('assets/images/profilephoto.svg')
                 : null,
             backgroundColor: Colors.grey,
           ),
+
         ),
         trailing: isExpanded ? null : _buildTrailingIcons(),
         children: <Widget>[
