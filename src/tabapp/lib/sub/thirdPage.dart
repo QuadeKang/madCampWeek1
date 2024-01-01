@@ -9,9 +9,11 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
-
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:tabapp/sub/contactManager.dart';
+
+import 'package:tabapp/sub/firstPage.dart';
 
 GlobalKey _globalKey = GlobalKey();
 
@@ -630,6 +632,7 @@ class CardReceiveScreen extends StatefulWidget {
 
 class _CardReceiveScreenState extends State<CardReceiveScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
   Barcode? result;
   QRViewController? controller;
 
@@ -679,6 +682,7 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+
     this.controller = controller;
     bool hasNavigated = false;
 
@@ -746,6 +750,23 @@ class getBusinessCardWidget extends StatefulWidget {
 
 class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
   final GlobalKey _globalKey = GlobalKey();
+  final List<Contact> allContacts = [];
+  late Contact contact;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize contact here where you have access to widget
+    contact = Contact(
+      name: widget.name,
+      phoneNumber: widget.phone,
+      organization: widget.organization,
+      position: widget.position,
+      email: widget.email,
+      memo: '',
+    );
+  }
 
   Future<bool> _onWillPop() async {
     int count = 0;
@@ -831,9 +852,13 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: ElevatedButton(
                         onPressed: () {
-                          // Add your action for Button B
+                          try {
+                            saveMyContacts();
+                          } catch (e) {
+                            print("Failed to save contacts: $e");
+                          }
                         },
-                        child: Text('Button B'),
+                        child: Text('Save Contact'),
                       ),
                     ),
                   ),
@@ -872,4 +897,25 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
       print('Error saving image: $e');
     }
   }
+
+  Future<void> saveMyContacts() async {
+    List<Contact> loadedContacts = []; // Declare it outside the try-catch block
+
+    try {
+      loadedContacts = await ContactManager.loadContacts();
+      if (loadedContacts.isEmpty) {
+        // Add default contacts. This function should update 'loadedContacts'
+        // loadedContacts = _addDefaultContacts.defaultContacts;
+      } else {
+        loadedContacts.add(contact); // Assuming 'contact' is defined and valid
+      }
+    } catch (e) {
+      print("Error loading contacts: $e");
+    }
+
+    // Use ContactManager to save the contacts
+    await ContactManager.saveContacts(loadedContacts);
+    print('Contacts have been saved successfully');
+  }
+
 }
