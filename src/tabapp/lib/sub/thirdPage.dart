@@ -103,14 +103,17 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                                     // File does not exist, display a placeholder or error widget
                                     return Container(
                                       width: 100,
-                                      height: 100,
+                                      height: double.infinity,
                                       child: Center( // This centers the child widget both horizontally and vertically
-                                        child: FittedBox(
-                                          fit: BoxFit.cover,
-                                          child: Icon(Icons.image_not_supported, size: 100),
+                                        child: Icon(
+                                          Icons.image_not_supported,
+                                          size: 60, // Adjust the size as needed
+                                          color: Colors.blue, // Optional: to make the icon stand out
                                         ),
                                       ),
                                     );
+
+
                                   }
                                 } else {
                                   // While the future is resolving, you can show a loader or an empty container
@@ -475,8 +478,12 @@ class Tab3State extends State {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ContactInputScreen()),
-    );
-
+    ).then((_) {
+      // When returning back to this screen, refresh the state
+      setState(() {
+        // Update your data here
+      });
+    });
   }
 
   void _showCardShare() async {
@@ -866,4 +873,3 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
     }
   }
 }
-
