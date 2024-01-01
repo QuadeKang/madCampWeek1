@@ -13,8 +13,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tabapp/sub/contactManager.dart';
 import 'package:tabapp/main.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tabapp/sub/firstPage.dart';
+import 'package:tabapp/colors.dart';
 
 GlobalKey _globalKey = GlobalKey();
 
@@ -332,7 +333,9 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Enter Contact Information"),
+        title: Text("내 명함 정보 입력",style: TextStyle(
+          fontWeight: FontWeight.w500,
+        ),),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -342,27 +345,49 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(hintText: "Name"),
+              cursorColor: AppColors.primaryBlue,
+              decoration: const InputDecoration(
+                  hintText: "이름",
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
+                ),
+              ),
             ),
 
             TextField(
               controller: _phoneController,
-              decoration: const InputDecoration(hintText: "Phone"),
+              cursorColor: AppColors.primaryBlue,
+              decoration: const InputDecoration(hintText: "전화번호",
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
+                ),),
             ),
 
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(hintText: "E-mail"),
+              cursorColor: AppColors.primaryBlue,
+              decoration: const InputDecoration(hintText: "이메일",
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
+                ),),
             ),
 
             TextField(
               controller: _organizationController,
-              decoration: const InputDecoration(hintText: "Organization"),
+              cursorColor: AppColors.primaryBlue,
+              decoration: const InputDecoration(hintText: "조직",
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
+                ),),
             ),
 
             TextField(
               controller: _positionController,
-              decoration: const InputDecoration(hintText: "Position"),
+              cursorColor: AppColors.primaryBlue,
+              decoration: const InputDecoration(hintText: "직급",
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
+                ),),
             ),
             SizedBox(height: 16),
 
@@ -388,11 +413,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                     );
                   } else {
                     // If there is no data (file not found or other issues), display an error icon
-                    return Icon(
-                      Icons.error, // This is the error icon
-                      color: Colors.red, // You can choose the color of the icon
-                      size: 48.0, // You can adjust the size of the icon
-                    );
+                    return SvgPicture.asset('assets/images/addphotosquare.svg');
                   }
                 },
               ),
@@ -406,9 +427,9 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                   await clearImageCache(_photoUrl);
                 });
               },
-              child: Text("Select Photo"),
+              child: Text("사진 선택"),
               style: ElevatedButton.styleFrom(
-                primary: Colors.grey,  // Background color
+                primary: AppColors.primaryBlue,  // Background color
                 onPrimary: Colors.white,  // Text color
                 elevation: 5,  // Shadow elevation
                 shape: RoundedRectangleBorder(
@@ -453,9 +474,9 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                 Navigator.of(context).pop();
 
               },
-              child: Text("Save"),
+              child: Text("저장"),
               style: ElevatedButton.styleFrom(
-                primary: Colors.grey,  // Background color
+                primary: AppColors.primaryBlue,  // Background color
                 onPrimary: Colors.white,  // Text color
                 elevation: 5,  // Shadow elevation
                 shape: RoundedRectangleBorder(
@@ -506,8 +527,19 @@ class Tab3State extends State {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text('Shaing Card'),
+        appBar: SubAppBar(
+          titleRow: Column(
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset('assets/images/tab3logo.svg'),
+                  SizedBox(width: 9.0),
+                  Text('명함 공유하기'),
+                ],
+              ),
+              SizedBox(height: 10.0),
+            ],
+          ),
         ),
         body: Stack(
           children: <Widget>[
@@ -541,22 +573,64 @@ class Tab3State extends State {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
                 children: <Widget>[
-                  FloatingActionButton(
-                    onPressed: _showInputScreen,
-                    child: Icon(Icons.add),
-                    heroTag: 'btn1',
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color:AppColors.gray.withOpacity(0.1),
+                          spreadRadius: 0,
+                          blurRadius: 5,
+                          offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: InkWell(
+                        onTap: () => _showInputScreen(),
+                        child: SvgPicture.asset('assets/images/editinfo.svg'),
+                      ),
+                    ),
                   ),
                   SizedBox(width: 20), // Spacing between buttons
-                  FloatingActionButton(
-                    onPressed: _showCardShare,
-                    child: Icon(Icons.share),
-                    heroTag: 'btn2',
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color:AppColors.gray.withOpacity(0.1),
+                          spreadRadius: 0,
+                          blurRadius: 5,
+                          offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: InkWell(
+                        onTap: () => _showCardShare(),
+                        child: SvgPicture.asset('assets/images/share.svg'),
+                      ),
+                    ),
                   ),
                   SizedBox(width: 20), // Spacing between buttons
-                  FloatingActionButton(
-                    onPressed: _showCardRecieve,
-                    child: Icon(Icons.download),
-                    heroTag: 'btn3',
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color:AppColors.gray.withOpacity(0.1),
+                          spreadRadius: 0,
+                          blurRadius: 5,
+                          offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: InkWell(
+                        onTap: () => _showCardRecieve(),
+                        child: SvgPicture.asset('assets/images/scanQR.svg'),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -610,7 +684,9 @@ class _CardShareScreenState extends State<CardShareScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Card Share Screen'),
+        title: Text('QR로 명함 공유',style: TextStyle(
+          fontWeight: FontWeight.w500,
+        ),),
       ),
       body: Center(
         child: data.isNotEmpty
@@ -655,7 +731,9 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Card Receive Screen'),
+        title: Text("QR 스캔해서 명함 저장",style: TextStyle(
+          fontWeight: FontWeight.w500,
+        ),),
       ),
       body: Column(
         children: <Widget>[

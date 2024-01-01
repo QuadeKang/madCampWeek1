@@ -75,8 +75,13 @@ flutter:
     - assets/images/logo.svg
     - assets/images/profilephoto.svg
     - assets/images/tab2logo.svg
+    - assets/images/tab3logo.svg
     - assets/images/photoadd.svg
     - assets/images/takephoto.svg
+    - assets/images/editinfo.svg
+    - assets/images/scanQR.svg
+    - assets/images/share.svg
+    - assets/images/addphotosquare.svg
     - assets/images/addContact.svg
     - assets/images/callButton.svg
     - assets/images/deleteButton.svg
