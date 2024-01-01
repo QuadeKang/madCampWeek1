@@ -101,7 +101,19 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                                     );
                                   } else {
                                     // File does not exist, display a placeholder or error widget
-                                    return Icon(Icons.image_not_supported); // Placeholder icon
+                                    return Container(
+                                      width: 100,
+                                      height: double.infinity,
+                                      child: Center( // This centers the child widget both horizontally and vertically
+                                        child: Icon(
+                                          Icons.image_not_supported,
+                                          size: 60, // Adjust the size as needed
+                                          color: Colors.blue, // Optional: to make the icon stand out
+                                        ),
+                                      ),
+                                    );
+
+
                                   }
                                 } else {
                                   // While the future is resolving, you can show a loader or an empty container
@@ -173,10 +185,21 @@ Future<ContactInfo> readContactInfo(String fileName) async {
         photoUrl: photoUrl,
       );
 
-  } else {
-      // Handle the case where the file does not exist
-      print('File does not exist: $filePath');
-      throw FileSystemException('File not found', filePath);
+    } else {
+      // If the file does not exist, create a new file with default content
+      print('File does not exist. Creating a new file: $filePath');
+      final defaultContent = 'name:\nphone:\nemail:\norganization:\nposition:\nmemo:\nphotoUrl:';
+      await file.writeAsString(defaultContent);
+
+      // Return a new ContactInfo object with empty fields
+      return ContactInfo(
+        name: '',
+        phone: '',
+        email: '',
+        organization: '',
+        position: '',
+        photoUrl: '',
+      );
     }
   } catch (e) {
     // Handle any errors
@@ -220,12 +243,13 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
       setState(() {
         _photoUrl = newPath;
-        _randKey = math.Random().nextInt(100) as String;
+        _randKey = math.Random().nextInt(100).toString(); // Corrected line
       });
     } catch (e) {
       print("Error initializing photo path: $e");
     }
   }
+
 
   Future<void> _loadContactInfo() async {
 
@@ -279,6 +303,25 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
     }
   }
 
+  Future<File> _loadFile(String path) async {
+    try {
+      // Create a file instance from the path
+      final file = File(path);
+
+      // Check if the file exists
+      if (await file.exists()) {
+        // If the file exists, return it
+        return file;
+      } else {
+        // If the file does not exist, throw an exception
+        throw Exception('File not found');
+      }
+    } catch (e) {
+      // If any error occurs, rethrow the exception
+      rethrow;
+    }
+  }
+
 
 
 
@@ -322,14 +365,36 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Image.file(
-                File(_photoUrl.split('?')[0]), // Split to get the actual file path without the query parameter
-                key: ValueKey(_randKey), // Using ValueKey to ensure the widget rebuilds when the key changes
-                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                  return Image.file(File(_photoUrl)); // Placeholder widget for errors
+              child: FutureBuilder<File>(
+                future: _loadFile(_photoUrl.split('?')[0]), // Function to load the file
+                builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // While the file is loading, display a loading icon
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasData) {
+                    // File is loaded, display the image
+                    return Image.file(
+                      snapshot.data!,
+                      key: ValueKey(_randKey), // Using ValueKey to ensure the widget rebuilds when the key changes
+                      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                        // If an error occurs, reopen the existing image
+                        return Image.file(
+                          File(_photoUrl.split('?')[0]), // Reopen the existing image
+                        );
+                      },
+                    );
+                  } else {
+                    // If there is no data (file not found or other issues), display an error icon
+                    return Icon(
+                      Icons.error, // This is the error icon
+                      color: Colors.red, // You can choose the color of the icon
+                      size: 48.0, // You can adjust the size of the icon
+                    );
+                  }
                 },
               ),
             ),
+
 
             // Add other text fields for phone, memo, etc.
             ElevatedButton(
@@ -357,7 +422,6 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                 String email = _emailController.text;
                 String organization = _organizationController.text;
                 String position = _positionController.text;
-                String phothUrl = '';
 
                 String contactInfo = 'Name:$name\nPhone:$phone\nEmail:$email\nOrganization:$organization\nPosition:$position\nMemo:\nPhoto URL:$_photoUrl';
                 debugPrint(contactInfo);
@@ -414,8 +478,12 @@ class Tab3State extends State {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ContactInputScreen()),
-    );
-
+    ).then((_) {
+      // When returning back to this screen, refresh the state
+      setState(() {
+        // Update your data here
+      });
+    });
   }
 
   void _showCardShare() async {
@@ -805,4 +873,3 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
     }
   }
 }
-
