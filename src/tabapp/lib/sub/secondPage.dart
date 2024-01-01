@@ -8,6 +8,7 @@ import 'package:tabapp/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tabapp/main.dart';
 import 'package:tabapp/customDialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Tab2State extends State {
   List<File> images = [];
@@ -21,38 +22,63 @@ class Tab2State extends State {
     _loadImages();
   }
 
+  // 이미지 파일 경로의 순서를 저장
+  Future<void> _saveImageOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> imagePathList = images.map((image) => image.path).toList();
+    await prefs.setStringList('imageOrder', imagePathList);
+  }
+
   Future<void> _loadImages() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> savedImagePathList = prefs.getStringList('imageOrder') ?? [];
+
     final String directoryPath = await findPath;
     final directory = Directory(directoryPath);
     List<FileSystemEntity> entries = await directory.list().toList();
 
-    List<FileSystemEntity> filteredEntries = entries.where((file) {
-      return file.path != '$findPath/profile.jpg';
-    }).toList();
+    List<File> imageFiles = [];
 
-    // Filter out only image files
-    List<File> imageFiles = filteredEntries.whereType<File>().where((file) {
-      String extension = path.extension(file.path).toLowerCase();
-      return ['.jpg', '.jpeg', '.png', '.gif', '.bmp'].contains(extension);
-    }).toList();
-
-    // Get modification times for each file
-    Map<File, DateTime> fileModificationTimes = {};
-    for (File file in imageFiles) {
-      var stat = await file.stat();
-      fileModificationTimes[file] = stat.modified;
+    // 저장된 이미지 경로 리스트가 있는 경우
+    for (String path in savedImagePathList) {
+      final file = File(path);
+      if (await file.exists()) {
+        imageFiles.add(file);
+      }
     }
 
-    // Sort the image files by modification date in descending order
-    imageFiles.sort((a, b) {
-      return fileModificationTimes[b]!.compareTo(fileModificationTimes[a]!);
-    });
+    // 저장된 경로 리스트가 비어있거나 파일이 존재하지 않는 경우
+    if (imageFiles.isEmpty) {
+      List<FileSystemEntity> filteredEntries = entries.where((file) {
+        return file.path != '$findPath/profile.jpg';
+      }).toList();
 
-    // Update the state with the sorted list of image files
+      // Filter out only image files
+      List<File> tempImageFiles = filteredEntries.whereType<File>().where((file) {
+        String extension = path.extension(file.path).toLowerCase();
+        return ['.jpg', '.jpeg', '.png', '.gif', '.bmp'].contains(extension);
+      }).toList();
+
+      // Sort the image files by modification date in descending order
+      Map<File, DateTime> fileModificationTimes = {};
+      for (File file in tempImageFiles) {
+        var stat = await file.stat();
+        fileModificationTimes[file] = stat.modified;
+      }
+
+      tempImageFiles.sort((a, b) {
+        return fileModificationTimes[b]!.compareTo(fileModificationTimes[a]!);
+      });
+
+      imageFiles = tempImageFiles;
+    }
+
+    // Update the state with the list of image files
     setState(() {
       images = imageFiles;
     });
   }
+
 
   Future<void> _takePicture() async {
     final ImagePicker _picker = ImagePicker();
@@ -166,10 +192,11 @@ class Tab2State extends State {
       ),
       body: Stack(
         children: [
-          ListView.builder(
+          ReorderableListView.builder(
             itemCount: images.length,
             itemBuilder: (context, index) {
               return Column(
+                key: ValueKey(images[index]), // 고유한 key 제공
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -190,11 +217,11 @@ class Tab2State extends State {
                       child: Container(
                         decoration: selectedPhotoIndex == index && showButtons
                             ? BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.icongray, // 색상 지정
-                                  width: 3.0, // 두께 조절
-                                ),
-                              )
+                          border: Border.all(
+                            color: AppColors.icongray,
+                            width: 3.0,
+                          ),
+                        )
                             : null,
                         child: AspectRatio(
                           aspectRatio: 9 / 5,
@@ -210,6 +237,17 @@ class Tab2State extends State {
                     _buildButtonOverlay(),
                 ],
               );
+            },
+            // ReorderableListView의 onReorder 콜백
+            onReorder: (int oldIndex, int newIndex) {
+              setState(() {
+                if (newIndex > oldIndex) {
+                  newIndex -= 1;
+                }
+                final image = images.removeAt(oldIndex);
+                images.insert(newIndex, image);
+                _saveImageOrder(); // 변경된 순서를 저장
+              });
             },
           ),
           Positioned(
