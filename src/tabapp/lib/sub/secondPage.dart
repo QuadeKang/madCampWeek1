@@ -236,6 +236,7 @@ class Tab2State extends State {
                     ),
                   ),
                 ),
+                SizedBox(width: 3,),
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
