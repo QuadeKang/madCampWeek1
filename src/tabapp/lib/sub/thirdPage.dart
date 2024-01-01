@@ -12,6 +12,7 @@ import 'dart:ui' as ui;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tabapp/sub/contactManager.dart';
+import 'package:tabapp/main.dart';
 
 import 'package:tabapp/sub/firstPage.dart';
 

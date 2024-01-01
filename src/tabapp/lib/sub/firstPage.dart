@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:tabapp/sub/contactManager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tabapp/main.dart';
 
 
 class Contact {

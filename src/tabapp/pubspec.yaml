@@ -74,6 +74,9 @@ flutter:
   assets:
     - assets/images/logo.svg
     - assets/images/profilephoto.svg
+    - assets/images/tab2logo.svg
+    - assets/images/photoadd.svg
+    - assets/images/takephoto.svg
 
   #   - images/a_dot_ham.jpeg
 

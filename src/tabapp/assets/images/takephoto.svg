@@ -1,0 +1,34 @@
+<svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_ii_73_5857)">
+<circle cx="25.5" cy="25.5" r="25.5" fill="url(#paint0_linear_73_5857)"/>
+</g>
+<g clip-path="url(#clip0_73_5857)">
+<path d="M25.4998 28.8333C27.3408 28.8333 28.8332 27.3409 28.8332 25.5C28.8332 23.659 27.3408 22.1667 25.4998 22.1667C23.6589 22.1667 22.1665 23.659 22.1665 25.5C22.1665 27.3409 23.6589 28.8333 25.4998 28.8333Z" fill="white"/>
+<path d="M22.3752 15.0833L20.4689 17.1667H17.1668C16.021 17.1667 15.0835 18.1042 15.0835 19.25V31.75C15.0835 32.8958 16.021 33.8333 17.1668 33.8333H33.8335C34.9793 33.8333 35.9168 32.8958 35.9168 31.75V19.25C35.9168 18.1042 34.9793 17.1667 33.8335 17.1667H30.5314L28.6252 15.0833H22.3752ZM25.5002 30.7083C22.6252 30.7083 20.2918 28.375 20.2918 25.5C20.2918 22.625 22.6252 20.2917 25.5002 20.2917C28.3752 20.2917 30.7085 22.625 30.7085 25.5C30.7085 28.375 28.3752 30.7083 25.5002 30.7083Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_ii_73_5857" x="0" y="-3" width="54" height="55" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="3" dy="1"/>
+<feGaussianBlur stdDeviation="7.5"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
+<feBlend mode="overlay" in2="shape" result="effect1_innerShadow_73_5857"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="-3"/>
+<feGaussianBlur stdDeviation="5"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+<feBlend mode="overlay" in2="effect1_innerShadow_73_5857" result="effect2_innerShadow_73_5857"/>
+</filter>
+<linearGradient id="paint0_linear_73_5857" x1="51" y1="51" x2="-1.51992e-06" y2="1.51992e-06" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2C5AFF"/>
+<stop offset="1" stop-color="#6B7FC4"/>
+</linearGradient>
+<clipPath id="clip0_73_5857">
+<rect width="25" height="25" fill="white" transform="translate(13 13)"/>
+</clipPath>
+</defs>
+</svg>

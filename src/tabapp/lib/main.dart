@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: IntroScreen(),
       theme: ThemeData(
+        primaryColor: AppColors.primaryBlue,
         fontFamily: 'Pretendard',
       ),
     );
@@ -58,13 +59,17 @@ class _MyTabbedAppState extends State<MyTabbedApp>
         controller: controller,
       ),
       bottomNavigationBar: Material(
+        color: Colors.white,
         child: TabBar(
           tabs: <Tab>[
-            Tab(icon: Icon(Icons.person), text: '전화번호부'),
-            Tab(icon: Icon(Icons.photo), text: '이미지'),
-            Tab(icon: Icon(Icons.nfc), text: 'NFC'),
+            Tab(icon: Icon(Icons.search), text: '연락처'),
+            Tab(icon: Icon(Icons.photo_library), text: '갤러리'),
+            Tab(icon: Icon(Icons.folder_shared), text: '명함 공유'),
           ],
           controller: controller,
+          labelColor: AppColors.primaryBlue,
+          unselectedLabelColor: AppColors.gray,
+          indicatorColor: AppColors.primaryBlue,
         ),
       ),
     );
@@ -83,11 +88,32 @@ class BizLinkAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text('BizLink',style: TextStyle(
         color: AppColors.primaryBlue,
-        fontSize: 25,
+        fontSize: 30,
         fontWeight: FontWeight.w700,
       ),),
     );
   }
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight); // AppBar의 기본 높이
+}
+
+class SubAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Widget titleRow; // Row 위젯을 매개변수로 받음
+
+  SubAppBar({required this.titleRow}); // 생성자를 통해 Row 위젯을 초기화
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: titleRow, // AppBar의 title로 Row 위젯 사용
+      titleTextStyle: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 20,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(50.0); // AppBar의 높이
 }
