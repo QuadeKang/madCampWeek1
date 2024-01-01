@@ -163,6 +163,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     decoration: InputDecoration(labelText: '이름')),
                 TextField(
                     controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(labelText: '전화번호')),
                 TextField(
                     controller: _organizationController,
@@ -172,6 +173,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     decoration: InputDecoration(labelText: '직급')),
                 TextField(
                     controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(labelText: '이메일')),
                 TextField(
                     controller: _memoController,
@@ -818,6 +820,7 @@ class Tab1State extends State {
                     decoration: InputDecoration(labelText: '이름')),
                 TextField(
                     controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(labelText: '전화번호')),
                 TextField(
                     controller: _organizationController,
@@ -827,6 +830,7 @@ class Tab1State extends State {
                     decoration: InputDecoration(labelText: '직급')),
                 TextField(
                     controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(labelText: '이메일')),
                 // 필요에 따라 더 많은 필드를 추가할 수 있습니다
               ],
@@ -1031,6 +1035,7 @@ class Tab1State extends State {
                 ),
                 TextField(
                   controller: _phoneNumberController,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(labelText: '전화번호'),
                 ),
                 // 여기에 추가 정보(소속, 직급, 이메일) 입력을 위한 TextField 추가
@@ -1044,6 +1049,7 @@ class Tab1State extends State {
                 ),
                 TextField(
                   controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(labelText: '이메일'),
                 ),
               ],
