@@ -106,6 +106,7 @@ flutter:
         - asset: assets/fonts/Pretendard-Bold.ttf
         - asset: assets/fonts/Pretendard-SemiBold.ttf
         - asset: assets/fonts/Pretendard-Regular.ttf
+        - asset: assets/fonts/Pretendard-Medium.ttf
         - asset: assets/fonts/Pretendard-Light.ttf
   #
   # For details regarding fonts from package dependencies,

@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class MyTabbedApp extends StatefulWidget {
   @override
   _MyTabbedAppState createState() => _MyTabbedAppState();
@@ -40,7 +39,8 @@ class _Tab3 extends StatefulWidget {
   Tab3State createState() => Tab3State();
 }
 
-class _MyTabbedAppState extends State<MyTabbedApp> with SingleTickerProviderStateMixin {
+class _MyTabbedAppState extends State<MyTabbedApp>
+    with SingleTickerProviderStateMixin {
   late TabController controller;
 
   @override
@@ -52,6 +52,7 @@ class _MyTabbedAppState extends State<MyTabbedApp> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BizLinkAppBar(),
       body: TabBarView(
         children: <Widget>[_Tab1(), _Tab2(), _Tab3()],
         controller: controller,
@@ -74,4 +75,19 @@ class _MyTabbedAppState extends State<MyTabbedApp> with SingleTickerProviderStat
     controller.dispose();
     super.dispose();
   }
+}
+
+class BizLinkAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Text('BizLink',style: TextStyle(
+        color: AppColors.primaryBlue,
+        fontSize: 25,
+        fontWeight: FontWeight.w700,
+      ),),
+    );
+  }
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight); // AppBar의 기본 높이
 }
