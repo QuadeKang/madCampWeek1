@@ -1,11 +1,11 @@
 # BizLink
-## 비즈링크에 관한 1줄 설명하면 됩니다.
+## 비즈니스를 위한 연락처/명함 관리 어플
 
 ---
 Week1. 4분반 최우정, 강정환
-- 설명
-- 설명
-- 설명
+- 기존 주소록과 분리된 별도의 주소록을 제공합니다. 그럼에도 상상할 수 있는 모든 기능을 제공합니다.
+- 다른 사람의 명함을 사진으로 깔끔하게 보관 가능합니다. 명함을 자르고, 돌리고, 명함 크기에 맞게 저장하세요.
+- 내 명함을, 다른 사람의 명함을 QR코드 공유를 통해 빠르게 교환할 수 있습니다.
 
 ---
 ### a. 개발 팀원
@@ -22,23 +22,27 @@ Week1. 4분반 최우정, 강정환
 - IDE : Android Studio
 - Target Device : Galaxy s10e, Galaxy Note20
 
+  > minSdkVersion 20
+  > 
+  > targetSdkVersion 31
+
+
 ---
 ### c. 의존성
-|LIB|Ver|
-|-|-|
-|cupertino_icons|1.0.2|
-|image_picker|1.0.5|
-|path_provider|2.1.1|
-|path|1.8.3|
-|image_cropper|5.0.1|
-|url_launcher|6.2.2|
-|contacts_service|0.6.3|
-|permission_handler|11.1.0|
-|nfc_manager|3.3.0
-|shared_preferences|2.2.2
-|qr_flutter|4.0.0
-|qr_code_scanner|1.0.1|
-|flutter_svg|2.0.9|
+|LIB|Ver|Use|
+|-|-|-|
+|[cupertino_icons](https://pub.dev/packages/cupertino_icons)|1.0.2|This is an asset repo containing the default set of icon assets used by Flutter's Cupertino widgets.|
+|[image_picker](https://pub.dev/packages/image_picker)|1.0.5|A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.|
+|[path_provider](https://pub.dev/packages/path_provider)|2.1.1|A Flutter plugin for finding commonly used locations on the filesystem.|
+|[path](https://pub.dev/packages/path)|1.8.3|A comprehensive, cross-platform path manipulation library for Dart.|
+|[image_cropper](https://pub.dev/packages/image_cropper)|5.0.1|A Flutter plugin for Android, iOS and Web supports cropping images.|
+|[url_launcher](https://pub.dev/packages/url_launcher)|6.2.2|A Flutter plugin for launching a URL.|
+|[contacts_service](https://pub.dev/packages/contacts_service)|0.6.3|A Flutter plugin to access and manage the device's contacts.|
+|[permission_handler](https://pub.dev/packages/permission_handler)|11.1.0|This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.|
+|[shared_preferences](https://pub.dev/packages/shared_preferences)|2.2.2|Wraps platform-specific persistent storage for simple data.|
+|[qr_flutter](https://pub.dev/packages/qr_flutter)|4.0.0|QR.Flutter is a Flutter library for simple and fast QR code rendering via a Widget or custom painter.|
+|[qr_code_scanner](https://pub.dev/packages/qr_code_scanner)|1.0.1|A QR code scanner that works on both iOS and Android by natively embedding the platform view within Flutter.|
+|[flutter_svg](https://pub.dev/packages/flutter_svg)|2.0.9|Draw SVG files using Flutter.|
 
 ---
 ### d. 어플리케이션 소개
