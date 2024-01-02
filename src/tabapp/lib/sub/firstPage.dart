@@ -998,112 +998,136 @@ class Tab1State extends State {
     final _organizationController = TextEditingController();
     final _positionController = TextEditingController();
     final _emailController = TextEditingController();
+    Map<String, bool> _showError = {
+      'name': false,
+      'phoneNumber': false,
+      'organization': false,
+      'position': false,
+      'email': false,
+    };
+
+    void checkAndSetError() {
+      _showError['name'] = _nameController.text.isEmpty;
+      _showError['phoneNumber'] = _phoneNumberController.text.isEmpty;
+      _showError['organization'] = _organizationController.text.isEmpty;
+      _showError['position'] = _positionController.text.isEmpty;
+      _showError['email'] = _emailController.text.isEmpty;
+    }
 
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // border-radius: 10px;
-          ),
-          backgroundColor: Colors.white, // background: #FFF;
-          surfaceTintColor: Colors.transparent,
-          title: const Text(
-            '새 연락처 추가',
-            style: TextStyle(
-              color: Color(0xFF476BEC), // Primary blue color for the title
-              fontFamily: 'Pretendard Variable',
-              fontSize: 22,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.408,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                CustomTextField(
-                  controller: _nameController,
-                  labelText: '이름',
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(10.0), // border-radius: 10px;
+              ),
+              backgroundColor: Colors.white, // background: #FFF;
+              surfaceTintColor: Colors.transparent,
+              title: const Text(
+                '새 연락처 추가',
+                style: TextStyle(
+                  color: Color(0xFF476BEC), // Primary blue color for the title
+                  fontFamily: 'Pretendard Variable',
+                  fontSize: 22,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.408,
                 ),
-                CustomTextField(
-                  controller: _phoneNumberController,
-                  labelText: '전화번호',
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    CustomTextField(
+                      controller: _nameController,
+                      labelText: '이름',
+                    ),
+                    if (_showError['name']!) // 이름 필드에 대한 경고 메시지
+                      Text('이름을 입력해주세요', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _phoneNumberController,
+                      labelText: '전화번호',
+                    ),
+                    if (_showError['phoneNumber']!) // 이름 필드에 대한 경고 메시지
+                      Text('전화번호를 입력해주세요', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _organizationController,
+                      labelText: '조직',
+                    ),
+                    if (_showError['organization']!)
+                      Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _positionController,
+                      labelText: '직급',
+                    ),
+                    if (_showError['position']!)
+                      Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _emailController,
+                      labelText: '이메일',
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    if (_showError['email']!)
+                      Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                  ],
                 ),
-                CustomTextField(
-                  controller: _organizationController,
-                  labelText: '조직',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      checkAndSetError(); // 필드 검사 및 오류 설정
+                    });
+                    if (!_showError.containsValue(true)) {
+                      Navigator.of(context).pop();
+                      _addNewContact(
+                        _nameController.text,
+                        _phoneNumberController.text,
+                        _organizationController.text,
+                        _positionController.text,
+                        _emailController.text,
+                      );
+                    }
+                  },
+                  child: Text(
+                    '저장',
+                    textAlign: TextAlign.center, // text-align: center;
+                    style: TextStyle(
+                      color: Colors.black, // color: var(--black, #000);
+                      fontFamily:
+                          'Pretendard Variable', // font-family: Pretendard Variable;
+                      fontSize: 16, // font-size: 16px;
+                      fontStyle: FontStyle.normal, // font-style: normal;
+                      fontWeight: FontWeight.w500, // font-weight: 500;
+                      letterSpacing: -0.408, // letter-spacing: -0.408px;
+                      height:
+                          1.375, // Approximately 137.5% line-height (22px / 16px)
+                    ),
+                  ),
                 ),
-                CustomTextField(
-                  controller: _positionController,
-                  labelText: '직급',
-                ),
-                CustomTextField(
-                  controller: _emailController,
-                  labelText: '이메일',
-                  keyboardType: TextInputType.emailAddress,
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    '취소',
+                    textAlign: TextAlign.center, // text-align: center;
+                    style: TextStyle(
+                      color: Colors.black, // color: var(--black, #000);
+                      fontFamily:
+                          'Pretendard Variable', // font-family: Pretendard Variable;
+                      fontSize: 16, // font-size: 16px;
+                      fontStyle: FontStyle.normal, // font-style: normal;
+                      fontWeight: FontWeight.w500, // font-weight: 500;
+                      letterSpacing: -0.408, // letter-spacing: -0.408px;
+                      height:
+                          1.375, // Approximately 137.5% line-height (22px / 16px)
+                    ),
+                  ),
                 ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                if (_nameController.text.isEmpty ||
-                    _phoneNumberController.text.isEmpty ||
-                    _organizationController.text.isEmpty ||
-                    _positionController.text.isEmpty ||
-                    _emailController.text.isEmpty) {
-                  // 필수 필드 중 하나라도 비어있으면 경고 메시지를 표시
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('모든 필수 필드를 채워주세요!')),
-                  );
-                } else {
-                  Navigator.of(context).pop();
-                  _addNewContact(
-                    _nameController.text,
-                    _phoneNumberController.text,
-                    _organizationController.text,
-                    _positionController.text,
-                    _emailController.text,
-                  );
-                }
-              },
-              child: Text(
-                '저장',
-                textAlign: TextAlign.center, // text-align: center;
-                style: TextStyle(
-                  color: Colors.black, // color: var(--black, #000);
-                  fontFamily:
-                      'Pretendard Variable', // font-family: Pretendard Variable;
-                  fontSize: 16, // font-size: 16px;
-                  fontStyle: FontStyle.normal, // font-style: normal;
-                  fontWeight: FontWeight.w500, // font-weight: 500;
-                  letterSpacing: -0.408, // letter-spacing: -0.408px;
-                  height:
-                      1.375, // Approximately 137.5% line-height (22px / 16px)
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                '취소',
-                textAlign: TextAlign.center, // text-align: center;
-                style: TextStyle(
-                  color: Colors.black, // color: var(--black, #000);
-                  fontFamily:
-                      'Pretendard Variable', // font-family: Pretendard Variable;
-                  fontSize: 16, // font-size: 16px;
-                  fontStyle: FontStyle.normal, // font-style: normal;
-                  fontWeight: FontWeight.w500, // font-weight: 500;
-                  letterSpacing: -0.408, // letter-spacing: -0.408px;
-                  height:
-                      1.375, // Approximately 137.5% line-height (22px / 16px)
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
@@ -1361,99 +1385,131 @@ class Tab1State extends State {
       String email) async {
     final _nameController = TextEditingController(text: name);
     final _phoneNumberController = TextEditingController(text: phoneNumber);
-
-    // 기존 TextField 외에 조직, 직급, 이메일을 위한 추가 TextField
     final _organizationController = TextEditingController(text: organization);
     final _positionController = TextEditingController(text: position);
     final _emailController = TextEditingController(text: email);
 
+    // 각 필드별 오류 상태를 추적하는 Map
+    Map<String, bool> _showError = {
+      'name': false,
+      'phoneNumber': false,
+      'organization': false,
+      'position': false,
+      'email': false,
+    };
+
+    // 오류 상태를 업데이트하는 함수
+    void checkAndSetError() {
+      _showError['name'] = _nameController.text.isEmpty;
+      _showError['phoneNumber'] = _phoneNumberController.text.isEmpty;
+      _showError['organization'] = _organizationController.text.isEmpty;
+      _showError['position'] = _positionController.text.isEmpty;
+      _showError['email'] = _emailController.text.isEmpty;
+    }
+
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          title: Text(
-            '연락처 정보 입력',
-            style: TextStyle(
-              color: AppColors.primaryBlue,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                CustomTextField(
-                  controller: _nameController,
-                  labelText: '이름',
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.transparent,
+              title: Text(
+                '연락처 정보 입력',
+                style: TextStyle(
+                  color: AppColors.primaryBlue,
+                  fontWeight: FontWeight.w600,
                 ),
-                CustomTextField(
-                  controller: _phoneNumberController,
-                  labelText: '전화번호',
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    CustomTextField(
+                      controller: _nameController,
+                      labelText: '이름',
+                    ),
+                    if (_showError['name']!)
+                      Text('이름을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _phoneNumberController,
+                      labelText: '전화번호',
+                    ),
+                    if (_showError['phoneNumber']!)
+                      Text('전화번호를 입력해주세요.',
+                          style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _organizationController,
+                      labelText: '조직',
+                    ),
+                    if (_showError['organization']!)
+                      Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _positionController,
+                      labelText: '직급',
+                    ),
+                    if (_showError['position']!)
+                      Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                    CustomTextField(
+                      controller: _emailController,
+                      labelText: '이메일',
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    if (_showError['email']!)
+                      Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                  ],
                 ),
-                CustomTextField(
-                  controller: _organizationController,
-                  labelText: '조직',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      checkAndSetError(); // 필드 상태 확인 및 오류 설정
+                    });
+                    if (!_showError.containsValue(true)) {
+                      Navigator.of(context).pop();
+                      _addContactToApp(Contact(
+                        name: _nameController.text,
+                        phoneNumber: _phoneNumberController.text,
+                        organization: _organizationController.text,
+                        position: _positionController.text,
+                        email: _emailController.text,
+                      ));
+                    }
+                  },
+                  child: Text(
+                    '저장',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Pretendard Variable',
+                      fontSize: 16,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.408,
+                      height: 1.375,
+                    ),
+                  ),
                 ),
-                CustomTextField(
-                  controller: _positionController,
-                  labelText: '직급',
-                ),
-                CustomTextField(
-                  controller: _emailController,
-                  labelText: '이메일',
-                  keyboardType: TextInputType.emailAddress,
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    '취소',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Pretendard Variable',
+                      fontSize: 16,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.408,
+                      height: 1.375,
+                    ),
+                  ),
                 ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _addContactToApp(Contact(
-                  name: _nameController.text,
-                  phoneNumber: _phoneNumberController.text,
-                  organization: _organizationController.text,
-                  position: _positionController.text,
-                  email: _emailController.text,
-                ));
-              },
-              child: Text(
-                '저장',
-                textAlign: TextAlign.center, // text-align: center;
-                style: TextStyle(
-                  color: Colors.black, // color: var(--black, #000);
-                  fontFamily:
-                      'Pretendard Variable', // font-family: Pretendard Variable;
-                  fontSize: 16, // font-size: 16px;
-                  fontStyle: FontStyle.normal, // font-style: normal;
-                  fontWeight: FontWeight.w500, // font-weight: 500;
-                  letterSpacing: -0.408, // letter-spacing: -0.408px;
-                  height:
-                      1.375, // Approximately 137.5% line-height (22px / 16px)
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                '취소',
-                textAlign: TextAlign.center, // text-align: center;
-                style: TextStyle(
-                  color: Colors.black, // color: var(--black, #000);
-                  fontFamily:
-                      'Pretendard Variable', // font-family: Pretendard Variable;
-                  fontSize: 16, // font-size: 16px;
-                  fontStyle: FontStyle.normal, // font-style: normal;
-                  fontWeight: FontWeight.w500, // font-weight: 500;
-                  letterSpacing: -0.408, // letter-spacing: -0.408px;
-                  height:
-                      1.375, // Approximately 137.5% line-height (22px / 16px)
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
