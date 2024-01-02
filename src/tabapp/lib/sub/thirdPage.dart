@@ -751,6 +751,7 @@ class Tab3State extends State {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
+        backgroundColor: AppColors.backgroundGray,
         appBar: SubAppBar(
           titleRow: Column(
             children: [
