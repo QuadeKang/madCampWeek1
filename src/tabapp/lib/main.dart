@@ -86,6 +86,7 @@ class BizLinkAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.white,
       title: Text('BizLink',style: TextStyle(
         color: AppColors.primaryBlue,
         fontSize: 30,
