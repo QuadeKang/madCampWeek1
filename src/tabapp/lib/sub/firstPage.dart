@@ -9,6 +9,7 @@ import 'package:tabapp/sub/contactManager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tabapp/customDialog.dart';
+import 'package:tabapp/main.dart';
 
 class Contact {
   String name;
@@ -173,157 +174,30 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextField(
+                CustomTextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: '이름',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '이름',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _phoneNumberController,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(labelText: '전화번호',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '전화번호',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _organizationController,
-                  decoration: const InputDecoration(labelText: '조직',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '조직',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _positionController,
-                  decoration: const InputDecoration(labelText: '직급',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '직급',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _emailController,
+                  labelText: '이메일',
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: '이메일',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
                 ),
-                TextField(
+                CustomTextField(
                   controller: _memoController,
-                  decoration: const InputDecoration(labelText: '메모',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '메모',
                 ),
               ],
             ),
@@ -1077,136 +951,27 @@ class Tab1State extends State {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextField(
+                CustomTextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: '이름',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '이름',
                 ),
-
-                TextField(
+                CustomTextField(
                   controller: _phoneNumberController,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(labelText: '전화번호',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '전화번호',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _organizationController,
-                  decoration: InputDecoration(
-                    labelText: '소속',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '조직',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _positionController,
-                  decoration: InputDecoration(labelText: '직급',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
+                  labelText: '직급',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _emailController,
+                  labelText: '이메일',
                   keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(labelText: '이메일',
-                    // Normal border when the TextField is not in focus
-                    border: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is enabled but not in focus
-                    enabledBorder: UnderlineInputBorder(
-
-                    ),
-                    // Border when TextField is in focus (user is typing)
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF476BEC), width: 2.0),
-                    ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.black, // Black color for the text
-                    fontFamily: 'Pretendard Variable',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: -0.408,
-                    height: 1.41667, // Approximately 141.667% line-height
-                  ),
                 ),
-                // 필요에 따라 더 많은 필드를 추가할 수 있습니다
               ],
             ),
           ),
@@ -1493,28 +1258,26 @@ class Tab1State extends State {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextField(
+                CustomTextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: '이름'),
+                  labelText: '이름',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _phoneNumberController,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(labelText: '전화번호'),
+                  labelText: '전화번호',
                 ),
-                // 여기에 추가 정보(소속, 직급, 이메일) 입력을 위한 TextField 추가
-                TextField(
+                CustomTextField(
                   controller: _organizationController,
-                  decoration: InputDecoration(labelText: '소속'),
+                  labelText: '조직',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _positionController,
-                  decoration: InputDecoration(labelText: '직급'),
+                  labelText: '직급',
                 ),
-                TextField(
+                CustomTextField(
                   controller: _emailController,
+                  labelText: '이메일',
                   keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(labelText: '이메일'),
                 ),
               ],
             ),
