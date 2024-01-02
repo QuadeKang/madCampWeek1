@@ -15,6 +15,7 @@ class Tab2State extends State {
   bool showButtons = false; // State to control button visibility
   late int selectedImageIndex; // To keep track of the selected image
   int? selectedPhotoIndex;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -214,6 +215,7 @@ class Tab2State extends State {
                           selectedPhotoIndex = index;
                         }
                       });
+                      _scrollToSelected();
                     },
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
@@ -252,6 +254,7 @@ class Tab2State extends State {
                 _saveImageOrder(); // 변경된 순서를 저장
               });
             },
+            scrollController: scrollController,
           ),
           Positioned(
             bottom: 10.0,
@@ -304,6 +307,18 @@ class Tab2State extends State {
       ),
     );
   }
+
+  void _scrollToSelected() {
+    if (selectedPhotoIndex != null && scrollController.hasClients) {
+      final offset = selectedPhotoIndex! * 200.0; // 예상 아이템 높이
+      scrollController.animateTo(
+        offset,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
 
   Widget _buildButtonOverlay() {
     return Row(
