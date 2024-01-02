@@ -1402,6 +1402,7 @@ class Tab1State extends State {
               ),
               Expanded(
                 child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: 5),
                   itemCount: searchQuery.isEmpty
                       ? allContacts.length
                       : filteredContacts.length,
