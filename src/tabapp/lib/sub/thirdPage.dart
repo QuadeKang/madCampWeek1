@@ -18,7 +18,6 @@ import 'package:tabapp/sub/firstPage.dart';
 import 'package:tabapp/colors.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-
 GlobalKey _globalKey = GlobalKey();
 
 class ContactInfo {
@@ -51,22 +50,22 @@ class BusinessCardWidget extends StatefulWidget {
 class _BusinessCardWidgetState extends State<BusinessCardWidget> {
   bool isEnlarged = false;
 
-
   TextStyle cardInfoStyle = const TextStyle(
-            color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
-            shadows: [
-            Shadow(
-            offset: Offset(0, 4), // 0px horizontal, 4px vertical
-            blurRadius: 4, // 4px blur radius
-            color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
-            ),
-            ],
-            fontFamily: 'PretendVariable', // Ensure the font is added to your pubspec.yaml
-            fontSize: 18.0, // 16px font size
-            fontStyle: FontStyle.normal, // Normal font style
-            fontWeight: FontWeight.w500, // Font weight 500
-            // You may adjust other properties like text height if necessary
-            );
+    color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
+    shadows: [
+      Shadow(
+        offset: Offset(0, 4), // 0px horizontal, 4px vertical
+        blurRadius: 4, // 4px blur radius
+        color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
+      ),
+    ],
+    fontFamily:
+        'PretendVariable', // Ensure the font is added to your pubspec.yaml
+    fontSize: 18.0, // 16px font size
+    fontStyle: FontStyle.normal, // Normal font style
+    fontWeight: FontWeight.w500, // Font weight 500
+    // You may adjust other properties like text height if necessary
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +82,8 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
         }
 
         return Center(
-          child: RepaintBoundary( // Add RepaintBoundary here
+          child: RepaintBoundary(
+            // Add RepaintBoundary here
             key: _globalKey, // Assign GlobalKey to RepaintBoundary
             child: Transform.scale(
               scale: isEnlarged ? 1.5 : 1.0,
@@ -118,34 +118,43 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const SizedBox(height: 20),
-                        Text(widget.contactInfo.name, style:
-                        const TextStyle(
-                          color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
-                          shadows: [
-                            Shadow(
-                              offset: Offset(0, 4), // 0px horizontal, 4px vertical
-                              blurRadius: 4, // 4px blur radius
-                              color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
-                            ),
-                          ],
-                          fontFamily: 'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
-                          fontSize: 30.0, // 30px font size
-                          fontStyle: FontStyle.normal, // Normal font style
-                          fontWeight: FontWeight.w700, // Font weight 700
-                          height: 0.7333, // Line height 22px on 30px font size is roughly 0.7333
-                          letterSpacing: -0.408, // -0.408px letter spacing
-                        ),
+                        Text(
+                          widget.contactInfo.name,
+                          style: const TextStyle(
+                            color: Colors
+                                .white, // Equivalent to #FFF or var(--white, #FFF)
+                            shadows: [
+                              Shadow(
+                                offset: Offset(
+                                    0, 4), // 0px horizontal, 4px vertical
+                                blurRadius: 4, // 4px blur radius
+                                color: Color.fromRGBO(
+                                    0, 0, 0, 0.25), // RGBA color with opacity
+                              ),
+                            ],
+                            fontFamily:
+                                'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
+                            fontSize: 30.0, // 30px font size
+                            fontStyle: FontStyle.normal, // Normal font style
+                            fontWeight: FontWeight.w700, // Font weight 700
+                            height:
+                                0.7333, // Line height 22px on 30px font size is roughly 0.7333
+                            letterSpacing: -0.408, // -0.408px letter spacing
+                          ),
                         ),
 
                         SizedBox(height: 20),
                         // Photo
                         FutureBuilder<bool>(
                           future: File(widget.contactInfo.photoUrl).exists(),
-                          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<bool> snapshot) {
                             // Debug print the photo URL
-                            debugPrint('Photo URL: ${widget.contactInfo.photoUrl}');
+                            debugPrint(
+                                'Photo URL: ${widget.contactInfo.photoUrl}');
 
-                            if (snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
                               if (snapshot.data == true) {
                                 // File exists, display the image
                                 return Image.file(
@@ -167,8 +176,6 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                                   //   ),
                                   // ),
                                 );
-
-
                               }
                             } else {
                               // While the future is resolving, you can show a loader or an empty container
@@ -180,21 +187,32 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
 
                         // Contact Info
                         Expanded(
-                          child:
-                          Padding (
+                          child: Padding(
                             padding: const EdgeInsets.only(left: 0),
-                            child:Column(
-                              mainAxisAlignment: MainAxisAlignment.center, // 여기를 추가하세요
+                            child: Column(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center, // 여기를 추가하세요
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-
-                                Text(widget.contactInfo.phone,style: cardInfoStyle,),
-                                Text(widget.contactInfo.email,style: cardInfoStyle,),
-                                Text(widget.contactInfo.organization,style: cardInfoStyle,),
-                                Text(widget.contactInfo.position,style: cardInfoStyle,),
+                                Text(
+                                  widget.contactInfo.phone,
+                                  style: cardInfoStyle,
+                                ),
+                                Text(
+                                  widget.contactInfo.email,
+                                  style: cardInfoStyle,
+                                ),
+                                Text(
+                                  widget.contactInfo.organization,
+                                  style: cardInfoStyle,
+                                ),
+                                Text(
+                                  widget.contactInfo.position,
+                                  style: cardInfoStyle,
+                                ),
                               ],
-                            ),),
-
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -202,7 +220,6 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                 ),
               ),
             ),
-
           ),
         );
       },
@@ -238,11 +255,11 @@ Future<ContactInfo> readContactInfo(String fileName) async {
         position: lines[4].split(':')[1].trim(),
         photoUrl: photoUrl,
       );
-
     } else {
       // If the file does not exist, create a new file with default content
       print('File does not exist. Creating a new file: $filePath');
-      final defaultContent = 'Name:\nPhone:\nEmail:\nOrganization:\nPosition:\nmemo:\nPhoto URL:';
+      final defaultContent =
+          'Name:\nPhone:\nEmail:\nOrganization:\nPosition:\nmemo:\nPhoto URL:';
       await file.writeAsString(defaultContent);
 
       // Return a new ContactInfo object with empty fields
@@ -262,8 +279,6 @@ Future<ContactInfo> readContactInfo(String fileName) async {
   }
 }
 
-
-
 class ContactInputScreen extends StatefulWidget {
   @override
   _ContactInputScreenState createState() => _ContactInputScreenState();
@@ -271,7 +286,6 @@ class ContactInputScreen extends StatefulWidget {
 
 // 명함 만들기
 class _ContactInputScreenState extends State<ContactInputScreen> {
-
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _positionController = TextEditingController();
@@ -280,6 +294,24 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
   String _photoUrl = '';
   String _randKey = '';
+
+  // 각 필드별 오류 상태를 추적하는 Map
+  Map<String, bool> _showError = {
+    'name': false,
+    'phoneNumber': false,
+    'organization': false,
+    'position': false,
+    'email': false,
+  };
+
+  // 오류 상태를 업데이트하는 함수
+  void checkAndSetError() {
+    _showError['name'] = _nameController.text.isEmpty;
+    _showError['phoneNumber'] = _phoneController.text.isEmpty;
+    _showError['organization'] = _organizationController.text.isEmpty;
+    _showError['position'] = _positionController.text.isEmpty;
+    _showError['email'] = _emailController.text.isEmpty;
+  }
 
   @override
   void initState() {
@@ -290,7 +322,8 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
   Future<void> _initializePhotoPath() async {
     try {
-      String directoryPath = await findPath; // Ensure findPath is an async function
+      String directoryPath =
+          await findPath; // Ensure findPath is an async function
       String folderPath = path.join(directoryPath, 'newProfileFolder');
       String fileName = "profile.jpg";
       String newPath = path.join(folderPath, fileName);
@@ -304,21 +337,17 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
     }
   }
 
-
   Future<void> _loadContactInfo() async {
+    // Get the local path
+    final filePath = 'information.txt';
 
-      // Get the local path
-      final filePath = 'information.txt';
-
-
-      // If the file exists, read the contact information
-      final contactInfo = await readContactInfo(filePath);
-      _nameController.text = contactInfo.name;
-      _phoneController.text = contactInfo.phone;
-      _emailController.text = contactInfo.email;
-      _organizationController.text = contactInfo.organization;
-      _positionController.text = contactInfo.position;
-
+    // If the file exists, read the contact information
+    final contactInfo = await readContactInfo(filePath);
+    _nameController.text = contactInfo.name;
+    _phoneController.text = contactInfo.phone;
+    _emailController.text = contactInfo.email;
+    _organizationController.text = contactInfo.organization;
+    _positionController.text = contactInfo.position;
   }
 
   Future<void> clearImageCache(String imagePath) async {
@@ -326,14 +355,14 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
     await imageProvider.evict();
   }
 
-
   Future<void> _selectPhoto() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       File tempFile = File(pickedFile.path);
-      String directoryPath = await findPath; // Make sure findPath() returns a valid directory path
+      String directoryPath =
+          await findPath; // Make sure findPath() returns a valid directory path
       String folderPath = path.join(directoryPath, 'newProfileFolder');
       String fileName = "profile.jpg";
       String newPath = path.join(folderPath, fileName);
@@ -350,7 +379,6 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
           _photoUrl = newPath;
           clearImageCache(newPath);
         });
-
       } catch (e) {
         debugPrint("Error: $e");
       }
@@ -407,8 +435,6 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
   Future<File?> _cropImage(File imageFile) async {
     try {
-
-
       CroppedFile? croppedFile = await ImageCropper().cropImage(
           sourcePath: imageFile.path,
           aspectRatioPresets: [
@@ -441,15 +467,16 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
     return null;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("내 명함 정보 입력",style: TextStyle(
-          fontWeight: FontWeight.w500,
-        ),),
+        title: Text(
+          "내 명함 정보 입력",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -460,33 +487,44 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
               controller: _nameController,
               labelText: '이름',
             ),
+            if (_showError['name']!)
+              Text('이름을 입력해주세요.', style: TextStyle(color: Colors.red)),
             CustomTextField(
               controller: _phoneController,
               labelText: '전화번호',
-              keyboardType: TextInputType.phone,
             ),
+            if (_showError['phoneNumber']!)
+              Text('전화번호를 입력해주세요.', style: TextStyle(color: Colors.red)),
             CustomTextField(
               controller: _organizationController,
               labelText: '조직',
             ),
+            if (_showError['organization']!)
+              Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
             CustomTextField(
               controller: _positionController,
               labelText: '직급',
             ),
+            if (_showError['position']!)
+              Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
             CustomTextField(
               controller: _emailController,
               labelText: '이메일',
               keyboardType: TextInputType.emailAddress,
             ),
+            if (_showError['email']!)
+              Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),
             SizedBox(height: 16),
 
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: AspectRatio(
-              aspectRatio: 1.2654 / 0.7902, // 원하는 비율
+                aspectRatio: 1.2654 / 0.7902, // 원하는 비율
                 child: FutureBuilder<File>(
-                  future: _loadFile(_photoUrl.split('?')[0]), // Function to load the file
-                  builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+                  future: _loadFile(
+                      _photoUrl.split('?')[0]), // Function to load the file
+                  builder:
+                      (BuildContext context, AsyncSnapshot<File> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       // While the file is loading, display a loading icon
                       return Center(child: CircularProgressIndicator());
@@ -499,20 +537,26 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0), // border-radius: 10px;
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // border-radius: 10px;
                                 ),
-                                backgroundColor: Colors.white, // background: #FFF;
+                                backgroundColor:
+                                    Colors.white, // background: #FFF;
                                 surfaceTintColor: Colors.transparent,
-                                title: Text('사진 옵션',
+                                title: Text(
+                                  '사진 옵션',
                                   style: TextStyle(
-                                    color: Color(0xFF476BEC), // Primary blue color
+                                    color:
+                                        Color(0xFF476BEC), // Primary blue color
                                     fontFamily: 'Pretendard Variable',
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.408,
                                     height: 1.0, // 100% line-height
-                                  ),),
-                                content: Text('원하는 작업을 선택하세요.',
+                                  ),
+                                ),
+                                content: Text(
+                                  '원하는 작업을 선택하세요.',
                                   style: TextStyle(
                                     color: Colors.black, // Black color
                                     fontFamily: 'Pretendard Variable',
@@ -520,87 +564,107 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                                     fontWeight: FontWeight.w400,
                                     letterSpacing: -0.408,
                                     height: 1.41667, // 141.667% line-height
-                                  ),),
-                                actions: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center, // Align buttons to the center
-                                    children: <Widget>[
-
-                                      ElevatedButton(
-                                        child: Text('크롭'),
-                                        style: ElevatedButton.styleFrom(
-                                          primary: AppColors.primaryBlue,  // Background color
-                                          onPrimary: Colors.white,  // Text color
-                                          elevation: 5,  // Shadow elevation
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),  // Rounded corners
-                                          ),
-                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
-                                        ),
-                                        onPressed: () async {
-                                          try {
-                                            // 경로 설정
-                                            String directoryPath = await findPath; // 비동기 함수가 필요
-                                            String folderPath = path.join(directoryPath, 'newProfileFolder');
-                                            String fileName = "profile.jpg";
-                                            String newPath = path.join(folderPath, fileName);
-
-                                            // 파일 인스턴스 생성
-                                            File originalFile = File(newPath);
-
-                                            // 이미지 수정 (예: 자르기)
-                                            final File? croppedImage = await _cropImage(originalFile);
-                                            if (croppedImage != null) {
-                                              // 원본 파일에 수정된 이미지 덮어쓰기
-                                              bool success = await _overwriteOriginalFile(originalFile, croppedImage);
-                                              if (success) {
-                                                print("Image successfully overwritten.");
-                                                // 필요한 경우 상태 업데이트
-                                                setState(() {
-                                                  // 예: 이미지 목록 업데이트
-                                                });
-                                              } else {
-                                                print("Failed to overwrite image.");
-                                              }
-                                            }
-                                          } catch (e) {
-                                            // 예외 처리
-                                            print('Error processing image: $e');
-                                          }
-                                          clearImageCache(_photoUrl);
-                                          setState(() {
-
-                                          });
-                                          // 버튼 2를 눌렀을 때의 작업
-                                          Navigator.of(context).pop(); // 다이얼로그 닫기
-                                        },
-                                      ),
-
-                                      const SizedBox(width:10),
-
-                                      ElevatedButton(
-                                        child: Text('삭제'),
-                                        style: ElevatedButton.styleFrom(
-                                          primary: AppColors.primaryBlue,  // Background color
-                                          onPrimary: Colors.white,  // Text color
-                                          elevation: 5,  // Shadow elevation
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),  // Rounded corners
-                                          ),
-                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
-                                        ),
-                                        onPressed: () async {
-                                          await _deleteProfilePhoto();
-                                          await clearImageCache(_photoUrl);
-                                          setState(() {
-
-                                          });
-
-                                          Navigator.of(context).pop(); // 다이얼로그 닫기
-                                        },
-                                      ),
-                                    ]
                                   ),
+                                ),
+                                actions: <Widget>[
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .center, // Align buttons to the center
+                                      children: <Widget>[
+                                        ElevatedButton(
+                                          child: Text('크롭'),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: AppColors
+                                                .primaryBlue, // Background color
+                                            onPrimary:
+                                                Colors.white, // Text color
+                                            elevation: 5, // Shadow elevation
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      10), // Rounded corners
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20,
+                                                vertical: 10), // Button padding
+                                          ),
+                                          onPressed: () async {
+                                            try {
+                                              // 경로 설정
+                                              String directoryPath =
+                                                  await findPath; // 비동기 함수가 필요
+                                              String folderPath = path.join(
+                                                  directoryPath,
+                                                  'newProfileFolder');
+                                              String fileName = "profile.jpg";
+                                              String newPath = path.join(
+                                                  folderPath, fileName);
+
+                                              // 파일 인스턴스 생성
+                                              File originalFile = File(newPath);
+
+                                              // 이미지 수정 (예: 자르기)
+                                              final File? croppedImage =
+                                                  await _cropImage(
+                                                      originalFile);
+                                              if (croppedImage != null) {
+                                                // 원본 파일에 수정된 이미지 덮어쓰기
+                                                bool success =
+                                                    await _overwriteOriginalFile(
+                                                        originalFile,
+                                                        croppedImage);
+                                                if (success) {
+                                                  print(
+                                                      "Image successfully overwritten.");
+                                                  // 필요한 경우 상태 업데이트
+                                                  setState(() {
+                                                    // 예: 이미지 목록 업데이트
+                                                  });
+                                                } else {
+                                                  print(
+                                                      "Failed to overwrite image.");
+                                                }
+                                              }
+                                            } catch (e) {
+                                              // 예외 처리
+                                              print(
+                                                  'Error processing image: $e');
+                                            }
+                                            clearImageCache(_photoUrl);
+                                            setState(() {});
+                                            // 버튼 2를 눌렀을 때의 작업
+                                            Navigator.of(context)
+                                                .pop(); // 다이얼로그 닫기
+                                          },
+                                        ),
+                                        const SizedBox(width: 10),
+                                        ElevatedButton(
+                                          child: Text('삭제'),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: AppColors
+                                                .primaryBlue, // Background color
+                                            onPrimary:
+                                                Colors.white, // Text color
+                                            elevation: 5, // Shadow elevation
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      10), // Rounded corners
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20,
+                                                vertical: 10), // Button padding
+                                          ),
+                                          onPressed: () async {
+                                            await _deleteProfilePhoto();
+                                            await clearImageCache(_photoUrl);
+                                            setState(() {});
+
+                                            Navigator.of(context)
+                                                .pop(); // 다이얼로그 닫기
+                                          },
+                                        ),
+                                      ]),
                                 ],
                               );
                             },
@@ -610,7 +674,8 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                           snapshot.data!,
                           key: ValueKey(_randKey),
                           fit: BoxFit.cover, // Added BoxFit.cover here
-                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                          errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stackTrace) {
                             return AspectRatio(
                               aspectRatio: 1.2654 / 0.7902,
                               child: ClipRect(
@@ -623,7 +688,6 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                           },
                         ),
                       );
-
                     } else {
                       // If there is no data (file not found or other issues), display an error icon
                       return GestureDetector(
@@ -631,18 +695,16 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                           _selectPhoto().then((_) async {
                             await clearImageCache(_photoUrl);
                           });
-                          setState(() {
-
-                          });
+                          setState(() {});
                         },
-                        child: SvgPicture.asset('assets/images/addphotosquare.svg'),
+                        child: SvgPicture.asset(
+                            'assets/images/addphotosquare.svg'),
                       );
                     }
                   },
                 ),
               ),
             ),
-
 
             // Add other text fields for phone, memo, etc.
             ElevatedButton(
@@ -653,63 +715,63 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
               },
               child: Text("사진 선택"),
               style: ElevatedButton.styleFrom(
-                primary: AppColors.primaryBlue,  // Background color
-                onPrimary: Colors.white,  // Text color
-                elevation: 5,  // Shadow elevation
+                primary: AppColors.primaryBlue, // Background color
+                onPrimary: Colors.white, // Text color
+                elevation: 5, // Shadow elevation
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),  // Rounded corners
+                  borderRadius: BorderRadius.circular(10), // Rounded corners
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 10), // Button padding
               ),
             ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                String name = _nameController.text;
-                String phone = _phoneController.text;
-                String email = _emailController.text;
-                String organization = _organizationController.text;
-                String position = _positionController.text;
+                setState(() {
+                  checkAndSetError();
+                });
+                if (!_showError.containsValue(true)) {
+                  String name = _nameController.text;
+                  String phone = _phoneController.text;
+                  String email = _emailController.text;
+                  String organization = _organizationController.text;
+                  String position = _positionController.text;
 
-                String contactInfo = 'Name:$name\nPhone:$phone\nEmail:$email\nOrganization:$organization\nPosition:$position\nMemo:\nPhoto URL:$_photoUrl';
-                debugPrint(contactInfo);
+                  String contactInfo =
+                      'Name:$name\nPhone:$phone\nEmail:$email\nOrganization:$organization\nPosition:$position\nMemo:\nPhoto URL:$_photoUrl';
+                  debugPrint(contactInfo);
 
-                try {
-                  final directory = await getApplicationDocumentsDirectory();
-                  final filePath = '${directory.path}/information.txt'; // Corrected file path
+                  try {
+                    final directory = await getApplicationDocumentsDirectory();
+                    final filePath = '${directory.path}/information.txt';
 
-                  // Create a file reference
-                  final file = File(filePath);
+                    final file = File(filePath);
 
-                  // Check if the file exists
-                  if (!await file.exists()) {
-                    // If the file does not exist, create it
-                    await file.create(recursive: true);
-                  }
-
-                  // Write the information
-                  await file.writeAsString(contactInfo);
-                } catch (e) {
-                  // Handle the error
-                  print('Error saving contact info: $e');
+                    if (!await file.exists()) {
+                await file.create(recursive: true);
                 }
 
-                // Close the dialog
-                Navigator.of(context).pop();
+                await file.writeAsString(contactInfo);
+                } catch (e) {
+                print('Error saving contact info: $e');
+                }
 
+                Navigator.of(context).pop();
+              }
               },
               child: Text("저장"),
               style: ElevatedButton.styleFrom(
-                primary: AppColors.primaryBlue,  // Background color
-                onPrimary: Colors.white,  // Text color
-                elevation: 5,  // Shadow elevation
+                primary: AppColors.primaryBlue, // Background color
+                onPrimary: Colors.white, // Text color
+                elevation: 5, // Shadow elevation
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),  // Rounded corners
+                  borderRadius: BorderRadius.circular(10), // Rounded corners
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 10), // Button padding
               ),
             ),
-
           ],
         ),
       ),
@@ -717,11 +779,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   }
 }
 
-
-
-
 class Tab3State extends State {
-
   void _showInputScreen() async {
     Navigator.push(
       context,
@@ -748,128 +806,130 @@ class Tab3State extends State {
     );
   }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: AppColors.backgroundGray,
-        appBar: SubAppBar(
-          titleRow: Column(
-            children: [
-              Row(
-                children: [
-                  SvgPicture.asset('assets/images/tab3logo.svg'),
-                  SizedBox(width: 9.0),
-                  Text('명함 공유하기'),
-                ],
-              ),
-              SizedBox(height: 10.0),
-            ],
-          ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.backgroundGray,
+      appBar: SubAppBar(
+        titleRow: Column(
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset('assets/images/tab3logo.svg'),
+                SizedBox(width: 9.0),
+                Text('명함 공유하기'),
+              ],
+            ),
+            SizedBox(height: 10.0),
+          ],
         ),
-        body: Stack(
-          children: <Widget>[
+      ),
+      body: Stack(
+        children: <Widget>[
           Positioned(
             top: 20, // Adjust this value to move the widget higher
             left: 0,
             right: 0,
-              child :Center(
-                child: FutureBuilder<ContactInfo>(
-                  future: readContactInfo('information.txt'), // Replace with your actual method to get contact info
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        // When data is loaded, display the business card
-                        return BusinessCardWidget(contactInfo: snapshot.data!);
-                      } else if (snapshot.hasError) {
-                        // In case of an error
-                        return Text('Error loading data: ${snapshot.error}');
-                      } else {
-                        // If data is not yet available
-                        return Text('No data found');
-                      }
+            child: Center(
+              child: FutureBuilder<ContactInfo>(
+                future: readContactInfo(
+                    'information.txt'), // Replace with your actual method to get contact info
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      // When data is loaded, display the business card
+                      return BusinessCardWidget(contactInfo: snapshot.data!);
+                    } else if (snapshot.hasError) {
+                      // In case of an error
+                      return Text('Error loading data: ${snapshot.error}');
                     } else {
-                      // While data is loading, show a progress indicator
-                      return CircularProgressIndicator();
+                      // If data is not yet available
+                      return Text('No data found');
                     }
-                  },
+                  } else {
+                    // While data is loading, show a progress indicator
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Center the buttons horizontally
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gray.withOpacity(0.1),
+                        spreadRadius: 0,
+                        blurRadius: 5,
+                        offset: Offset(3, 3), // 오른쪽 아래로 그림자
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
+                    child: InkWell(
+                      onTap: () => _showInputScreen(),
+                      child: SvgPicture.asset('assets/images/editinfo.svg'),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(width: 20), // Spacing between buttons
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gray.withOpacity(0.1),
+                        spreadRadius: 0,
+                        blurRadius: 5,
+                        offset: Offset(3, 3), // 오른쪽 아래로 그림자
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
+                    child: InkWell(
+                      onTap: () => _showCardShare(),
+                      child: SvgPicture.asset('assets/images/share.svg'),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20), // Spacing between buttons
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gray.withOpacity(0.1),
+                        spreadRadius: 0,
+                        blurRadius: 5,
+                        offset: Offset(3, 3), // 오른쪽 아래로 그림자
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
+                    child: InkWell(
+                      onTap: () => _showCardRecieve(),
+                      child: SvgPicture.asset('assets/images/scanQR.svg'),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.gray.withOpacity(0.1),
-                          spreadRadius: 0,
-                          blurRadius: 5,
-                          offset: Offset(3, 3), // 오른쪽 아래로 그림자
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
-                      child: InkWell(
-                        onTap: () => _showInputScreen(),
-                        child: SvgPicture.asset('assets/images/editinfo.svg'),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20), // Spacing between buttons
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.gray.withOpacity(0.1),
-                          spreadRadius: 0,
-                          blurRadius: 5,
-                          offset: Offset(3, 3), // 오른쪽 아래로 그림자
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
-                      child: InkWell(
-                        onTap: () => _showCardShare(),
-                        child: SvgPicture.asset('assets/images/share.svg'),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20), // Spacing between buttons
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.gray.withOpacity(0.1),
-                          spreadRadius: 0,
-                          blurRadius: 5,
-                          offset: Offset(3, 3), // 오른쪽 아래로 그림자
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
-                      child: InkWell(
-                        onTap: () => _showCardRecieve(),
-                        child: SvgPicture.asset('assets/images/scanQR.svg'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -916,27 +976,27 @@ class _CardShareScreenState extends State<CardShareScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR로 명함 공유',style: TextStyle(
-          fontWeight: FontWeight.w500,
-        ),),
+        title: Text(
+          'QR로 명함 공유',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
       body: Center(
         child: data.isNotEmpty
             ? QrImage(
-          data: data,
-          version: QrVersions.auto,
-          size: 200.0,
-        )
+                data: data,
+                version: QrVersions.auto,
+                size: 200.0,
+              )
             : Text('Loading or No data found!'),
       ),
     );
   }
 }
 
-
-
 /* ------------------------------------------------------------- */
-
 
 class CardReceiveScreen extends StatefulWidget {
   @override
@@ -963,9 +1023,12 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("QR 스캔해서 명함 저장",style: TextStyle(
-          fontWeight: FontWeight.w500,
-        ),),
+        title: Text(
+          "QR 스캔해서 명함 저장",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -989,7 +1052,10 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
       List<String> parts = line.split(':');
       if (parts.length >= 2) {
         String key = parts[0].trim();
-        String value = parts.sublist(1).join(':').trim(); // Join back if there were multiple ':' in the data.
+        String value = parts
+            .sublist(1)
+            .join(':')
+            .trim(); // Join back if there were multiple ':' in the data.
         cardData[key] = value;
       }
     }
@@ -997,7 +1063,6 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-
     this.controller = controller;
     bool hasNavigated = false;
 
@@ -1022,7 +1087,8 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
                   position: cardData['Position'] ?? '',
                 ),
               ),
-            ).then((_) => hasNavigated = false); // Reset the flag when back to the previous screen
+            ).then((_) => hasNavigated =
+                false); // Reset the flag when back to the previous screen
 
             hasNavigated = true;
             controller.pauseCamera(); // Optionally pause the camera
@@ -1033,9 +1099,6 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
       });
     });
   }
-
-
-
 
   @override
   void dispose() {
@@ -1086,7 +1149,8 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
   Future<bool> _onWillPop() async {
     int count = 0;
     Navigator.popUntil(context, (route) {
-      return count++ == 2; // Replace 2 with the number of screens you want to go back
+      return count++ ==
+          2; // Replace 2 with the number of screens you want to go back
     });
     return true;
   }
@@ -1100,7 +1164,8 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
         color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
       ),
     ],
-    fontFamily: 'PretendVariable', // Ensure the font is added to your pubspec.yaml
+    fontFamily:
+        'PretendVariable', // Ensure the font is added to your pubspec.yaml
     fontSize: 18.0, // 16px font size
     fontStyle: FontStyle.normal, // Normal font style
     fontWeight: FontWeight.w500, // Font weight 500
@@ -1112,188 +1177,218 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
     return WillPopScope(
         onWillPop: _onWillPop,
         child: LayoutBuilder(
-      builder: (context, constraints) {
-        double maxWidth = constraints.maxWidth;
-        double cardWidth = math.min(600, maxWidth);
-        double cardHeight = cardWidth * (5 / 9);
+          builder: (context, constraints) {
+            double maxWidth = constraints.maxWidth;
+            double cardWidth = math.min(600, maxWidth);
+            double cardHeight = cardWidth * (5 / 9);
 
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RepaintBoundary(
-                key: _globalKey,
-                child: Container(
-                  decoration: BoxDecoration(
-
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFFB4C0EE), // 끝 색상
-                        Color(0xFF6586FF), // 시작 색상
-                      ],
-                      stops: [0.1955, 0.843], // 색상의 위치
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withOpacity(0.5),
-                        offset: Offset(3, 1),
-                        blurRadius: 15,
-                        spreadRadius: 0,
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RepaintBoundary(
+                    key: _globalKey,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFB4C0EE), // 끝 색상
+                            Color(0xFF6586FF), // 시작 색상
+                          ],
+                          stops: [0.1955, 0.843], // 색상의 위치
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.5),
+                            offset: Offset(3, 1),
+                            blurRadius: 15,
+                            spreadRadius: 0,
+                          ),
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            offset: Offset(0, -3),
+                            blurRadius: 10,
+                            spreadRadius: 0,
+                          ),
+                        ],
                       ),
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
-                        offset: Offset(0, -3),
-                        blurRadius: 10,
-                        spreadRadius: 0,
-                      ),
-                    ],
+                      width: cardWidth,
+                      height: cardHeight,
+                      child: Card(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              // Photo
+                              Text(
+                                widget.name,
+                                style: const TextStyle(
+                                  color: Colors
+                                      .white, // Equivalent to #FFF or var(--white, #FFF)
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(
+                                          0, 4), // 0px horizontal, 4px vertical
+                                      blurRadius: 4, // 4px blur radius
+                                      color: Color.fromRGBO(0, 0, 0,
+                                          0.25), // RGBA color with opacity
+                                    ),
+                                  ],
 
-                  ),
-
-                  width: cardWidth,
-                  height: cardHeight,
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-
-                          // Photo
-                          Text(widget.name, style:
-                          const TextStyle(
-                            color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
-                            shadows: [
-                              Shadow(
-                                offset: Offset(0, 4), // 0px horizontal, 4px vertical
-                                blurRadius: 4, // 4px blur radius
-                                color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
+                                  fontFamily:
+                                      'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
+                                  fontSize: 35,
+                                  fontStyle:
+                                      FontStyle.normal, // Normal font style
+                                  fontWeight:
+                                      FontWeight.w700, // Font weight 700
+                                  height:
+                                      0.7333, // Line height 22px on 30px font size is roughly 0.7333
+                                  letterSpacing:
+                                      -0.408, // -0.408px letter spacing
+                                ),
                               ),
-                            ],
+                              // Contact
 
-                            fontFamily: 'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
-                            fontSize: 35,
-                            fontStyle: FontStyle.normal, // Normal font style
-                            fontWeight: FontWeight.w700, // Font weight 700
-                            height: 0.7333, // Line height 22px on 30px font size is roughly 0.7333
-                            letterSpacing: -0.408, // -0.408px letter spacing
-                          ),),
-                          // Contact
+                              const Spacer(),
 
-                          const Spacer(),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Column(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-
-                                  Text(widget.organization,style: cardInfoStyle,),
-                                  Text(widget.position,style: cardInfoStyle,),
-                                  Text(widget.phone,style: cardInfoStyle,),
-                                  Text(widget.email,style: cardInfoStyle,),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 16.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          widget.organization,
+                                          style: cardInfoStyle,
+                                        ),
+                                        Text(
+                                          widget.position,
+                                          style: cardInfoStyle,
+                                        ),
+                                        Text(
+                                          widget.phone,
+                                          style: cardInfoStyle,
+                                        ),
+                                        Text(
+                                          widget.email,
+                                          style: cardInfoStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                          ],),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly, // This will space the buttons evenly
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF476BEC), // --primary-blue 색상
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // border-radius: 15px;
+                            ],
                           ),
                         ),
-                        onPressed: () {
-                          saveRepaintBoundaryAsImage(_globalKey);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                      ),
+                    ),
+                  ),
 
-                        },
-                        child: const Text('Save Business Card',
-                          textAlign: TextAlign.center, // text-align: center;
-                          style: TextStyle(
-                            color: Colors.white, // var(--white, #FFF)
-                            fontFamily: 'Pretendard Variable', // font-family: Pretendard Variable;
-                            fontSize: 17, // font-size: 17px;
-                            fontWeight: FontWeight.w500, // font-weight: 500;
-                            height: 1.2941, // line-height: 129.412%;
-                            letterSpacing: -0.408, // letter-spacing: -0.408px;
-                          ),
-                        )
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF476BEC), // --primary-blue 색상
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // border-radius: 15px;
-                          ),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceEvenly, // This will space the buttons evenly
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color(0xFF476BEC), // --primary-blue 색상
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      15), // border-radius: 15px;
+                                ),
+                              ),
+                              onPressed: () {
+                                saveRepaintBoundaryAsImage(_globalKey);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                'Save Business Card',
+                                textAlign:
+                                    TextAlign.center, // text-align: center;
+                                style: TextStyle(
+                                  color: Colors.white, // var(--white, #FFF)
+                                  fontFamily:
+                                      'Pretendard Variable', // font-family: Pretendard Variable;
+                                  fontSize: 17, // font-size: 17px;
+                                  fontWeight:
+                                      FontWeight.w500, // font-weight: 500;
+                                  height: 1.2941, // line-height: 129.412%;
+                                  letterSpacing:
+                                      -0.408, // letter-spacing: -0.408px;
+                                ),
+                              )),
                         ),
-                        onPressed: () {
-                          try {
-                            saveMyContacts();
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          } catch (e) {
-                            print("Failed to save contacts: $e");
-                          }
-                        },
-                        child: const Text('Save Contact',
-                          textAlign: TextAlign.center, // text-align: center;
-                          style: TextStyle(
-                            color: Colors.white, // var(--white, #FFF)
-                            fontFamily: 'Pretendard Variable', // font-family: Pretendard Variable;
-                            fontSize: 17, // font-size: 17px;
-                            fontWeight: FontWeight.w500, // font-weight: 500;
-                            height: 1.2941, // line-height: 129.412%;
-                            letterSpacing: -0.408, // letter-spacing: -0.408px;
-                          ),
-                        )
                       ),
-                    ),
-                  ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color(0xFF476BEC), // --primary-blue 색상
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      15), // border-radius: 15px;
+                                ),
+                              ),
+                              onPressed: () {
+                                try {
+                                  saveMyContacts();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                } catch (e) {
+                                  print("Failed to save contacts: $e");
+                                }
+                              },
+                              child: const Text(
+                                'Save Contact',
+                                textAlign:
+                                    TextAlign.center, // text-align: center;
+                                style: TextStyle(
+                                  color: Colors.white, // var(--white, #FFF)
+                                  fontFamily:
+                                      'Pretendard Variable', // font-family: Pretendard Variable;
+                                  fontSize: 17, // font-size: 17px;
+                                  fontWeight:
+                                      FontWeight.w500, // font-weight: 500;
+                                  height: 1.2941, // line-height: 129.412%;
+                                  letterSpacing:
+                                      -0.408, // letter-spacing: -0.408px;
+                                ),
+                              )),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        );
-      },
-      )
-    );
+              ),
+            );
+          },
+        ));
   }
 
   Future<void> saveRepaintBoundaryAsImage(GlobalKey key) async {
     try {
-      RenderRepaintBoundary boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary =
+          key.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage();
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       // Get the directory to store the image
@@ -1301,7 +1396,8 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
 
       // Generate a random string
       var rng = math.Random();
-      String randomString = DateTime.now().millisecondsSinceEpoch.toString() + rng.nextInt(10000).toString();
+      String randomString = DateTime.now().millisecondsSinceEpoch.toString() +
+          rng.nextInt(10000).toString();
 
       final imagePath = '${directory}/business_card_$randomString.jpg';
       final imageFile = File(imagePath);
@@ -1334,5 +1430,4 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
     await ContactManager.saveContacts(loadedContacts);
     print('Contacts have been saved successfully');
   }
-
 }
