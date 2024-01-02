@@ -6,6 +6,6 @@ class AppColors {
   static const Color primaryBlue = Color(0xFF476BEC);
   static const Color icongray = Color(0xFF7C7C7C);
   static const Color iconred = Color(0xFFD62727);
-  static const Color icongreen = Color(0xFF48C927);
-  static const Color iconskyblue = Color(0xFF57B8FF);
+  static const Color icongreen = Color(0xFF12A763);
+  static const Color iconskyblue = Color(0xFF32A0EB);
 }
