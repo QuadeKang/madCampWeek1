@@ -25,7 +25,7 @@ class CustomDialog extends StatelessWidget {
         style: TextStyle(
           color: Color(0xFF476BEC), // Primary blue color
           fontFamily: 'Pretendard Variable',
-          fontSize: 22,
+          fontSize: 24,
           fontWeight: FontWeight.w600,
           letterSpacing: -0.408,
           height: 1.0, // 100% line-height
@@ -36,7 +36,7 @@ class CustomDialog extends StatelessWidget {
         style: TextStyle(
           color: Colors.black, // Black color
           fontFamily: 'Pretendard Variable',
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           letterSpacing: -0.408,
           height: 1.41667, // 141.667% line-height

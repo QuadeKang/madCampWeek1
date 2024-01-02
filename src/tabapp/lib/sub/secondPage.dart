@@ -136,6 +136,7 @@ class Tab2State extends State {
                 toolbarColor: AppColors.primaryBlue,
                 toolbarWidgetColor: Colors.white,
                 initAspectRatio: CropAspectRatioPreset.original,
+                activeControlsWidgetColor: AppColors.primaryBlue,
                 lockAspectRatio: true),
             IOSUiSettings(
               minimumAspectRatio: 1.0,
@@ -176,6 +177,7 @@ class Tab2State extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundGray,
       appBar: SubAppBar(
         titleRow: Column(
           children: [
@@ -190,6 +192,7 @@ class Tab2State extends State {
           ],
         ),
       ),
+
       body: Stack(
         children: [
           ReorderableListView.builder(
@@ -306,53 +309,10 @@ class Tab2State extends State {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(left: 10, right: 5),
-            child: ElevatedButton(
-              onPressed: () async {
-                // Show confirmation dialog
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CustomDialog(
-                      title: '명함 삭제',
-                      content: '삭제하시겠습니까?',
-                      onConfirm: () => Navigator.of(context).pop(true),
-                      onCancel: () => Navigator.of(context).pop(false),
-                    );
-                  },
-                );
-
-                // If 'Yes' was pressed, delete the photo file and remove it from the list
-                if (result == true) {
-                  File photoFile = images[selectedPhotoIndex!];
-                  await photoFile.delete(); // Delete the file from storage
-                  setState(() {
-                    images
-                        .removeAt(selectedPhotoIndex!); // Remove from the list
-                    showButtons = false;
-                    selectedPhotoIndex = null;
-                  });
-                }
-              },
-              child: Text(
-                '명함 삭제',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: AppColors.primaryBlue,
-                onPrimary: Colors.white,
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: 5, right: 10),
             child: ElevatedButton(
               onPressed: () async {
                 try {
@@ -387,6 +347,50 @@ class Tab2State extends State {
               },
               child: Text(
                 '수정하기',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: AppColors.primaryBlue,
+                onPrimary: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 5, right: 10),
+            child: ElevatedButton(
+              onPressed: () async {
+                // Show confirmation dialog
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CustomDialog(
+                      title: '명함 삭제',
+                      content: '삭제하시겠습니까?',
+                      onConfirm: () => Navigator.of(context).pop(true),
+                      onCancel: () => Navigator.of(context).pop(false),
+                    );
+                  },
+                );
+
+                // If 'Yes' was pressed, delete the photo file and remove it from the list
+                if (result == true) {
+                  File photoFile = images[selectedPhotoIndex!];
+                  await photoFile.delete(); // Delete the file from storage
+                  setState(() {
+                    images
+                        .removeAt(selectedPhotoIndex!); // Remove from the list
+                    showButtons = false;
+                    selectedPhotoIndex = null;
+                  });
+                }
+              },
+              child: Text(
+                '명함 삭제',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w500,
