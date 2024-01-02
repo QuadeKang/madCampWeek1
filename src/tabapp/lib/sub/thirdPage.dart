@@ -55,18 +55,34 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
     });
   }
 
+  TextStyle cardInfoStyle = const TextStyle(
+            color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
+            shadows: [
+            Shadow(
+            offset: Offset(0, 4), // 0px horizontal, 4px vertical
+            blurRadius: 4, // 4px blur radius
+            color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
+            ),
+            ],
+            fontFamily: 'PretendVariable', // Ensure the font is added to your pubspec.yaml
+            fontSize: 18.0, // 16px font size
+            fontStyle: FontStyle.normal, // Normal font style
+            fontWeight: FontWeight.w500, // Font weight 500
+            // You may adjust other properties like text height if necessary
+            );
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double maxWidth = constraints.maxWidth;
         double maxHeight = constraints.maxHeight;
-        double cardWidth = math.min(600, maxWidth);
-        double cardHeight = cardWidth * (5 / 9);
+        double cardWidth = math.min(200, maxWidth);
+        double cardHeight = cardWidth * (9 / 5);
 
         if (cardWidth > maxHeight) {
           cardWidth = maxHeight;
-          cardHeight = cardWidth * (5 / 9);
+          cardHeight = cardWidth * (9 / 5);
         }
 
         return GestureDetector(
@@ -74,19 +90,59 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
           child: Center(
             child: RepaintBoundary( // Add RepaintBoundary here
             key: _globalKey, // Assign GlobalKey to RepaintBoundary
-              child: Transform.rotate(
-                angle: math.pi / 2,
                 child: Transform.scale(
                   scale: isEnlarged ? 1.5 : 1.0,
                   child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFB4C0EE),
+                          Color(0xFF6586FF),
+                        ],
+                        stops: [0.2255, 0.6872],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          offset: Offset(3, 3),
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
                     width: cardWidth,
                     height: cardHeight,
                     child: Card(
+                      color: Colors.transparent,
+                      elevation: 0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            const SizedBox(height: 20),
+                            Text(widget.contactInfo.name, style:
+                              const TextStyle(
+                                color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(0, 4), // 0px horizontal, 4px vertical
+                                    blurRadius: 4, // 4px blur radius
+                                    color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
+                                  ),
+                                ],
+                                fontFamily: 'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
+                                fontSize: 30.0, // 30px font size
+                                fontStyle: FontStyle.normal, // Normal font style
+                                fontWeight: FontWeight.w700, // Font weight 700
+                                height: 0.7333, // Line height 22px on 30px font size is roughly 0.7333
+                                letterSpacing: -0.408, // -0.408px letter spacing
+                              ),
+                            ),
+
+                            SizedBox(height: 20),
                             // Photo
                             FutureBuilder<bool>(
                               future: File(widget.contactInfo.photoUrl).exists(),
@@ -99,22 +155,22 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                                     // File exists, display the image
                                     return Image.file(
                                       File(widget.contactInfo.photoUrl),
-                                      width: 100.0,
-                                      height: double.infinity,
+                                      width: cardWidth,
+                                      height: cardWidth / 1.2654320987654322,
                                       fit: BoxFit.cover,
                                     );
                                   } else {
                                     // File does not exist, display a placeholder or error widget
                                     return Container(
-                                      width: 100,
-                                      height: double.infinity,
-                                      child: Center( // This centers the child widget both horizontally and vertically
-                                        child: Icon(
-                                          Icons.image_not_supported,
-                                          size: 60, // Adjust the size as needed
-                                          color: Colors.blue, // Optional: to make the icon stand out
-                                        ),
-                                      ),
+                                      width: cardWidth,
+                                      height: cardWidth / 1.2654320987654322,
+                                      // child: Center( // This centers the child widget both horizontally and vertically
+                                      //   child: Icon(
+                                      //     Icons.image_not_supported,
+                                      //     size: 60, // Adjust the size as needed
+                                      //     color: Colors.blue, // Optional: to make the icon stand out
+                                      //   ),
+                                      // ),
                                     );
 
 
@@ -131,16 +187,16 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                             Expanded(
                               child:
                               Padding (
-                                padding: const EdgeInsets.only(left: 16.0),
+                                padding: const EdgeInsets.only(left: 0),
                                 child:Column(
                                   mainAxisAlignment: MainAxisAlignment.center, // 여기를 추가하세요
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(widget.contactInfo.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                    Text("Tel : ${widget.contactInfo.phone}"),
-                                    Text("Email : ${widget.contactInfo.email}"),
-                                    Text("Organization : ${widget.contactInfo.organization}"),
-                                    Text("Position : ${widget.contactInfo.position}"),
+
+                                    Text(widget.contactInfo.phone,style: cardInfoStyle,),
+                                    Text(widget.contactInfo.email,style: cardInfoStyle,),
+                                    Text(widget.contactInfo.organization,style: cardInfoStyle,),
+                                    Text(widget.contactInfo.position,style: cardInfoStyle,),
                                   ],
                                 ),),
 
@@ -151,7 +207,7 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                     ),
                   ),
                 ),
-              ),
+
             ),
           ),
         );
@@ -543,29 +599,33 @@ class Tab3State extends State {
         ),
         body: Stack(
           children: <Widget>[
-            Center(
-              child: FutureBuilder<ContactInfo>(
-                future: readContactInfo('information.txt'), // Replace with your actual method to get contact info
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      // When data is loaded, display the business card
-                      return BusinessCardWidget(contactInfo: snapshot.data!);
-                    } else if (snapshot.hasError) {
-                      // In case of an error
-                      return Text('Error loading data: ${snapshot.error}');
+          Positioned(
+            top: 20, // Adjust this value to move the widget higher
+            left: 0,
+            right: 0,
+              child :Center(
+                child: FutureBuilder<ContactInfo>(
+                  future: readContactInfo('information.txt'), // Replace with your actual method to get contact info
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData) {
+                        // When data is loaded, display the business card
+                        return BusinessCardWidget(contactInfo: snapshot.data!);
+                      } else if (snapshot.hasError) {
+                        // In case of an error
+                        return Text('Error loading data: ${snapshot.error}');
+                      } else {
+                        // If data is not yet available
+                        return Text('No data found');
+                      }
                     } else {
-                      // If data is not yet available
-                      return Text('No data found');
+                      // While data is loading, show a progress indicator
+                      return CircularProgressIndicator();
                     }
-                  } else {
-                    // While data is loading, show a progress indicator
-                    return CircularProgressIndicator();
-                  }
-                },
+                  },
+                ),
               ),
             ),
-            SizedBox(height: 20), // Spacing between buttons
             Positioned(
               bottom: 20,
               left: 0,
@@ -862,6 +922,22 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
     return true;
   }
 
+  TextStyle cardInfoStyle = const TextStyle(
+    color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
+    shadows: [
+      Shadow(
+        offset: Offset(0, 4), // 0px horizontal, 4px vertical
+        blurRadius: 4, // 4px blur radius
+        color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
+      ),
+    ],
+    fontFamily: 'PretendVariable', // Ensure the font is added to your pubspec.yaml
+    fontSize: 18.0, // 16px font size
+    fontStyle: FontStyle.normal, // Normal font style
+    fontWeight: FontWeight.w500, // Font weight 500
+    // You may adjust other properties like text height if necessary
+  );
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -879,38 +955,87 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
               RepaintBoundary(
                 key: _globalKey,
                 child: Container(
+                  decoration: BoxDecoration(
+
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFB4C0EE), // 끝 색상
+                        Color(0xFF6586FF), // 시작 색상
+                      ],
+                      stops: [0.1955, 0.843], // 색상의 위치
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.5),
+                        offset: Offset(3, 1),
+                        blurRadius: 15,
+                        spreadRadius: 0,
+                      ),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        offset: Offset(0, -3),
+                        blurRadius: 10,
+                        spreadRadius: 0,
+                      ),
+                    ],
+
+                  ),
+
                   width: cardWidth,
                   height: cardHeight,
                   child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    elevation: 4.0,
+                    color: Colors.transparent,
+                    elevation: 0,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Row(
+
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          // Photo
-                          SizedBox(width: 10),
 
-                          // Contact Info
-                          Expanded(
-                            child: Padding(
+                          // Photo
+                          Text(widget.name, style:
+                          const TextStyle(
+                            color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
+                            shadows: [
+                              Shadow(
+                                offset: Offset(0, 4), // 0px horizontal, 4px vertical
+                                blurRadius: 4, // 4px blur radius
+                                color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
+                              ),
+                            ],
+
+                            fontFamily: 'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
+                            fontSize: 35,
+                            fontStyle: FontStyle.normal, // Normal font style
+                            fontWeight: FontWeight.w700, // Font weight 700
+                            height: 0.7333, // Line height 22px on 30px font size is roughly 0.7333
+                            letterSpacing: -0.408, // -0.408px letter spacing
+                          ),),
+                          // Contact
+
+                          const Spacer(),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[Padding(
                               padding: const EdgeInsets.only(left: 16.0),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-                                  Text(widget.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                  Text("Tel: ${widget.phone}"),
-                                  Text("Email: ${widget.email}"),
-                                  Text("Organization: ${widget.organization}"),
-                                  Text("Position: ${widget.position}"),
+
+                                  Text(widget.organization,style: cardInfoStyle,),
+                                  Text(widget.position,style: cardInfoStyle,),
+                                  Text(widget.phone,style: cardInfoStyle,),
+                                  Text(widget.email,style: cardInfoStyle,),
                                 ],
                               ),
                             ),
-                          ),
+                          ],),
                         ],
                       ),
                     ),
@@ -926,10 +1051,26 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF476BEC), // --primary-blue 색상
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15), // border-radius: 15px;
+                          ),
+                        ),
                         onPressed: () {
                           saveRepaintBoundaryAsImage(_globalKey);
                         },
-                        child: Text('Save Business Card'),
+                        child: const Text('Save Business Card',
+                          textAlign: TextAlign.center, // text-align: center;
+                          style: TextStyle(
+                            color: Colors.white, // var(--white, #FFF)
+                            fontFamily: 'Pretendard Variable', // font-family: Pretendard Variable;
+                            fontSize: 17, // font-size: 17px;
+                            fontWeight: FontWeight.w500, // font-weight: 500;
+                            height: 1.2941, // line-height: 129.412%;
+                            letterSpacing: -0.408, // letter-spacing: -0.408px;
+                          ),
+                        )
                       ),
                     ),
                   ),
@@ -937,6 +1078,12 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF476BEC), // --primary-blue 색상
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15), // border-radius: 15px;
+                          ),
+                        ),
                         onPressed: () {
                           try {
                             saveMyContacts();
@@ -944,7 +1091,17 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
                             print("Failed to save contacts: $e");
                           }
                         },
-                        child: Text('Save Contact'),
+                        child: const Text('Save Contact',
+                          textAlign: TextAlign.center, // text-align: center;
+                          style: TextStyle(
+                            color: Colors.white, // var(--white, #FFF)
+                            fontFamily: 'Pretendard Variable', // font-family: Pretendard Variable;
+                            fontSize: 17, // font-size: 17px;
+                            fontWeight: FontWeight.w500, // font-weight: 500;
+                            height: 1.2941, // line-height: 129.412%;
+                            letterSpacing: -0.408, // letter-spacing: -0.408px;
+                          ),
+                        )
                       ),
                     ),
                   ),
