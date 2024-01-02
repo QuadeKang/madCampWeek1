@@ -145,99 +145,142 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     final _emailController = TextEditingController(text: widget.contact.email);
     final _memoController = TextEditingController(text: widget.contact.memo);
 
+    Map<String, bool> _showError = {
+      'name': false,
+      'phoneNumber': false,
+      'organization': false,
+      'position': false,
+      'email': false,
+    };
+
+    void checkAndSetError() {
+      _showError['name'] = _nameController.text.isEmpty;
+      _showError['phoneNumber'] = _phoneNumberController.text.isEmpty;
+      _showError['organization'] = _organizationController.text.isEmpty;
+      _showError['position'] = _positionController.text.isEmpty;
+      _showError['email'] = _emailController.text.isEmpty;
+    }
+
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // border-radius: 10px;
-          ),
-          backgroundColor: Colors.white, // background: #FFF;
-          surfaceTintColor: Colors.transparent,
-          title: const Text('연락처 수정',
-            style: TextStyle(
-              color: Color(0xFF476BEC), // Primary blue color for the title
-              fontFamily: 'Pretendard Variable',
-              fontSize: 22,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.408,
-            ),),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                CustomTextField(
-                  controller: _nameController,
-                  labelText: '이름',
-                ),
-                CustomTextField(
-                  controller: _phoneNumberController,
-                  labelText: '전화번호',
-                ),
-                CustomTextField(
-                  controller: _organizationController,
-                  labelText: '조직',
-                ),
-                CustomTextField(
-                  controller: _positionController,
-                  labelText: '직급',
-                ),
-                CustomTextField(
-                  controller: _emailController,
-                  labelText: '이메일',
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                CustomTextField(
-                  controller: _memoController,
-                  labelText: '메모',
-                ),
-              ],
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0), // border-radius: 10px;
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _updateContact(
-                  _nameController.text,
-                  _phoneNumberController.text,
-                  _organizationController.text,
-                  _positionController.text,
-                  _emailController.text,
-                  widget.contact.photoPath, // 사진 URL은 변경하지 않음
-                  _memoController.text.isEmpty ? null : _memoController.text,
-                );
-              },
-              child: Text('저장',
-                textAlign: TextAlign.center, // text-align: center;
-                style: TextStyle(
-                  color: Colors.black, // color: var(--black, #000);
-                  fontFamily: 'Pretendard Variable', // font-family: Pretendard Variable;
-                  fontSize: 16, // font-size: 16px;
-                  fontStyle: FontStyle.normal, // font-style: normal;
-                  fontWeight: FontWeight.w500, // font-weight: 500;
-                  letterSpacing: -0.408, // letter-spacing: -0.408px;
-                  height: 1.375, // Approximately 137.5% line-height (22px / 16px)
-                ),
+            backgroundColor: Colors.white, // background: #FFF;
+            surfaceTintColor: Colors.transparent,
+            title: const Text(
+              '연락처 수정',
+              style: TextStyle(
+                color: Color(0xFF476BEC), // Primary blue color for the title
+                fontFamily: 'Pretendard Variable',
+                fontSize: 22,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -0.408,
               ),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('취소',
-                textAlign: TextAlign.center, // text-align: center;
-                style: TextStyle(
-                  color: Colors.black, // color: var(--black, #000);
-                  fontFamily: 'Pretendard Variable', // font-family: Pretendard Variable;
-                  fontSize: 16, // font-size: 16px;
-                  fontStyle: FontStyle.normal, // font-style: normal;
-                  fontWeight: FontWeight.w500, // font-weight: 500;
-                  letterSpacing: -0.408, // letter-spacing: -0.408px;
-                  height: 1.375, // Approximately 137.5% line-height (22px / 16px)
-                ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  CustomTextField(
+                    controller: _nameController,
+                    labelText: '이름',
+                  ),
+                  if (_showError['name']!) // 이름 필드에 대한 경고 메시지
+                    Text('이름을 입력해주세요', style: TextStyle(color: Colors.red)),
+                  CustomTextField(
+                    controller: _phoneNumberController,
+                    labelText: '전화번호',
+                  ),
+                  if (_showError['phoneNumber']!) // 이름 필드에 대한 경고 메시지
+                    Text('전화번호를 입력해주세요', style: TextStyle(color: Colors.red)),
+                  CustomTextField(
+                    controller: _organizationController,
+                    labelText: '조직',
+                  ),
+                  if (_showError['organization']!)
+                    Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                  CustomTextField(
+                    controller: _positionController,
+                    labelText: '직급',
+                  ),
+                  if (_showError['position']!)
+                    Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                  CustomTextField(
+                    controller: _emailController,
+                    labelText: '이메일',
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  if (_showError['email']!)
+                    Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),
+                  CustomTextField(
+                    controller: _memoController,
+                    labelText: '메모',
+                  ),
+                ],
               ),
             ),
-          ],
-        );
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    checkAndSetError(); // 필드 검사 및 오류 설정
+                  });
+                  if (!_showError.containsValue(true)) {
+                    Navigator.of(context).pop();
+                    _updateContact(
+                      _nameController.text,
+                      _phoneNumberController.text,
+                      _organizationController.text,
+                      _positionController.text,
+                      _emailController.text,
+                      widget.contact.photoPath,
+                      _memoController.text.isEmpty
+                          ? null
+                          : _memoController.text,
+                    );
+                  }
+                },
+                child: Text(
+                  '저장',
+                  textAlign: TextAlign.center, // text-align: center;
+                  style: TextStyle(
+                    color: Colors.black, // color: var(--black, #000);
+                    fontFamily:
+                        'Pretendard Variable', // font-family: Pretendard Variable;
+                    fontSize: 16, // font-size: 16px;
+                    fontStyle: FontStyle.normal, // font-style: normal;
+                    fontWeight: FontWeight.w500, // font-weight: 500;
+                    letterSpacing: -0.408, // letter-spacing: -0.408px;
+                    height:
+                        1.375, // Approximately 137.5% line-height (22px / 16px)
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  '취소',
+                  textAlign: TextAlign.center, // text-align: center;
+                  style: TextStyle(
+                    color: Colors.black, // color: var(--black, #000);
+                    fontFamily:
+                        'Pretendard Variable', // font-family: Pretendard Variable;
+                    fontSize: 16, // font-size: 16px;
+                    fontStyle: FontStyle.normal, // font-style: normal;
+                    fontWeight: FontWeight.w500, // font-weight: 500;
+                    letterSpacing: -0.408, // letter-spacing: -0.408px;
+                    height:
+                        1.375, // Approximately 137.5% line-height (22px / 16px)
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
       },
     );
   }
