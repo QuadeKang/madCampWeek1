@@ -192,7 +192,7 @@ Future<ContactInfo> readContactInfo(String fileName) async {
     } else {
       // If the file does not exist, create a new file with default content
       print('File does not exist. Creating a new file: $filePath');
-      final defaultContent = 'name:\nphone:\nemail:\norganization:\nposition:\nmemo:\nphotoUrl:';
+      final defaultContent = 'Name:\nPhone:\nEmail:\nOrganization:\nPosition:\nmemo:\nPhoto URL:';
       await file.writeAsString(defaultContent);
 
       // Return a new ContactInfo object with empty fields
