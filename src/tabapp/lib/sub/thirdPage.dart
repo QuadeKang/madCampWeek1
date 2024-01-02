@@ -16,6 +16,7 @@ import 'package:tabapp/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tabapp/sub/firstPage.dart';
 import 'package:tabapp/colors.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 GlobalKey _globalKey = GlobalKey();
 
@@ -374,6 +375,70 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
     }
   }
 
+  Future<void> _deleteProfilePhoto() async {
+    String directoryPath = await findPath; // 이 함수는 비동기 함수여야 함
+    String folderPath = path.join(directoryPath, 'newProfileFolder');
+    String fileName = "profile.jpg";
+    String newPath = path.join(folderPath, fileName);
+
+    File file = File(newPath);
+
+    if (await file.exists()) {
+      try {
+        await file.delete();
+        // 파일 삭제 성공
+      } catch (e) {
+        // 파일 삭제 중 오류 발생
+      }
+    } else {
+      // 파일이 존재하지 않음
+    }
+  }
+
+  Future<bool> _overwriteOriginalFile(File original, File newFile) async {
+    try {
+      await original.writeAsBytes(await newFile.readAsBytes());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<File?> _cropImage(File imageFile) async {
+    try {
+
+
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: imageFile.path,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+          ],
+          aspectRatio: const CropAspectRatio(
+            ratioX: 1.2654, // Custom aspect ratio
+            ratioY: 0.7902,
+          ),
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: '명함 수정',
+                toolbarColor: AppColors.primaryBlue,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                activeControlsWidgetColor: AppColors.primaryBlue,
+                lockAspectRatio: true),
+            IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            )
+          ]);
+
+      if (croppedFile != null) {
+        return File(croppedFile.path);
+      }
+    } catch (e) {
+      // Handle any exceptions here
+      print('Error in _cropImage: $e');
+    }
+    return null;
+  }
 
 
 
@@ -416,29 +481,164 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
 
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: FutureBuilder<File>(
-                future: _loadFile(_photoUrl.split('?')[0]), // Function to load the file
-                builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // While the file is loading, display a loading icon
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasData) {
-                    // File is loaded, display the image
-                    return Image.file(
-                      snapshot.data!,
-                      key: ValueKey(_randKey), // Using ValueKey to ensure the widget rebuilds when the key changes
-                      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                        // If an error occurs, reopen the existing image
-                        return Image.file(
-                          File(_photoUrl.split('?')[0]), // Reopen the existing image
-                        );
-                      },
-                    );
-                  } else {
-                    // If there is no data (file not found or other issues), display an error icon
-                    return SvgPicture.asset('assets/images/addphotosquare.svg');
-                  }
-                },
+              child: AspectRatio(
+              aspectRatio: 1.2654 / 0.7902, // 원하는 비율
+                child: FutureBuilder<File>(
+                  future: _loadFile(_photoUrl.split('?')[0]), // Function to load the file
+                  builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // While the file is loading, display a loading icon
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasData) {
+                      // File is loaded, display the image
+                      return GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0), // border-radius: 10px;
+                                ),
+                                backgroundColor: Colors.white, // background: #FFF;
+                                surfaceTintColor: Colors.transparent,
+                                title: Text('사진 옵션',
+                                  style: TextStyle(
+                                    color: Color(0xFF476BEC), // Primary blue color
+                                    fontFamily: 'Pretendard Variable',
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.408,
+                                    height: 1.0, // 100% line-height
+                                  ),),
+                                content: Text('원하는 작업을 선택하세요.',
+                                  style: TextStyle(
+                                    color: Colors.black, // Black color
+                                    fontFamily: 'Pretendard Variable',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -0.408,
+                                    height: 1.41667, // 141.667% line-height
+                                  ),),
+                                actions: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center, // Align buttons to the center
+                                    children: <Widget>[
+
+                                      ElevatedButton(
+                                        child: Text('크롭'),
+                                        style: ElevatedButton.styleFrom(
+                                          primary: AppColors.primaryBlue,  // Background color
+                                          onPrimary: Colors.white,  // Text color
+                                          elevation: 5,  // Shadow elevation
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),  // Rounded corners
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
+                                        ),
+                                        onPressed: () async {
+                                          try {
+                                            // 경로 설정
+                                            String directoryPath = await findPath; // 비동기 함수가 필요
+                                            String folderPath = path.join(directoryPath, 'newProfileFolder');
+                                            String fileName = "profile.jpg";
+                                            String newPath = path.join(folderPath, fileName);
+
+                                            // 파일 인스턴스 생성
+                                            File originalFile = File(newPath);
+
+                                            // 이미지 수정 (예: 자르기)
+                                            final File? croppedImage = await _cropImage(originalFile);
+                                            if (croppedImage != null) {
+                                              // 원본 파일에 수정된 이미지 덮어쓰기
+                                              bool success = await _overwriteOriginalFile(originalFile, croppedImage);
+                                              if (success) {
+                                                print("Image successfully overwritten.");
+                                                // 필요한 경우 상태 업데이트
+                                                setState(() {
+                                                  // 예: 이미지 목록 업데이트
+                                                });
+                                              } else {
+                                                print("Failed to overwrite image.");
+                                              }
+                                            }
+                                          } catch (e) {
+                                            // 예외 처리
+                                            print('Error processing image: $e');
+                                          }
+                                          clearImageCache(_photoUrl);
+                                          setState(() {
+
+                                          });
+                                          // 버튼 2를 눌렀을 때의 작업
+                                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                                        },
+                                      ),
+
+                                      const SizedBox(width:10),
+
+                                      ElevatedButton(
+                                        child: Text('삭제'),
+                                        style: ElevatedButton.styleFrom(
+                                          primary: AppColors.primaryBlue,  // Background color
+                                          onPrimary: Colors.white,  // Text color
+                                          elevation: 5,  // Shadow elevation
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),  // Rounded corners
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Button padding
+                                        ),
+                                        onPressed: () async {
+                                          await _deleteProfilePhoto();
+                                          await clearImageCache(_photoUrl);
+                                          setState(() {
+
+                                          });
+
+                                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                                        },
+                                      ),
+                                    ]
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Image.file(
+                          snapshot.data!,
+                          key: ValueKey(_randKey),
+                          fit: BoxFit.cover, // Added BoxFit.cover here
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return AspectRatio(
+                              aspectRatio: 1.2654 / 0.7902,
+                              child: ClipRect(
+                                child: Image.file(
+                                  File(_photoUrl.split('?')[0]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+
+                    } else {
+                      // If there is no data (file not found or other issues), display an error icon
+                      return GestureDetector(
+                        onTap: () {
+                          _selectPhoto().then((_) async {
+                            await clearImageCache(_photoUrl);
+                          });
+                          setState(() {
+
+                          });
+                        },
+                        child: SvgPicture.asset('assets/images/addphotosquare.svg'),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
 
