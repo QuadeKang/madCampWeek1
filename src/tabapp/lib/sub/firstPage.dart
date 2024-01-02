@@ -87,19 +87,11 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
     final bool? confirm = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('사진 삭제'),
-          content: Text('사진을 삭제하시겠습니까?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('예'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('아니오'),
-            ),
-          ],
+        return CustomDialog(
+          title: '사진 삭제',
+          content: '사진을 삭제하시겠습니까?',
+          onConfirm: () => Navigator.of(context).pop(true),
+          onCancel: () => Navigator.of(context).pop(false),
         );
       },
     );
