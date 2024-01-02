@@ -390,52 +390,27 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-
-            TextField(
+            CustomTextField(
               controller: _nameController,
-              cursorColor: AppColors.primaryBlue,
-              decoration: const InputDecoration(
-                  hintText: "이름",
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
-                ),
-              ),
+              labelText: '이름',
             ),
-
-            TextField(
+            CustomTextField(
               controller: _phoneController,
-              cursorColor: AppColors.primaryBlue,
-              decoration: const InputDecoration(hintText: "전화번호",
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
-                ),),
+              labelText: '전화번호',
+              keyboardType: TextInputType.phone,
             ),
-
-            TextField(
-              controller: _emailController,
-              cursorColor: AppColors.primaryBlue,
-              decoration: const InputDecoration(hintText: "이메일",
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
-                ),),
-            ),
-
-            TextField(
+            CustomTextField(
               controller: _organizationController,
-              cursorColor: AppColors.primaryBlue,
-              decoration: const InputDecoration(hintText: "조직",
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
-                ),),
+              labelText: '조직',
             ),
-
-            TextField(
+            CustomTextField(
               controller: _positionController,
-              cursorColor: AppColors.primaryBlue,
-              decoration: const InputDecoration(hintText: "직급",
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primaryBlue,width: 2.0),
-                ),),
+              labelText: '직급',
+            ),
+            CustomTextField(
+              controller: _emailController,
+              labelText: '이메일',
+              keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: 16),
 

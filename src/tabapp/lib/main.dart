@@ -120,3 +120,43 @@ class SubAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(50.0); // AppBar의 높이
 }
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final TextInputType keyboardType; // 추가된 변수
+
+  const CustomTextField({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    this.keyboardType = TextInputType.text, // 기본값 설정
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      cursorColor: AppColors.primaryBlue,
+      controller: controller,
+      keyboardType: keyboardType, // keyboardType을 TextField에 적용
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(
+          color: Colors.black87,
+        ),
+        border: const UnderlineInputBorder(),
+        enabledBorder: const UnderlineInputBorder(),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.primaryBlue, width: 2.0),
+        ),
+      ),
+      style: const TextStyle(
+        color: Colors.black,
+        fontFamily: 'Pretendard Variable',
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        letterSpacing: -0.408,
+        height: 1.41667,
+      ),
+    );
+  }
+}

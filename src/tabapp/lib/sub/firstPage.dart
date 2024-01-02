@@ -9,6 +9,7 @@ import 'package:tabapp/sub/contactManager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tabapp/customDialog.dart';
+import 'package:tabapp/main.dart';
 
 class Contact {
   String name;
@@ -196,6 +197,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                 CustomTextField(
                   controller: _emailController,
                   labelText: '이메일',
+                  keyboardType: TextInputType.emailAddress,
                 ),
                 CustomTextField(
                   controller: _memoController,
@@ -1031,6 +1033,7 @@ class Tab1State extends State {
               CustomTextField(
                 controller: _phoneNumberController,
                 labelText: '전화번호',
+                keyboardType: TextInputType.phone,
               ),
               CustomTextField(
                 controller: _organizationController,
@@ -1043,6 +1046,7 @@ class Tab1State extends State {
               CustomTextField(
                 controller: _emailController,
                 labelText: '이메일',
+                keyboardType: TextInputType.emailAddress,
               ),
               ],
             ),
@@ -1159,7 +1163,7 @@ class Tab1State extends State {
             surfaceTintColor: Colors.transparent,
 
             title: Text(
-              '연락처 불러오기',
+              '연락처 추가',
               style: TextStyle(
                 color: Color(0xFF476BEC),
                 // Primary blue color for the title
@@ -1181,7 +1185,7 @@ class Tab1State extends State {
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
-                        child: Text('불러올 연락처를 선택하세요',
+                        child: Text('새로운 연락처를 추가하거나, 불러올 연락처를 선택하세요.',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
@@ -1211,7 +1215,11 @@ class Tab1State extends State {
                               child: Text(
                                 '새로운 연락처', // The button's text
                                 style: TextStyle(
-                                    color: Colors.black), // Set the text color
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+
+                                ), // Set the text color
                               ),
                             ),
                           ],
@@ -1370,6 +1378,7 @@ class Tab1State extends State {
                 CustomTextField(
                   controller: _phoneNumberController,
                   labelText: '전화번호',
+                  keyboardType: TextInputType.phone,
                 ),
                 CustomTextField(
                   controller: _organizationController,
@@ -1382,6 +1391,7 @@ class Tab1State extends State {
                 CustomTextField(
                   controller: _emailController,
                   labelText: '이메일',
+                  keyboardType: TextInputType.emailAddress,
                 ),
               ],
             ),
@@ -1577,43 +1587,6 @@ class Tab1State extends State {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-
-  const CustomTextField({
-    Key? key,
-    required this.controller,
-    required this.labelText,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      cursorColor: AppColors.primaryBlue,
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: const TextStyle(
-          color: Colors.black87,
-        ),
-        border: const UnderlineInputBorder(),
-        enabledBorder: const UnderlineInputBorder(),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColors.primaryBlue, width: 2.0),
-        ),
-      ),
-      style: const TextStyle(
-        color: Colors.black, // Black color for the text
-        fontFamily: 'Pretendard Variable',
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        letterSpacing: -0.408,
-        height: 1.41667, // Approximately 141.667% line-height
       ),
     );
   }
