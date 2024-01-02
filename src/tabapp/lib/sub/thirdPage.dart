@@ -471,6 +471,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: Text(
           "내 명함 정보 입력",
           style: TextStyle(
