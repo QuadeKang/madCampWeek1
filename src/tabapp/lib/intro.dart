@@ -19,7 +19,7 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
   void initState() {
     super.initState();
     controller = AnimationController(
-      duration: const Duration(seconds: 5), // Adjust duration to control speed
+      duration: const Duration(seconds: 2, milliseconds: 500), // Adjust duration to control speed
       vsync: this,
     );
 
@@ -54,7 +54,7 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double screenDiagonal = math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
-    return screenDiagonal * 1.1; // Slightly increase the size
+    return screenDiagonal; // Slightly increase the size
   }
 
   @override
@@ -101,7 +101,7 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                   },
                 ),
 
-              SvgPicture.asset('assets/images/logo.svg', width: 100, height: 100),
+              SvgPicture.asset('assets/images/logo.svg', width: 150, height: 150),
             ],
           ),
         ),
