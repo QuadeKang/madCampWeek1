@@ -1173,6 +1173,8 @@ class Tab1State extends State {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: Colors.white, // background: #FFF;
+            surfaceTintColor: Colors.transparent,
             title: Text('권한 필요'),
             content: Text('연락처에 접근하려면 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
             actions: <Widget>[
@@ -1249,7 +1251,12 @@ class Tab1State extends State {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('연락처 정보 입력'),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          title: Text('연락처 정보 입력', style: TextStyle(
+            color: AppColors.primaryBlue,
+            fontWeight: FontWeight.w600,
+          ),),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
