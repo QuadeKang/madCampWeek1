@@ -86,7 +86,7 @@ class BizLinkAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       title: Text('BizLink',style: TextStyle(
         color: AppColors.primaryBlue,
         fontSize: 30,
@@ -106,6 +106,8 @@ class SubAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: AppColors.white,
+      scrolledUnderElevation: 0.0,
       title: titleRow, // AppBar의 title로 Row 위젯 사용
       titleTextStyle: TextStyle(
         fontWeight: FontWeight.w500,

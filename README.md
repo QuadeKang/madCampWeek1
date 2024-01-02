@@ -1,8 +1,8 @@
-# bizLink
+# BizLink
 ## 비즈링크에 관한 1줄 설명하면 됩니다.
 
 ---
-Week1. 4분반 최우정, 강정환팀
+Week1. 4분반 최우정, 강정환
 - 설명
 - 설명
 - 설명
@@ -14,6 +14,8 @@ Week1. 4분반 최우정, 강정환팀
 
 ---
 ### b. 개발환경
+<img src="https://img.shields.io/badge/Dart-0175C2?style=flat-round&logo=dart&logoColor=white"/> <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-round&logo=flutter&logoColor=white"/> <img src="https://img.shields.io/badge/Android-34A853?style=flat-round&logo=android&logoColor=white"/> <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat-round&logo=androidstudio&logoColor=white"/>
+
 - Language : Dart
 - Framework : Flutter
 - OS : Android

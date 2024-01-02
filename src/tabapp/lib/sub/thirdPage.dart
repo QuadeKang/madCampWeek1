@@ -575,17 +575,18 @@ class Tab3State extends State {
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: BoxShape.rectangle,
                       boxShadow: [
                         BoxShadow(
-                          color:AppColors.gray.withOpacity(0.1),
+                          color: AppColors.gray.withOpacity(0.1),
                           spreadRadius: 0,
                           blurRadius: 5,
-                          offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                          offset: Offset(3, 3), // 오른쪽 아래로 그림자
                         ),
                       ],
                     ),
-                    child: ClipOval(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
                       child: InkWell(
                         onTap: () => _showInputScreen(),
                         child: SvgPicture.asset('assets/images/editinfo.svg'),
@@ -595,17 +596,18 @@ class Tab3State extends State {
                   SizedBox(width: 20), // Spacing between buttons
                   Container(
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: BoxShape.rectangle,
                       boxShadow: [
                         BoxShadow(
-                          color:AppColors.gray.withOpacity(0.1),
+                          color: AppColors.gray.withOpacity(0.1),
                           spreadRadius: 0,
                           blurRadius: 5,
-                          offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                          offset: Offset(3, 3), // 오른쪽 아래로 그림자
                         ),
                       ],
                     ),
-                    child: ClipOval(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
                       child: InkWell(
                         onTap: () => _showCardShare(),
                         child: SvgPicture.asset('assets/images/share.svg'),
@@ -615,17 +617,18 @@ class Tab3State extends State {
                   SizedBox(width: 20), // Spacing between buttons
                   Container(
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: BoxShape.rectangle,
                       boxShadow: [
                         BoxShadow(
-                          color:AppColors.gray.withOpacity(0.1),
+                          color: AppColors.gray.withOpacity(0.1),
                           spreadRadius: 0,
                           blurRadius: 5,
-                          offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                          offset: Offset(3, 3), // 오른쪽 아래로 그림자
                         ),
                       ],
                     ),
-                    child: ClipOval(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10), // 라운드 정사각형 모서리 반경
                       child: InkWell(
                         onTap: () => _showCardRecieve(),
                         child: SvgPicture.asset('assets/images/scanQR.svg'),
