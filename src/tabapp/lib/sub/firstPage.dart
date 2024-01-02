@@ -519,7 +519,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
 
     return Padding(
       padding: EdgeInsets.only(
-          left: horizontalPadding,
+          left: horizontalPadding+14,
           right: horizontalPadding,
           top: 8.0,
           bottom: 8.0),
@@ -1084,7 +1084,6 @@ class Tab1State extends State {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
 
-
                       Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
                         child: Text('불러올 연락처를 선택하세요', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
@@ -1107,6 +1106,7 @@ class Tab1State extends State {
                         child: Row(
 
                           children: [
+                            SizedBox(width: 4), // Optional: provide some space between the icon and the text
                             Icon(Icons.add, color: Colors.black), // The "+" icon on the left
                             SizedBox(width: 8), // Optional: provide some space between the icon and the text
                             Expanded( // This will take up all available space, pushing the icon to the left
@@ -1141,7 +1141,12 @@ class Tab1State extends State {
                                 ),
                               ),
                               child: ListTile(
-                                title: Text(contact.displayName ?? 'Unknown'),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 4),
+                                leading: Icon(Icons.person), // 'person' 아이콘 추가
+                                title: Text(contact.displayName ?? 'Unknown',style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),),
                                 subtitle: Text(contact.phones?.isNotEmpty ?? false
                                     ? contact.phones!.first.value ?? 'No phone number'
                                     : 'No phone number'),
