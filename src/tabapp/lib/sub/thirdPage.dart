@@ -18,6 +18,7 @@ import 'package:tabapp/sub/firstPage.dart';
 import 'package:tabapp/colors.dart';
 import 'package:image_cropper/image_cropper.dart';
 
+
 GlobalKey _globalKey = GlobalKey();
 
 class ContactInfo {
@@ -1226,6 +1227,9 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
                         ),
                         onPressed: () {
                           saveRepaintBoundaryAsImage(_globalKey);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+
                         },
                         child: const Text('Save Business Card',
                           textAlign: TextAlign.center, // text-align: center;
@@ -1254,6 +1258,8 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
                         onPressed: () {
                           try {
                             saveMyContacts();
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                           } catch (e) {
                             print("Failed to save contacts: $e");
                           }
