@@ -362,57 +362,60 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
           color: Color(0xFFFFFFFF), // Equivalent to #FFF
           borderRadius: BorderRadius.circular(10), // 10px border radius
         ),
-        child: ExpansionTile(
-          title: Text(
-              widget.contact.name,
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            title: Text(
+                widget.contact.name,
+                style: const TextStyle(
+                  color: Color(0xFF000000), // Equivalent to #000 or black
+                  fontFamily: 'Pretendard Variable', // Ensure the font is included in your project
+                  fontSize: 18.0, // Font size
+                  fontStyle: FontStyle.normal, // Normal font style
+                  fontWeight: FontWeight.w700, // Font weight 700 is equivalent to FontWeight.w700
+                  height: 22 / 18, // Line height divided by font size for line-height percentage
+                  letterSpacing: -0.408, // Letter spacing
+                )
+            ),
+            subtitle: Text(
+              widget.contact.organization,
               style: const TextStyle(
                 color: Color(0xFF000000), // Equivalent to #000 or black
                 fontFamily: 'Pretendard Variable', // Ensure the font is included in your project
-                fontSize: 18.0, // Font size
+                fontSize: 14.0, // Font size
                 fontStyle: FontStyle.normal, // Normal font style
-                fontWeight: FontWeight.w700, // Font weight 700 is equivalent to FontWeight.w700
-                height: 22 / 18, // Line height divided by font size for line-height percentage
+                fontWeight: FontWeight.w300, // Font weight 300 is equivalent to FontWeight.w300
+                height: 22 / 14, // Line height divided by font size for line-height percentage
                 letterSpacing: -0.408, // Letter spacing
-              )
-          ),
-          subtitle: Text(
-            widget.contact.organization,
-            style: const TextStyle(
-              color: Color(0xFF000000), // Equivalent to #000 or black
-              fontFamily: 'Pretendard Variable', // Ensure the font is included in your project
-              fontSize: 14.0, // Font size
-              fontStyle: FontStyle.normal, // Normal font style
-              fontWeight: FontWeight.w300, // Font weight 300 is equivalent to FontWeight.w300
-              height: 22 / 14, // Line height divided by font size for line-height percentage
-              letterSpacing: -0.408, // Letter spacing
+              ),
             ),
-          ),
-          leading: GestureDetector(
-            onTap: _pickImage,
-            onLongPress: _confirmRemoveImage, // 여기를 수정합니다.
-            child: CircleAvatar(
-              backgroundImage: widget.contact.photoPath != null
-                  ? FileImage(File(widget.contact.photoPath!))
-                  : null,
-              backgroundColor: Colors.grey,
-              child: widget.contact.photoPath == null
-                  ? SvgPicture.asset(
-                'assets/images/profilephoto.svg',
-                width: 45,
-                height: 45,
-              )
-                  : null,
+            leading: GestureDetector(
+              onTap: _pickImage,
+              onLongPress: _confirmRemoveImage, // 여기를 수정합니다.
+              child: CircleAvatar(
+                backgroundImage: widget.contact.photoPath != null
+                    ? FileImage(File(widget.contact.photoPath!))
+                    : null,
+                backgroundColor: Colors.grey,
+                child: widget.contact.photoPath == null
+                    ? SvgPicture.asset(
+                  'assets/images/profilephoto.svg',
+                  width: 45,
+                  height: 45,
+                )
+                    : null,
+              ),
             ),
+            trailing: isExpanded ? null : _buildTrailingIcons(),
+            children: <Widget>[
+              isExpanded ? _buildExpandedCard() : _buildCollapsedCard(),
+            ],
+            onExpansionChanged: (expanded) {
+              setState(() {
+                isExpanded = expanded;
+              });
+            },
           ),
-          trailing: isExpanded ? null : _buildTrailingIcons(),
-          children: <Widget>[
-            isExpanded ? _buildExpandedCard() : _buildCollapsedCard(),
-          ],
-          onExpansionChanged: (expanded) {
-            setState(() {
-              isExpanded = expanded;
-            });
-          },
         ),
       ),
     );
