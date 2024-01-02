@@ -269,7 +269,7 @@ class Tab2State extends State {
                         color: AppColors.gray.withOpacity(0.1),
                         spreadRadius: 0,
                         blurRadius: 10,
-                        offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                        offset: Offset(3, 3), // 오른쪽 아래로 그림자
                       ),
                     ],
                   ),
@@ -280,7 +280,7 @@ class Tab2State extends State {
                     ),
                   ),
                 ),
-                SizedBox(width: 3,),
+                SizedBox(width: 1,),
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -289,7 +289,7 @@ class Tab2State extends State {
                         color:AppColors.gray.withOpacity(0.1),
                         spreadRadius: 0,
                         blurRadius: 5,
-                        offset: Offset(1, 1), // 오른쪽 아래로 그림자
+                        offset: Offset(3,3), // 오른쪽 아래로 그림자
                       ),
                     ],
                   ),
