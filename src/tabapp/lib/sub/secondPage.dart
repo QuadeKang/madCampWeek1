@@ -188,12 +188,6 @@ class Tab2State extends State {
     return false;
   }
 
-  void _sortImages() {
-    images.sort((a, b) {
-      return b.lastModifiedSync().compareTo(a.lastModifiedSync());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
