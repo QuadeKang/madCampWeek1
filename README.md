@@ -1,7 +1,24 @@
 
 ![title](https://github.com/QuadeKang/madCampWeek1/assets/124063721/749a516b-58dd-410b-9087-f404e688a1cf)
 
-[![Version](https://badge.fury.io/gh/tterb%2FHyde.svg)](https://github.com/QuadeKang/madCampWeek1/raw/main/bizLink.apk)
+<a href="https://github.com/QuadeKang/madCampWeek1/raw/main/bizLink.apk" style="background-color: #008CBA; color: white; padding: 10px 15px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">
+  Download Here
+</a>
+
+<a href="https://github.com/QuadeKang/madCampWeek1/raw/main/bizLink.apk" style="background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 25px;">
+  Download Here
+</a>
+
 
 ---
 **Week1. 4분반 최우정, 강정환**
