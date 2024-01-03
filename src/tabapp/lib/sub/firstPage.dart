@@ -1516,15 +1516,15 @@ class Tab1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFECECEC),
-      appBar: AppBar(
-        title: Text('연락처', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh), // 새로고침 아이콘 추가
-            onPressed: _resetContacts, // 새로고침 기능을 실행할 메소드
-          ),
-        ],
-      ),
+      //appBar: AppBar(
+        //title: Text('연락처', style: TextStyle(fontWeight: FontWeight.bold)),
+        //actions: <Widget>[
+          //IconButton(
+            //icon: Icon(Icons.refresh), // 새로고침 아이콘 추가
+            //onPressed: _resetContacts, // 새로고침 기능을 실행할 메소드
+          //),
+        //],
+      //),
       body: Stack(
         // Use Stack to overlay widgets
         children: [
