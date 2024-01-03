@@ -189,6 +189,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   CustomTextField(
                     controller: _nameController,
                     labelText: '이름',
+                    showError: _showError['name'] ?? false,
                   ),
                   if (_showError['name']!) // 이름 필드에 대한 경고 메시지
                     Text('이름을 입력해주세요', style: TextStyle(color: Colors.red)),
@@ -196,18 +197,21 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     controller: _phoneNumberController,
                     labelText: '전화번호',
                     keyboardType: TextInputType.phone,
+                    showError: _showError['phoneNumber'] ?? false,
                   ),
                   if (_showError['phoneNumber']!) // 이름 필드에 대한 경고 메시지
                     Text('전화번호를 입력해주세요', style: TextStyle(color: Colors.red)),
                   CustomTextField(
                     controller: _organizationController,
                     labelText: '조직',
+                    showError: _showError['organization'] ?? false,
                   ),
                   if (_showError['organization']!)
                     Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
                   CustomTextField(
                     controller: _positionController,
                     labelText: '직급',
+                    showError: _showError['position'] ?? false,
                   ),
                   if (_showError['position']!)
                     Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
@@ -215,6 +219,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     controller: _emailController,
                     labelText: '이메일',
                     keyboardType: TextInputType.emailAddress,
+                    showError: _showError['email'] ?? false,
                   ),
                   if (_showError['email']!)
                     Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),
@@ -1030,6 +1035,7 @@ class Tab1State extends State {
                     CustomTextField(
                       controller: _nameController,
                       labelText: '이름',
+                      showError: _showError['name'] ?? false, // 'name' 키가 null인 경우 false를 반환
                     ),
                     if (_showError['name']!) // 이름 필드에 대한 경고 메시지
                       Text('이름을 입력해주세요', style: TextStyle(color: Colors.red)),
@@ -1037,18 +1043,21 @@ class Tab1State extends State {
                       controller: _phoneNumberController,
                       labelText: '전화번호',
                       keyboardType: TextInputType.phone,
+                      showError: _showError['phoneNumber'] ?? false,
                     ),
                     if (_showError['phoneNumber']!) // 이름 필드에 대한 경고 메시지
                       Text('전화번호를 입력해주세요', style: TextStyle(color: Colors.red)),
                     CustomTextField(
                       controller: _organizationController,
                       labelText: '조직',
+                      showError: _showError['organization'] ?? false,
                     ),
                     if (_showError['organization']!)
                       Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
                     CustomTextField(
                       controller: _positionController,
                       labelText: '직급',
+                      showError: _showError['position'] ?? false,
                     ),
                     if (_showError['position']!)
                       Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
@@ -1056,6 +1065,7 @@ class Tab1State extends State {
                       controller: _emailController,
                       labelText: '이메일',
                       keyboardType: TextInputType.emailAddress,
+                      showError: _showError['email'] ?? false,
                     ),
                     if (_showError['email']!)
                       Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),
@@ -1417,6 +1427,7 @@ class Tab1State extends State {
                     CustomTextField(
                       controller: _nameController,
                       labelText: '이름',
+                      showError: _showError['name'] ?? false,
                     ),
                     if (_showError['name']!)
                       Text('이름을 입력해주세요.', style: TextStyle(color: Colors.red)),
@@ -1424,6 +1435,7 @@ class Tab1State extends State {
                       controller: _phoneNumberController,
                       labelText: '전화번호',
                       keyboardType: TextInputType.phone,
+                      showError: _showError['phoneNumber'] ?? false,
                     ),
                     if (_showError['phoneNumber']!)
                       Text('전화번호를 입력해주세요.',
@@ -1431,12 +1443,14 @@ class Tab1State extends State {
                     CustomTextField(
                       controller: _organizationController,
                       labelText: '조직',
+                      showError: _showError['organization'] ?? false,
                     ),
                     if (_showError['organization']!)
                       Text('조직명을 입력해주세요.', style: TextStyle(color: Colors.red)),
                     CustomTextField(
                       controller: _positionController,
                       labelText: '직급',
+                      showError: _showError['position'] ?? false,
                     ),
                     if (_showError['position']!)
                       Text('직급을 입력해주세요.', style: TextStyle(color: Colors.red)),
@@ -1444,6 +1458,7 @@ class Tab1State extends State {
                       controller: _emailController,
                       labelText: '이메일',
                       keyboardType: TextInputType.emailAddress,
+                      showError: _showError['email'] ?? false,
                     ),
                     if (_showError['email']!)
                       Text('이메일을 입력해주세요.', style: TextStyle(color: Colors.red)),

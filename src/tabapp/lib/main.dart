@@ -125,12 +125,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final TextInputType keyboardType; // 추가된 변수
+  final bool showError; // 오류 상태를 표시하는 변수 추가
 
   const CustomTextField({
     Key? key,
     required this.controller,
     required this.labelText,
     this.keyboardType = TextInputType.text, // 기본값 설정
+    this.showError = false, // 기본값은 오류가 없음을 의미
   }) : super(key: key);
 
   @override
@@ -145,9 +147,11 @@ class CustomTextField extends StatelessWidget {
           color: Colors.black87,
         ),
         border: const UnderlineInputBorder(),
-        enabledBorder: const UnderlineInputBorder(),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColors.primaryBlue, width: 2.0),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: showError ? Colors.red : Colors.black87),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: showError ? Colors.red : AppColors.primaryBlue, width: 2.0),
         ),
       ),
       style: const TextStyle(
@@ -161,6 +165,7 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
 String formatPhoneNumber(String rawNumber) {
   // 전화번호가 11자리인 경우에 대한 예시입니다.
   if (rawNumber.length == 11) {
