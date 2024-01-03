@@ -40,39 +40,34 @@ class Tab2State extends State {
 
     List<File> imageFiles = [];
 
-    // 저장된 이미지 경로 리스트가 있는 경우
-    for (String path in savedImagePathList) {
-      final file = File(path);
+    // 저장된 이미지 경로 리스트를 기반으로 파일을 찾아 imageFiles에 추가
+    for (String savedPath in savedImagePathList) {
+      final file = File(savedPath);
       if (await file.exists()) {
         imageFiles.add(file);
       }
     }
 
-    // 저장된 경로 리스트가 비어있거나 파일이 존재하지 않는 경우
-    if (imageFiles.isEmpty) {
-      List<FileSystemEntity> filteredEntries = entries.where((file) {
-        return file.path != '$findPath/profile.jpg';
-      }).toList();
+    // 현재 디렉토리의 모든 이미지 파일을 찾음
+    List<File> allImageFiles = entries.whereType<File>().where((file) {
+      String extension = path.extension(file.path).toLowerCase();
+      return ['.jpg', '.jpeg', '.png', '.gif', '.bmp'].contains(extension);
+    }).toList();
 
-      // Filter out only image files
-      List<File> tempImageFiles = filteredEntries.whereType<File>().where((file) {
-        String extension = path.extension(file.path).toLowerCase();
-        return ['.jpg', '.jpeg', '.png', '.gif', '.bmp'].contains(extension);
-      }).toList();
-
-      // Sort the image files by modification date in descending order
-      Map<File, DateTime> fileModificationTimes = {};
-      for (File file in tempImageFiles) {
-        var stat = await file.stat();
-        fileModificationTimes[file] = stat.modified;
+    // SharedPreferences에 없는 새로운 이미지를 찾아 추가
+    for (File file in allImageFiles) {
+      if (!savedImagePathList.contains(file.path) && file.path != '$directoryPath/profile.jpg') {
+        imageFiles.add(file);
       }
-
-      tempImageFiles.sort((a, b) {
-        return fileModificationTimes[b]!.compareTo(fileModificationTimes[a]!);
-      });
-
-      imageFiles = tempImageFiles;
     }
+
+    // // 이미지 파일을 수정 날짜에 따라 내림차순으로 정렬
+    // Map<File, DateTime> fileModificationTimes = {};
+    // for (File file in imageFiles) {
+    //   var stat = await file.stat();
+    //   fileModificationTimes[file] = stat.modified;
+    // }
+    // imageFiles.sort((a, b) => fileModificationTimes[b]!.compareTo(fileModificationTimes[a]!));
 
     // Update the state with the list of image files
     setState(() {
@@ -86,39 +81,62 @@ class Tab2State extends State {
     final ImagePicker _picker = ImagePicker();
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
+    final prefs = await SharedPreferences.getInstance();
+    List<String> savedImagePathList = prefs.getStringList('imageOrder') ?? [];
+
     if (photo != null) {
       final String directoryPath = await findPath;
       final String fileName = photo.path.split(Platform.pathSeparator).last;
-      final File localImage =
-          await File(photo.path).copy('$directoryPath/$fileName');
+      final String localImagePath = '$directoryPath/$fileName';
+      final File localImage = await File(photo.path).copy(localImagePath);
+
+      // 새로운 이미지 경로를 savedImagePathList에 추가
+      savedImagePathList.insert(0, localImagePath);
+
+      // SharedPreferences에 새로운 이미지 목록 저장
+      await prefs.setStringList('imageOrder', savedImagePathList);
 
       setState(() {
-        images.insert(
-            0, localImage); // Add the new image at the start of the list
-        _sortImages(); // Sort the images list
+        images.insert(0, localImage); // 새 이미지를 이미지 목록의 시작 부분에 추가
       });
     }
   }
 
+
   Future<void> _getPhotos() async {
     final ImagePicker _picker = ImagePicker();
-    final List<XFile>? photos =
-        await _picker.pickMultiImage(); // Pick multiple images
+    final List<XFile>? photos = await _picker.pickMultiImage(); // 여러 이미지 선택
+
+    final prefs = await SharedPreferences.getInstance();
+    List<String> savedImagePathList = prefs.getStringList('imageOrder') ?? [];
 
     if (photos != null && photos.isNotEmpty) {
-      final String localPath =
-          await findPath; // Assuming _localPath is a function returning the path as String
+      final String localPath = await findPath; // _localPath 함수가 문자열 형태의 경로를 반환한다고 가정
 
       for (final photo in photos) {
         final String fileName = path.basename(photo.path);
-        final File localImage =
-            await File(photo.path).copy('$localPath/$fileName');
+        final String localImagePath = '$localPath/$fileName';
+        final File localImage = await File(photo.path).copy(localImagePath);
+
+        if (await _verifyCopy(localImage)) { // 파일이 정상적으로 복사되었는지 확인
+          images.insert(0, localImage);
+          debugPrint('$fileName has been successfully copied to $localImagePath');
+        } else {
+          debugPrint('Failed to copy $fileName to $localImagePath');
+        }
+        // 이미지 목록이 업데이트 되었으므로 SharedPreferences도 업데이트
+        await prefs.setStringList('imageOrder', savedImagePathList);
 
         setState(() {
-          images.add(localImage);
+
         });
       }
     }
+  }
+
+// 파일이 실제로 해당 경로에 존재하는지 확인하는 함수
+  Future<bool> _verifyCopy(File file) async {
+    return await file.exists();
   }
 
   Future<File?> _cropImage(File imageFile) async {
