@@ -77,6 +77,7 @@ class Tab2State extends State {
     // Update the state with the list of image files
     setState(() {
       images = imageFiles;
+      print("Images loaded: ${images.length}");
     });
   }
 
