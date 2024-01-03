@@ -57,19 +57,10 @@ class Tab2State extends State {
     // SharedPreferences에 없는 새로운 이미지를 찾아 추가
     for (File file in allImageFiles) {
       if (!savedImagePathList.contains(file.path) && file.path != '$directoryPath/profile.jpg') {
-        imageFiles.add(file);
+        imageFiles.insert(0, file); // Insert at the start of the list
       }
     }
 
-    // // 이미지 파일을 수정 날짜에 따라 내림차순으로 정렬
-    // Map<File, DateTime> fileModificationTimes = {};
-    // for (File file in imageFiles) {
-    //   var stat = await file.stat();
-    //   fileModificationTimes[file] = stat.modified;
-    // }
-    // imageFiles.sort((a, b) => fileModificationTimes[b]!.compareTo(fileModificationTimes[a]!));
-
-    // Update the state with the list of image files
     setState(() {
       images = imageFiles;
       print("Images loaded: ${images.length}");
