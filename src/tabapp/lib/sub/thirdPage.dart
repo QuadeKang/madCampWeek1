@@ -441,8 +441,8 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
             CropAspectRatioPreset.original,
           ],
           aspectRatio: const CropAspectRatio(
-            ratioX: 1.2654, // Custom aspect ratio
-            ratioY: 0.7902,
+            ratioX: 1.126, // Custom aspect ratio
+            ratioY: 1,
           ),
           uiSettings: [
             AndroidUiSettings(
