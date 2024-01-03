@@ -1,28 +1,29 @@
-# BizLink
-## 비즈니스를 위한 연락처/명함 관리 어플
+![title](https://github.com/QuadeKang/madCampWeek1/assets/124063721/529e6768-bbf3-4dfb-a83a-dd20477247db)
 
-<프로그램 아이콘 사진 위치>
+
+
 
 ---
-Week1. 4분반 최우정, 강정환
+**Week1. 4분반 최우정, 강정환**
 - 업무와 일상의 연락처를 분리하세요. 그럼에도 상상할 수 있는 모든 기능을 앱에서 제공합니다.
 - 다른 사람의 명함을 사진으로 보관 가능합니다. 명함을 자르고, 돌리고, 명함 크기에 맞게 저장하세요.
 - 내 명함을, 다른 사람의 명함을 QR코드 공유를 통해 빠르게 교환할 수 있습니다.
 
+
 ---
-### a. 개발 팀원
+### A. 개발 팀원
 - **최우정** KAIST 화학과 21학번
 - **강정환** 부산대학교 컴퓨터공학 18학번
 
 ---
-### b. 개발환경
+### B. 개발환경
 <img src="https://img.shields.io/badge/Dart-0175C2?style=flat-round&logo=dart&logoColor=white"/> <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-round&logo=flutter&logoColor=white"/> <img src="https://img.shields.io/badge/Android-34A853?style=flat-round&logo=android&logoColor=white"/> <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat-round&logo=androidstudio&logoColor=white"/>
 
-- Language : Dart
-- Framework : Flutter
+- Language : Dart (3.2.3 )
+- Framework : Flutter (3.16.5)
 - OS : Android
 - IDE : Android Studio
-- Target Device : Galaxy s10e, Galaxy Note20
+- Target Device : Galaxy s10e 
 
   > minSdkVersion 20
   > 
@@ -30,7 +31,7 @@ Week1. 4분반 최우정, 강정환
 
 
 ---
-### c. 의존성
+### C. 의존성
 |LIB|Ver|Use|
 |-|-|-|
 |[cupertino_icons](https://pub.dev/packages/cupertino_icons)|1.0.2|This is an asset repo containing the default set of icon assets used by Flutter's Cupertino widgets.|
@@ -47,9 +48,10 @@ Week1. 4분반 최우정, 강정환
 |[flutter_svg](https://pub.dev/packages/flutter_svg)|2.0.9|Draw SVG files using Flutter.|
 
 ---
-### d. 어플리케이션 소개
+### D. 어플리케이션 소개
 #### 0. Intro
-<사진 넣기>  
+
+<img src='https://github.com/QuadeKang/madCampWeek1/assets/124063721/3e05b534-4c43-4d67-9491-e915bcbf6121' width="200" height="400" />
 
 ***Major Features***
 - 기업용 연락처 관리 도구에 적합한 로고 디자인이 적용되어 있습니다.
@@ -63,7 +65,11 @@ Week1. 4분반 최우정, 강정환
 
 
 #### 1. Tab 1
-<사진 넣기>  
+![Tab1_확장](https://github.com/QuadeKang/madCampWeek1/assets/124063721/7cfb27fa-b9fe-4b5d-901d-9bd1f8046a7c)
+![Tab1_기능연결](https://github.com/QuadeKang/madCampWeek1/assets/124063721/b91c563b-1431-4610-abbe-123c0e5c2248)
+![Tab1_연락처저장](https://github.com/QuadeKang/madCampWeek1/assets/124063721/2112f6be-3662-4395-a167-fe66c59c991d)
+
+
 
 ***Major Features***
 - 연락처를 추가/삭제/수정 할 수 있습니다.
@@ -84,9 +90,12 @@ Week1. 4분반 최우정, 강정환
 
 
 #### 2. Tab 2
-<사진 넣기>  
+![Tab2_스크롤](https://github.com/QuadeKang/madCampWeek1/assets/124063721/950da0a3-b257-4c2f-8099-3034c129bb27)
+![Tab2_사진수정](https://github.com/QuadeKang/madCampWeek1/assets/124063721/306670b0-13fd-4f9e-9b24-a765fdffd9e5)
+![Tab2_드래그](https://github.com/QuadeKang/madCampWeek1/assets/124063721/58e938d9-ef52-4c07-865f-00c6d4cfed0a)
 
-*Major Features*
+
+***Major Features***
 - 명함 사진을 목록을 보여줍니다.
 - 사진은 명함 비율에 맞춰 9:5 비율로 제공됩니다.
 - 비율에 맞지 않는 사진은 사진을 선택하여 설정된 비율로 크롭 및 회전할 수 있습니다.
@@ -118,13 +127,13 @@ Week1. 4분반 최우정, 강정환
 ---
 
 ***기술 설명***
-- RepaintBoundary를 통해 레이아웃을 캡쳐할 수 있는 기능을 제작했습니다.
+- [RepaintBoundary](https://api.flutter.dev/flutter/widgets/RepaintBoundary-class.html)를 통해 레이아웃을 캡쳐할 수 있는 기능을 제작했습니다.
 - QrImage를 통해 명함 정보가 담긴 QR코드를 생성합니다.
 - QRView를 통해 QR코드를 읽을 수 있는 카메라를 실행합니다.
 - QR코드를 인식한 순간, 카메라를 멈추어 함수가 여러번 호출되는 것을 예방합니다.
 ---
 
-### e. 별도 기술 소개
+### E. 별도 기술 소개
 
 #### 1. findPath
 - path_provider를 통해 앱 내에서 사용하는 저장소 폴더 위치를 반환해주는 함수를 포함하고 있습니다.
@@ -135,5 +144,11 @@ Week1. 4분반 최우정, 강정환
 #### 4. colors
 - 앱에서 사용하는 컬러셋을 저장해 두었습니다.
 
+| Color Name     | Color Block | Color Name     | Color Block |
+|----------------|:-----------:|----------------|:-----------:|
+| backgroundGray | ![backgroundGray](https://via.placeholder.com/20/ECECEC/000000?text=+) | icongray       | ![icongray](https://via.placeholder.com/20/7C7C7C/FFFFFF?text=+) |
+| gray           | ![gray](https://via.placeholder.com/20/979797/000000?text=+) | iconred        | ![iconred](https://via.placeholder.com/20/D62727/FFFFFF?text=+) |
+| primaryBlue    | ![primaryBlue](https://via.placeholder.com/20/476BEC/000000?text=+) | icongreen      | ![icongreen](https://via.placeholder.com/20/12A763/FFFFFF?text=+) |
+| iconskyblue    | ![iconskyblue](https://via.placeholder.com/20/32A0EB/FFFFFF?text=+) | white          | ![white](https://via.placeholder.com/20/FFFFFF/000000?text=+) |
 
   
