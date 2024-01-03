@@ -523,7 +523,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: AspectRatio(
-                aspectRatio: 1.2654 / 0.7902, // 원하는 비율
+                aspectRatio: 1.126, // 원하는 비율
                 child: FutureBuilder<File>(
                   future: _loadFile(
                       _photoUrl.split('?')[0]), // Function to load the file
@@ -681,7 +681,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                           errorBuilder: (BuildContext context, Object error,
                               StackTrace? stackTrace) {
                             return AspectRatio(
-                              aspectRatio: 1.2654 / 0.7902,
+                              aspectRatio: 1.126,
                               child: ClipRect(
                                 child: Image.file(
                                   File(_photoUrl.split('?')[0]),
