@@ -1,6 +1,7 @@
 
 ![title](https://github.com/QuadeKang/madCampWeek1/assets/124063721/749a516b-58dd-410b-9087-f404e688a1cf)
 
+[![Version](https://badge.fury.io/gh/tterb%2FHyde.svg)](https://github.com/QuadeKang/madCampWeek1/raw/main/bizLink.apk)
 
 ---
 **Week1. 4분반 최우정, 강정환**
