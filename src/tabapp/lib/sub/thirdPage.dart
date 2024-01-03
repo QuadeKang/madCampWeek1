@@ -446,7 +446,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
           ),
           uiSettings: [
             AndroidUiSettings(
-                toolbarTitle: '명함 수정',
+                toolbarTitle: '명함 사진 수정',
                 toolbarColor: AppColors.primaryBlue,
                 toolbarWidgetColor: Colors.white,
                 initAspectRatio: CropAspectRatioPreset.original,
@@ -465,6 +465,50 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
       print('Error in _cropImage: $e');
     }
     return null;
+  }
+
+  void _resetContactInfo() async {
+    // 모든 TextEditingController를 초기화합니다.
+    _nameController.clear();
+    _phoneController.clear();
+    _positionController.clear();
+    _organizationController.clear();
+    _emailController.clear();
+
+    // 사진 관련 데이터를 초기화합니다.
+    await _deleteProfilePhoto();
+    _photoUrl = '';
+    _randKey = '';
+
+    // 오류 메시지 상태를 초기화합니다.
+    setState(() {
+      _showError = {
+        'name': false,
+        'phoneNumber': false,
+        'organization': false,
+        'position': false,
+        'email': false,
+      };
+    });
+
+    // 초기화된 정보를 파일에 저장합니다.
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/information.txt';
+
+      final file = File(filePath);
+      if (!await file.exists()) {
+        await file.create(recursive: true);
+      }
+
+      String contactInfo = 'Name:\nPhone:\nEmail:\nOrganization:\nPosition:\nMemo:\nPhoto URL:';
+      await file.writeAsString(contactInfo);
+
+      // 파일 저장 후 이전 화면으로 돌아갑니다.
+      Navigator.of(context).pop();
+    } catch (e) {
+      print('Error saving contact info: $e');
+    }
   }
 
   @override
@@ -734,7 +778,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                     horizontal: 20, vertical: 10), // Button padding
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
                 setState(() {
@@ -779,6 +823,20 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                 ),
                 padding: EdgeInsets.symmetric(
                     horizontal: 20, vertical: 10), // Button padding
+              ),
+            ),
+            SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: _resetContactInfo,
+              child: Text("정보 초기화"),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // 초기화 버튼에는 일반적으로 빨간색을 사용합니다.
+                onPrimary: Colors.white,
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
             ),
           ],
