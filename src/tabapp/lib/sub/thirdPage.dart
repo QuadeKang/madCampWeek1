@@ -54,7 +54,7 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
     color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
     shadows: [
       Shadow(
-        offset: Offset(0, 4), // 0px horizontal, 4px vertical
+        offset: Offset(3, 3), // 0px horizontal, 4px vertical
         blurRadius: 4, // 4px blur radius
         color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
       ),
@@ -115,7 +115,7 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         const SizedBox(height: 20),
                         Text(
@@ -126,7 +126,7 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                             shadows: [
                               Shadow(
                                 offset: Offset(
-                                    0, 4), // 0px horizontal, 4px vertical
+                                    3, 3), // 0px horizontal, 4px vertical
                                 blurRadius: 4, // 4px blur radius
                                 color: Color.fromRGBO(
                                     0, 0, 0, 0.25), // RGBA color with opacity
@@ -134,7 +134,7 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                             ],
                             fontFamily:
                                 'Pretendard Variable', // Ensure the font is added to your pubspec.yaml
-                            fontSize: 30.0, // 30px font size
+                            fontSize: 35.0, // 30px font size
                             fontStyle: FontStyle.normal, // Normal font style
                             fontWeight: FontWeight.w700, // Font weight 700
                             height:
@@ -192,14 +192,10 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                             child: Column(
                               mainAxisAlignment:
                                   MainAxisAlignment.center, // 여기를 추가하세요
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
                                 Text(
                                   widget.contactInfo.phone,
-                                  style: cardInfoStyle,
-                                ),
-                                Text(
-                                  widget.contactInfo.email,
                                   style: cardInfoStyle,
                                 ),
                                 Text(
@@ -208,6 +204,10 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                                 ),
                                 Text(
                                   widget.contactInfo.position,
+                                  style: cardInfoStyle,
+                                ),
+                                Text(
+                                  widget.contactInfo.email,
                                   style: cardInfoStyle,
                                 ),
                               ],
@@ -470,8 +470,10 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.white,
         title: Text(
           "내 명함 정보 입력",
           style: TextStyle(
@@ -1161,7 +1163,7 @@ class _getBusinessCardWidgetState extends State<getBusinessCardWidget> {
     color: Colors.white, // Equivalent to #FFF or var(--white, #FFF)
     shadows: [
       Shadow(
-        offset: Offset(0, 4), // 0px horizontal, 4px vertical
+        offset: Offset(3, 3), // 0px horizontal, 4px vertical
         blurRadius: 4, // 4px blur radius
         color: Color.fromRGBO(0, 0, 0, 0.25), // RGBA color with opacity
       ),
