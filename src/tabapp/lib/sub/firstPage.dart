@@ -660,7 +660,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
               ),
               SizedBox(width: 8),
               Expanded(
-                child: widget.contact.memo != null
+                child: widget.contact.memo != null || widget.contact.memo ==''
                     ? Text(
                         widget.contact.memo!,
                         maxLines: null,
