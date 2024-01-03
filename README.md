@@ -1,5 +1,5 @@
-![title](https://github.com/QuadeKang/madCampWeek1/assets/124063721/529e6768-bbf3-4dfb-a83a-dd20477247db)
 
+![title](https://github.com/QuadeKang/madCampWeek1/assets/124063721/221c9523-493a-4f46-ad51-e9c2be3398f1)
 
 
 
