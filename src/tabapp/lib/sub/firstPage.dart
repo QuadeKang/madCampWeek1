@@ -194,6 +194,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   CustomTextField(
                     controller: _phoneNumberController,
                     labelText: '전화번호',
+                    keyboardType: TextInputType.phone,
                   ),
                   if (_showError['phoneNumber']!) // 이름 필드에 대한 경고 메시지
                     Text('전화번호를 입력해주세요', style: TextStyle(color: Colors.red)),
@@ -1049,6 +1050,7 @@ class Tab1State extends State {
                     CustomTextField(
                       controller: _phoneNumberController,
                       labelText: '전화번호',
+                      keyboardType: TextInputType.phone,
                     ),
                     if (_showError['phoneNumber']!) // 이름 필드에 대한 경고 메시지
                       Text('전화번호를 입력해주세요', style: TextStyle(color: Colors.red)),
@@ -1434,6 +1436,7 @@ class Tab1State extends State {
                     CustomTextField(
                       controller: _phoneNumberController,
                       labelText: '전화번호',
+                      keyboardType: TextInputType.phone,
                     ),
                     if (_showError['phoneNumber']!)
                       Text('전화번호를 입력해주세요.',

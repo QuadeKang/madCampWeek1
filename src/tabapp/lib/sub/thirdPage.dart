@@ -493,6 +493,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
             CustomTextField(
               controller: _phoneController,
               labelText: '전화번호',
+              keyboardType: TextInputType.phone,
             ),
             if (_showError['phoneNumber']!)
               Text('전화번호를 입력해주세요.', style: TextStyle(color: Colors.red)),
