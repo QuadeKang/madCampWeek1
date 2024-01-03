@@ -1533,6 +1533,7 @@ class Tab1State extends State {
             children: [
               Container(
                 color: Colors.white,
+                height: 50,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
