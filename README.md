@@ -1,10 +1,10 @@
-
+![image](https://github.com/QuadeKang/madCampWeek1/assets/144689054/e1bb5bc6-a4ef-4fe8-a2dd-bbb174355a69)
 ![title](https://github.com/QuadeKang/madCampWeek1/assets/124063721/749a516b-58dd-410b-9087-f404e688a1cf)
 
+---
 <a href="https://github.com/QuadeKang/madCampWeek1/raw/main/bizLink.apk" style="background-color: #476BEC; color: white; padding: 10px 15px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">
-  Download Here!
+  Download HERE! 
 </a>
-
 
 ---
 **Week1. 4분반 최우정, 강정환**
