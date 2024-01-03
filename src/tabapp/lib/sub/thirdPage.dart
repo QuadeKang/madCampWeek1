@@ -581,7 +581,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
                                           .center, // Align buttons to the center
                                       children: <Widget>[
                                         ElevatedButton(
-                                          child: Text('크롭'),
+                                          child: Text('수정'),
                                           style: ElevatedButton.styleFrom(
                                             primary: AppColors
                                                 .primaryBlue, // Background color
