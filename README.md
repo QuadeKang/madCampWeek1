@@ -120,7 +120,10 @@
 
 
 #### 3. Tab 3
-<사진 넣기>  
+![tab3_명함](https://github.com/QuadeKang/madCampWeek1/assets/124063721/9ba1c657-a888-4518-aec2-ef414cf6e4b1)
+![Tab3_읽기](https://github.com/QuadeKang/madCampWeek1/assets/124063721/0edfc5e2-8ceb-424b-bb29-a83666db4c9f)
+![Tab3_큐알생성](https://github.com/QuadeKang/madCampWeek1/assets/124063721/63b3d641-273e-419a-acfa-97f9164d084d)
+
 
 ***Major Features***
 - 사용자가 설정한 정보를 바탕으로 명함을 생성합니다.
@@ -155,7 +158,3 @@
 | gray           | ![gray](https://via.placeholder.com/20/979797/000000?text=+) | iconred        | ![iconred](https://via.placeholder.com/20/D62727/FFFFFF?text=+) |
 | primaryBlue    | ![primaryBlue](https://via.placeholder.com/20/476BEC/000000?text=+) | icongreen      | ![icongreen](https://via.placeholder.com/20/12A763/FFFFFF?text=+) |
 | iconskyblue    | ![iconskyblue](https://via.placeholder.com/20/32A0EB/FFFFFF?text=+) | white          | ![white](https://via.placeholder.com/20/FFFFFF/000000?text=+) |
-
-  
-### F.Build File
-<나중에 추가>
