@@ -121,6 +121,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
 
   void _updateContact(String name, String phoneNumber, String organization,
       String position, String email, String? photoPath, String? memo) {
+    phoneNumber = formatPhoneNumber(phoneNumber);
     Contact updatedContact = Contact(
       name: name,
       phoneNumber: phoneNumber,
@@ -234,7 +235,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                     Navigator.of(context).pop();
                     _updateContact(
                       _nameController.text,
-                      _phoneNumberController.text,
+                      formatPhoneNumber(_phoneNumberController.text),
                       _organizationController.text,
                       _positionController.text,
                       _emailController.text,
@@ -524,7 +525,7 @@ class _ExpandableContactCardState extends State<ExpandableContactCard> {
                   Navigator.of(context).pop();
                   _updateContact(
                     widget.contact.name,
-                    widget.contact.phoneNumber,
+                    formatPhoneNumber(widget.contact.phoneNumber),
                     widget.contact.organization,
                     widget.contact.position,
                     widget.contact.email,
@@ -1122,6 +1123,7 @@ class Tab1State extends State {
 
   void _addNewContact(String name, String phoneNumber, String organization,
       String position, String email) {
+    phoneNumber = formatPhoneNumber(phoneNumber);
     Contact newContact = Contact(
       name: name,
       phoneNumber: phoneNumber,
@@ -1456,9 +1458,10 @@ class Tab1State extends State {
                     });
                     if (!_showError.containsValue(true)) {
                       Navigator.of(context).pop();
+                      phoneNumber = _phoneNumberController.text;
                       _addContactToApp(Contact(
                         name: _nameController.text,
-                        phoneNumber: _phoneNumberController.text,
+                        phoneNumber: formatPhoneNumber(phoneNumber),
                         organization: _organizationController.text,
                         position: _positionController.text,
                         email: _emailController.text,

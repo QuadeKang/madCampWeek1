@@ -195,7 +195,7 @@ class _BusinessCardWidgetState extends State<BusinessCardWidget> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
                                 Text(
-                                  widget.contactInfo.phone,
+                                  formatPhoneNumber(widget.contactInfo.phone),
                                   style: cardInfoStyle,
                                 ),
                                 Text(
@@ -344,7 +344,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
     // If the file exists, read the contact information
     final contactInfo = await readContactInfo(filePath);
     _nameController.text = contactInfo.name;
-    _phoneController.text = contactInfo.phone;
+    _phoneController.text = formatPhoneNumber(contactInfo.phone);
     _emailController.text = contactInfo.email;
     _organizationController.text = contactInfo.organization;
     _positionController.text = contactInfo.position;
@@ -1060,7 +1060,11 @@ class _CardReceiveScreenState extends State<CardReceiveScreen> {
             .sublist(1)
             .join(':')
             .trim(); // Join back if there were multiple ':' in the data.
-        cardData[key] = value;
+        if (key == 'Phone') {
+          cardData[key] = formatPhoneNumber(value);
+        } else {
+          cardData[key] = value;
+        }
       }
     }
     return cardData;

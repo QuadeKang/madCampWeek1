@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: IntroScreen(),
       theme: ThemeData(
         primaryColor: AppColors.primaryBlue,
@@ -159,4 +160,12 @@ class CustomTextField extends StatelessWidget {
       ),
     );
   }
+}
+String formatPhoneNumber(String rawNumber) {
+  // 전화번호가 11자리인 경우에 대한 예시입니다.
+  if (rawNumber.length == 11) {
+    return '${rawNumber.substring(0, 3)}-${rawNumber.substring(3, 7)}-${rawNumber.substring(7, 11)}';
+  }
+  // 전화번호 형식이 올바르지 않은 경우 원본 번호를 반환
+  return rawNumber;
 }
